@@ -4,11 +4,12 @@ import { CanvasComponent } from './canvas/canvas.component';
 import { PlantListComponent } from './plant-list/plant-list.component';
 import { MyGardensComponent } from './my-gardens/my-gardens.component';
 import { FilterComponent } from './filter/filter.component';
+import { MainGardenComponent } from './main-garden/main-garden.component';
 
 @NgModule({
   imports: [
     CommonModule
   ],
-  declarations: [CanvasComponent, PlantListComponent, MyGardensComponent, FilterComponent]
+  declarations: [CanvasComponent, PlantListComponent, MyGardensComponent, FilterComponent, MainGardenComponent]
 })
 export class GardenModule { }
