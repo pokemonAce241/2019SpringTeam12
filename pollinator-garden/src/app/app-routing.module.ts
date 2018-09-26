@@ -6,6 +6,7 @@ import { ForgotPasswordComponent } from './login/forgot-password/forgot-password
 import { CreateAccountComponent } from './login/create-account/create-account.component';
 import { MainGardenComponent } from './garden/main-garden/main-garden.component';
 import { ShoppingListComponent } from './shopping-list/shopping-list/shopping-list.component';
+import { AuthGuard } from './services/auth-guard.service';
 
 
 const routes: Routes = [
@@ -28,11 +29,13 @@ const routes: Routes = [
   },
   {
     path: 'garden',
-    component: MainGardenComponent
+    component: MainGardenComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'shopping-list',
-    component: ShoppingListComponent
+    component: ShoppingListComponent,
+    canActivate: [AuthGuard]
   }
 ]
 

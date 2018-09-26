@@ -1,3 +1,11 @@
-<p>
-  main-login works!
-</p>
+<div class="mx-auto mt-5" style="width: 200px; height: 500px; text-align: center">
+  <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+    <input [(ngModel)]="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" name="email" required>
+    <input [(ngModel)]="password" type="password" id="inputPassword" class="form-control" placeholder="Password" name="password" required>
+    <a routerLink="forgot-password">Forgot Password</a>
+    <br>
+    <a routerLink="create-account">Create Account</a>
+    <br>
+    <button type="submit">Submit</button>
+  </form>
+</div>
