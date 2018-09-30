@@ -7,9 +7,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreateAccountComponent implements OnInit {
 
+  email: string;
+  username: string;
+  password: string;
+  cpassword: string;
+
   constructor() { }
 
   ngOnInit() {
+  }
+
+  onSubmit() {
+    if(this.password === this.cpassword)
+    console.log(this.email + '\n' + this.username + '\n' +
+    this.password + '\n' + this.cpassword);
   }
 
 }
