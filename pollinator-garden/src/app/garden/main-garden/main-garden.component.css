@@ -1,0 +1,66 @@
+.container {
+    display: grid;
+    grid-template-columns: 30% auto;
+    grid-template-rows: 5% 5% 5% auto;
+    height: 100vh;
+    width: 100vw;
+    margin-left: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-right: 0px;
+    max-width: none;
+}
+
+.search {
+    grid-area: 2 / 1 / 3 / 2;
+}
+
+.plantlist {
+    grid-area: 3 / 1 / 5 / 2;
+}
+
+.filter {
+    grid-area: 2 / 2 / 3 / 3;
+    background-color: blue;
+}
+
+.canvas {
+    grid-area: 3 / 2 / 5 / 3;
+    background-color: orange;
+}
+
+.logo {
+    display: grid;
+    grid-area: 1 / 1 / 2 / 2;
+    background-color: red;
+}
+
+.mygardens {
+    display: grid;
+    grid-area: 1 / 2 / 2 / 3;
+    background-color: red;
+    justify-items: end;
+}
+
+.collapsible {
+    background-color: #777;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+}
+
+.active, .collapsible:hover {
+    background-color: #555;
+}
+
+.content {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    background-color: #f1f1f1;
+}
