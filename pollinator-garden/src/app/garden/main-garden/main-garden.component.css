@@ -26,7 +26,6 @@
 
 .canvas {
     grid-area: 3 / 2 / 5 / 3;
-    background-color: orange;
 }
 
 .logo {
@@ -63,4 +62,10 @@
     display: none;
     overflow: hidden;
     background-color: #f1f1f1;
+}
+
+.square {
+    width:25%; 
+    padding-top: 25%; 
+    border: 1px solid black;
 }
