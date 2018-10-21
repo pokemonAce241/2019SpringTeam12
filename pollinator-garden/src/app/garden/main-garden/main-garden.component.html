@@ -5,7 +5,7 @@
   <div class="mygardens">
     <span>
       <app-my-gardens></app-my-gardens>
-      <a class="px-3" routerLink="" style="color: white;">Logout</a>
+      <a class="px-4" routerLink="" style="color: white;">Logout</a>
     </span>
   </div>
 
@@ -92,9 +92,32 @@
         style="width: 50%">
     </div>
   </div>
-  <div class="filter">text</div>
+  <div class="filter">
+    <label class="mr-1"> Garden Options</label>
+    <div class="mr-5" style="display: inline;">
+      <button type="button" class="btn mdi mdi-circle-outline filterButton"></button>
+      <button type="button" class="btn mdi mdi-square-outline filterButton"></button>
+      <button type="button" class="btn mdi mdi-brush filterButton"></button>
+      <button type="button" class="btn mdi mdi-palette filterButton mr-5" style="color: brown;"></button>
+    </div>
 
-  <div class="canvas">
-    <canvas #canvasEl></canvas>
+    <label class="ml-5 mr-1"> Season </label>
+    <div style="display: inline;">
+      <button type="button" class="btn mdi mdi-snowflake filterButton" style="color: blue; outline: firebrick;"></button>
+      <button type="button" class="btn mdi mdi-leaf filterButton" style="color: green;"></button>
+      <button type="button" class="btn mdi mdi-weather-sunny filterButton" style="color: orange;"></button>
+      <button type="button" class="btn mdi mdi-weather-windy filterButton" style="color: brown;"></button>
+    </div>
+
+    <div class="mr-4" style="display: inline; float: right; height: 100%;">
+    <button type="button" class="btn mdi mdi-content-save-outline filterButton" style="color: lightblue;"></button>
+    <button type="button" class="btn mdi mdi-cube-outline filterButton"></button>
+    <button type="button" class="btn mdi mdi-check-outline filterButton" style="color: greenyellow;"></button>
+    <button type="button" class="btn mdi mdi-format-list-bulleted filterButton" (click)="goToShoppingList()"></button>
+    </div>
+  </div>
+
+  <div class="canvas" id="canvasContainer">
+    <canvas #canvasEl id="canvas" style="width: 100%; height: 100%;"></canvas>
   </div>
 </div>

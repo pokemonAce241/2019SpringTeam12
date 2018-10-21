@@ -35,7 +35,7 @@ const routes: Routes = [
   {
     path: 'shopping-list',
     component: ShoppingListComponent,
-    canActivate: [AuthGuard]
+    //canActivate: [AuthGuard]
   }
 ]
 
