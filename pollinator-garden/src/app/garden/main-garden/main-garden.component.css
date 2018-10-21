@@ -56,10 +56,10 @@
     border: 1px solid black;
 }
 
-.btn .mdi::before {
+/* .btn .mdi::before {
     font-size: 24px;
     line-height: 0px;
-}
+} */
 /* .btn .mdi::before {
     position: relative;
     top: 4px;
@@ -71,4 +71,6 @@
     padding: .375rem .2rem;
     background: inherit;
     height: 100%;
+    font-size: 24px;
+    line-height: 0px;
 }
