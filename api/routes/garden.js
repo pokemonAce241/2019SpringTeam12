@@ -5,15 +5,27 @@ var db = require("../db");
 const MOCK_GARDENS = [
     {
         "id": 1,
-        "userId": 1
+        "name": "test",
+        "user_id": 1,
+        "user_email": "asdf@asdf.com",
+        "date_created": "datestring",
+        "date_modified": "datestring"
     },
     {
         "id": 2,
-        "userId": 1
+        "name": "test2",
+        "user_id": 1,
+        "user_email": "asdf@asdf.com",
+        "date_created": "datestring",
+        "date_modified": "datestring"
     },
     {
         "id": 3,
-        "userId": 2
+        "name": "test3",
+        "user_id": 2,
+        "user_email": "asdf@asdf.com",
+        "date_created": "datestring",
+        "date_modified": "datestring"
     }
 ]
 
@@ -65,7 +77,7 @@ router.post('/', function(req, res, next) {
         return res.status(400).send("Bad request");
     }
 
-    var garden = req.body;
+    var garden = MOCK_GARDENS[0];
     garden.id = 4;
     res.status(201).json(garden);
 });
@@ -80,11 +92,11 @@ router.put('/:id(\\d+)', function(req, res, next) {
         return next();
     }
 
-    if (req.body.userId === undefined) {
+    if (req.body.user_id === undefined) {
         return res.status(400).send("Bad request");
     }
 
-    res.json(req.body);
+    res.json(garden);
 });
 
 module.exports = router;
