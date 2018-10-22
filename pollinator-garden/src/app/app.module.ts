@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { GardenModule } from './garden/garden.module';
 import { ShoppingListModule } from './shopping-list/shopping-list.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
     ShoppingListModule,
     AppRoutingModule,
     NgbModule,
+    HttpClientModule
   ],
   declarations: [
     AppComponent
