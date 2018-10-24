@@ -42,12 +42,14 @@ export class MainGardenComponent implements OnInit, AfterViewInit {
   }
 
   private draw() {
-      var img = new Image();
-      img.src = this.plant_instances[0].front_image_path;
+      this.plant_instances.forEach(instance => {
+        var img = new Image();
+        img.src = instance.front_image_path;
 
-      img.onload = () => {
-        this.context.drawImage(img, this.plant_instances[0].x, this.plant_instances[0].y);
-      }
+        img.onload = () => {
+          this.context.drawImage(img, instance.x, instance.y, 100, 100);
+        }
+      })
   }
 
   public goToShoppingList(): void {
