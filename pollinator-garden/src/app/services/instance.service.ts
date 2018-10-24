@@ -21,7 +21,7 @@ export class InstanceService {
   ) { }
 
   baseUrl = "http://localhost:3000/";
-  instancesUrl = "instances/"
+  instancesUrl = "instances/garden/"
 
   getInstances(garden_id: number): Observable<PlantInstance[]> {
     return this.http.get<PlantInstance[]>(this.baseUrl + this.instancesUrl + garden_id);

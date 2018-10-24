@@ -21,7 +21,7 @@ export class MainGardenComponent implements OnInit, AfterViewInit {
 
   plant_instances: PlantInstance[];
 
-  garden = {"id": 1};
+  garden = {"id": 2};
 
   constructor(
     private router: Router,
@@ -35,7 +35,6 @@ export class MainGardenComponent implements OnInit, AfterViewInit {
     canvas.width = parent.offsetWidth * .95;
     this.context = (this.canvasEl.nativeElement as HTMLCanvasElement).getContext('2d');
 
-    this.draw();
   }
 
   ngOnInit() {
@@ -43,11 +42,12 @@ export class MainGardenComponent implements OnInit, AfterViewInit {
   }
 
   private draw() {
+      var img = new Image();
+      img.src = this.plant_instances[0].front_image_path;
 
-    this.context.beginPath();
-    this.context.moveTo(0,0);
-    this.context.lineTo(.9 * this.context.canvas.width,.9 * this.context.canvas.height);
-    this.context.stroke();
+      img.onload = () => {
+        this.context.drawImage(img, this.plant_instances[0].x, this.plant_instances[0].y);
+      }
   }
 
   public goToShoppingList(): void {
@@ -59,6 +59,8 @@ export class MainGardenComponent implements OnInit, AfterViewInit {
       .subscribe(res => {
         console.log(res);
         this.plant_instances = res;
+        this.draw();
+
       })
   }
 
