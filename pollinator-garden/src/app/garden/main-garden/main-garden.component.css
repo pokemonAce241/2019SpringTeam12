@@ -20,7 +20,7 @@
     border: 1px black solid;
 }
 
-.filter {
+.toolbar {
     display: inline;
     grid-area: 1 / 2 / 2 / 3;
     border: 1px black solid;
