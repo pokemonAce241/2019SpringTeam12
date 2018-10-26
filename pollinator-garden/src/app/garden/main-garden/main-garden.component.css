@@ -1,0 +1,76 @@
+.container {
+    display: grid;
+    grid-template-columns: 30% auto;
+    grid-template-rows: 5% 5% 5% auto;
+    height: 100vh;
+    width: 100vw;
+    margin-left: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-right: 0px;
+    max-width: none;
+}
+
+.search {
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+.plantlist {
+    grid-area: 2 / 1 / 5 / 2;
+    border: 1px black solid;
+}
+
+.toolbar {
+    display: inline;
+    grid-area: 1 / 2 / 2 / 3;
+    border: 1px black solid;
+}
+
+.canvas {
+    grid-area: 2 / 2 / 5 / 3;
+}
+
+.logo {
+    display: grid;
+    grid-area: 1 / 1 / 2 / 2;
+    background-color: red;
+}
+
+.mygardens {
+    display: grid;
+    grid-area: 1 / 2 / 2 / 3;
+    background-color: red;
+    justify-items: end;
+}
+
+.content {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    background-color: #f1f1f1;
+}
+
+.square {
+    width:25%; 
+    padding-top: 25%; 
+    border: 1px solid black;
+}
+
+/* .btn .mdi::before {
+    font-size: 24px;
+    line-height: 0px;
+} */
+/* .btn .mdi::before {
+    position: relative;
+    top: 4px;
+} */
+
+.filterButton {
+    border-radius: 0px; 
+    border: 1px black solid; 
+    padding: .375rem .2rem;
+    background: inherit;
+    height: 100%;
+    font-size: 24px;
+    line-height: 0px;
+}

@@ -30,12 +30,12 @@ const routes: Routes = [
   {
     path: 'garden',
     component: MainGardenComponent,
-    canActivate: [AuthGuard]
+    //canActivate: [AuthGuard]
   },
   {
     path: 'shopping-list',
     component: ShoppingListComponent,
-    canActivate: [AuthGuard]
+    //canActivate: [AuthGuard]
   }
 ]
 
