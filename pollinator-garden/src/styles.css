@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+.content-modal .modal-content {
+    height: 100% !important;
+}
+
+.dialog-modal .modal-dialog {
+    max-width: none !important;
+    height: 70% !important;
+    width: 90% !important;
+}
