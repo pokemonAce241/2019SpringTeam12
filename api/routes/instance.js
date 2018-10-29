@@ -29,4 +29,44 @@ router.get('/:id(\\d+)', function(req, res, next) {
     });
 });
 
+createInstanceQuery = `INSERT INTO plant_instance(garden_id, plant_id, x, y) VALUES (?, ?, ?, ?)`;
+
+router.post('/', function(req, res, next) {
+    console.log(req.body);
+    if (req.body.garden_id === undefined ||
+        req.body.plant_id === undefined ||
+        req.body.x === undefined ||
+        req.body.y === undefined) {
+        return res.status(400).send("Bad request");
+    }
+
+    var post_data = [req.body.garden_id, req.body.plant_id, req.body.x, req.body.y];
+
+    db.query(createInstanceQuery, post_data, function(err, result, fields) {
+        var response = req.body;
+        response.id = result.insertId;
+        res.status(201).json(response);
+    });
+});
+
+updateInstanceQuery = `UPDATE plant_instance
+SET x = ?, y = ?
+WHERE id = ?`;
+
+router.put('/:id(\\d+)', function(req, res, next) {
+
+    if (req.body.x === undefined ||
+        req.body.y === undefined) {
+        return res.status(400).send("Bad request");
+    }
+
+    db.query(updateInstanceQuery, [req.body.x, req.body.y, req.params.id], function(err, result, fields) {
+        console.log(result);
+        if (result.affectedRows === 0) {
+            return next();
+        }
+        res.status(200).send();
+    });
+});
+
 module.exports = router;
