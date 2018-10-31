@@ -15,6 +15,8 @@ WHERE pi.id = ?`;
 // Get all instances in a garden
 router.get('/garden/:garden_id(\\d+)', function(req, res, next) {
     db.query(getAllFromGardenQuery, req.params.garden_id, function(err, rows, fields) {
+        if (err) throw err;
+
         res.json(rows);
     });
 });
@@ -22,6 +24,8 @@ router.get('/garden/:garden_id(\\d+)', function(req, res, next) {
 // Get single instance by ID
 router.get('/:id(\\d+)', function(req, res, next) {
     db.query(getSingleInstanceQuery, req.params.id, function(err, rows, fields) {
+        if (err) throw err;
+
         if (rows.length === 0) {
             return next();
         }
@@ -43,6 +47,8 @@ router.post('/', function(req, res, next) {
     var post_data = [req.body.garden_id, req.body.plant_id, req.body.x, req.body.y];
 
     db.query(createInstanceQuery, post_data, function(err, result, fields) {
+        if(err) throw err;
+
         var response = req.body;
         response.id = result.insertId;
         res.status(201).json(response);
@@ -61,12 +67,28 @@ router.put('/:id(\\d+)', function(req, res, next) {
     }
 
     db.query(updateInstanceQuery, [req.body.x, req.body.y, req.params.id], function(err, result, fields) {
+        if (err) throw err;
+
         console.log(result);
         if (result.affectedRows === 0) {
             return next();
         }
         res.status(200).send();
     });
+});
+
+deleteInstanceQuery = `DELETE FROM plant_instance WHERE id = ?`;
+
+router.delete('/:id(\\d+)', function(req, res, next) {
+    db.query(deleteInstanceQuery, req.params.id, function(err, result, fields) {
+        if (err) throw err;
+
+        if (result.affectedRows === 0) {
+            return next();
+        }
+
+        res.status(200).send();
+    })
 });
 
 module.exports = router;
