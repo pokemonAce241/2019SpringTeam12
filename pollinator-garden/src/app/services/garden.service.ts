@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
 
 export class Garden {
   id: number;
@@ -31,6 +32,15 @@ export class GardenService {
 
   getGardens(): Observable<Garden[]> {
     return this.http.get<Garden[]>(this.baseUrl + this.gardenUrl);
+  }
+
+  createGarden(garden: Garden): Observable<Garden> {
+    return this.http.post<Garden>(this.baseUrl + this.gardenUrl, garden, httpOptions).pipe(
+      catchError(val => {
+        console.log(val);
+        return of(garden);
+      })
+    );
   }
 
 }

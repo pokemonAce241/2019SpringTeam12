@@ -67,19 +67,27 @@ router.get('/:id(\\d+)', function(req, res, next) {
     // }
 });
 
+createGardenQuery = `INSERT INTO garden(name, user_id) VALUES (?, ?)`;
+
 // POST garden
 router.post('/', function(req, res, next) {
-    // console.log(req.body);
-    
+    console.log(req.body);
 
-    // Body must have a valid user ID
-    if (req.body.userId === undefined) {
+    // Body must have a valid user ID and name
+    if (req.body.user_id === undefined ||
+        req.body.name === undefined) {
         return res.status(400).send("Bad request");
     }
 
-    var garden = MOCK_GARDENS[0];
-    garden.id = 4;
-    res.status(201).json(garden);
+    var post_data = [req.body.name, req.body.user_id];
+
+    db.query(createGardenQuery, post_data, function(err, result, fields) {
+        if (err) throw err;
+
+        var response = req.body;
+        response.id = result.insertId;
+        res.status(201).json(response);
+    });
 });
 
 // PUT garden
