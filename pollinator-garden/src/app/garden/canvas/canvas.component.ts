@@ -38,7 +38,7 @@ export class CanvasComponent implements OnInit {
     this.getPlantInstances();
   }
 
-  private draw() {
+  draw() {
       this.plant_instances.forEach(instance => {
         var img = new Image();
         img.src = instance.front_image_path;
