@@ -9,6 +9,7 @@ import { ShoppingListModule } from './shopping-list/shopping-list.module';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { MyGardensComponent } from 'src/app/garden/my-gardens/my-gardens.component';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { HttpClientModule } from '@angular/common/http';
     ShoppingListModule,
     AppRoutingModule,
     NgbModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   declarations: [
     AppComponent,
