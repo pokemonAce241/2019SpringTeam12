@@ -2,12 +2,14 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PlantInstance, InstanceService } from 'src/app/services/instance.service';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { MyGardensComponent } from '../my-gardens/my-gardens.component';
 
 @Component({
   selector: 'app-canvas',
   templateUrl: './canvas.component.html',
   styleUrls: ['./canvas.component.css'],
-  providers: [InstanceService]
+  providers: [MyGardensComponent, InstanceService, NgbActiveModal]
 })
 export class CanvasComponent implements OnInit {
 
@@ -23,7 +25,8 @@ export class CanvasComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private instanceService: InstanceService
+    private instanceService: InstanceService,
+    private modalService: NgbModal
   ) { }
 
   ngAfterViewInit() { 
@@ -32,14 +35,14 @@ export class CanvasComponent implements OnInit {
     canvas.height = parent.offsetHeight * .95;
     canvas.width = parent.offsetWidth * .95;
     this.context = (this.canvasEl.nativeElement as HTMLCanvasElement).getContext('2d');
-
+    setTimeout(() => this.checkRouteId());
+    // this.checkRouteId();
   }
 
   ngOnInit() {
-    this.checkRouteId()
   }
 
-  private draw() {
+  draw() {
       this.clearCanvas();
       this.plant_instances.forEach(instance => {
         var img = new Image();
@@ -72,6 +75,8 @@ export class CanvasComponent implements OnInit {
       if (!this.gardenId) {
         // open modal
         console.log("open modal");
+        var modalRef = this.modalService.open(MyGardensComponent, { windowClass: 'dialog-modal content-modal' });
+        modalRef.componentInstance.name = 'World';
       } else {
         this.getPlantInstances()
       }
