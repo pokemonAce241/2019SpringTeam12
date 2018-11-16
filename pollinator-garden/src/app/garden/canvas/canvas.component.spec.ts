@@ -5,7 +5,7 @@ import { of } from 'rxjs';
 import { CanvasComponent } from './canvas.component';
 import { InstanceService } from 'src/app/services/instance.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MainGardenComponent } from '../main-garden/main-garden.component';
 
 @Component({selector: 'app-search', template: ''})
@@ -51,7 +51,8 @@ describe('CanvasComponent', () => {
       declarations: [ CanvasComponent, MainGardenComponent, SearchComponentStub, PlantListComponentStub, ToolbarComponentStub ],
       providers: [
         { provide: InstanceService, useValue: instanceService },
-        { provide: Router, useValue: routerSpy }
+        { provide: Router, useValue: routerSpy },
+        { provide: ActivatedRoute, useValue: { params: of({id: 1}) } }
       ],
       imports: [
         HttpClientTestingModule
