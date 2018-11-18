@@ -8,6 +8,7 @@ import { CanvasTransitionService } from 'src/app/services/canvas-transition.serv
   templateUrl: './plant-list.component.html',
   styleUrls: ['./plant-list.component.css']
 })
+
 export class PlantListComponent implements OnInit {
 
   @ViewChild('canvasEl') canvasEl: ElementRef;
@@ -15,17 +16,12 @@ export class PlantListComponent implements OnInit {
   /** Canvas 2d context */
   private context: CanvasRenderingContext2D;
   private imgDim: any;
-  // private toggle: boolean;
-  // @Output() imgEmitter: EventEmitter<any> = new EventEmitter<any>();
   private img: HTMLImageElement;
-  // private active: boolean;
 
   constructor(private canvasService: CanvasTransitionService,
   ) {
     this.imgDim = {};
     this.img = new Image();
-    // this.toggle = false;
-    // this.active = true;
   }
 
   ngAfterViewInit() {
@@ -33,14 +29,12 @@ export class PlantListComponent implements OnInit {
     let parent = document.getElementById('canvasContainer') as HTMLDivElement;
     canvas.height = parent.offsetHeight + 500;
     canvas.width = parent.offsetWidth;
-    this.canvasService.setDivider(canvas.width);
     let rect = canvas.getBoundingClientRect();
     this.context = (this.canvasEl.nativeElement as HTMLCanvasElement).getContext('2d');
 
     window.addEventListener("resize", (ev) => {
-      canvas.width = parent.offsetWidth;
-      this.canvasService.setDivider(canvas.width);
-      canvas.height = parent.offsetHeight + 500;
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight + 500;
       this.imgDim.x = this.imgDim.xRel * canvas.width;
       this.imgDim.y = this.imgDim.yRel * canvas.height;
       this.context.clearRect(0, 0, canvas.width, canvas.height);
@@ -49,87 +43,43 @@ export class PlantListComponent implements OnInit {
 
     document.addEventListener('click', (ev) => {
 
+      if(this.canvasService.isFail()) {
+
+      }
+
       rect = canvas.getBoundingClientRect();
       var x = ev.clientX - rect.left;
       var y = ev.clientY - rect.top;
-      // console.log(x + ' ' + y +  ' ' + this.imgDim.x + ' ' + this.imgDim.width + ' ' + this.imgDim.y + ' ' +  this.imgDim.height + ' ' + this.canvasService.isToggled());
       if ((x > this.imgDim.x && x < this.imgDim.x + this.imgDim.width) &&
         (y > this.imgDim.y && y < this.imgDim.y + this.imgDim.height) &&
         !this.canvasService.isToggled() && this.canvasService.isPlantCanvas()) {
         this.canvasService.toggleSelected();
-        // console.log(this.canvasService.isToggled());
         return;
       }
 
       if (this.canvasService.isToggled() && this.canvasService.isPlantCanvas())  {
-        // if (y > 0 && y < canvas.height) {
-          this.imgDim.x = x - this.imgDim.width * .5;
-          this.imgDim.y = y - this.imgDim.height * .5;
-          this.imgDim.xRel = this.imgDim.x / canvas.width;
-          this.imgDim.yRel = this.imgDim.y / canvas.height;
-          this.context.clearRect(0, 0, canvas.width, canvas.height);
-          this.context.drawImage(this.img, this.imgDim.x, this.imgDim.y, 100, 100);
-          this.canvasService.toggleSelected();
-          // console.log(this.canvasService.isToggled());
-        // } else {
-        //   this.context.clearRect(0, 0, canvas.width, canvas.height);
-        //   alert("Invalid location.\nPlease try again.");
-        //   this.context.drawImage(this.img, 10, 10, 100, 100);
-        //   this.canvasService.toggleSelected();
-        //   this.imgDim.x = 10;
-        //   this.imgDim.y = 10;
-          // console.log(this.canvasService.isToggled());
-        // }
-      }
+          alert('Not within canvas.\nPlease try again.');
+
+        }
     });
 
     document.addEventListener('mousemove', (ev) => {
       rect = canvas.getBoundingClientRect();
       var x = ev.clientX - rect.left;
       var y = ev.clientY - rect.top;
-      // console.log(y + ' ' + (parent.clientHeight - canvas.height) + ' ' + parent.offsetHeight + ' ' + canvas.height);
-      // console.log(x + ' ' + y + ' ' + canvas.width + ' ' + canvas.height + ' ' + this.canvasService.getImg().src);
-      console.log('x: ' + x + ' divider: ' + this.canvasService.getDivider());
-      if (this.canvasService.getImg().src === '' && this.canvasService.isToggled() && x > canvas.width && y > 0 && y < canvas.height) {
+      if (this.canvasService.getImg().src === '' && this.canvasService.isToggled() && this.canvasService.isPlantCanvas() && x > canvas.width && y > 0 && y < canvas.height) {
         this.canvasService.setImg(this.img);
         this.canvasService.toggleCanvas();
         this.context.clearRect(0, 0, canvas.width, canvas.height);
-        //console.log(this.canvasService.isPlantCanvas());
       } else {
-        // this.context.strokeStyle = '#f00';  // some color/style
-        // this.context.lineWidth = 2;         // thickness
-        // console.log('mouse x coordinate: ' + x + ' mouse y coordinate: ' + y );
         if (this.canvasService.isToggled()) {
           this.imgDim.x = x - this.imgDim.width * .5;
           this.imgDim.y = y - this.imgDim.height * .5;
           this.context.clearRect(0, 0, canvas.width, canvas.height);
           this.context.drawImage(this.img, this.imgDim.x, this.imgDim.y, 100, 100);
-          // this.context.strokeRect(this.imgDim.x, this.imgDim.y, 100, 100);
         }
       }
     })
-
-    // canvas.onmousemove = (ev) => {
-    //   rect = canvas.getBoundingClientRect();
-    //   var x = ev.clientX - rect.left;
-    //   var y = ev.clientY - rect.top;
-    //   console.log(x + ' ' + y + ' ' + canvas.width + ' ' + canvas.height);
-    //   if(x > canvas.width && y > 0 && y < canvas.height) {
-    //     this.canvasService.setImg(this.img);
-    //     this.canvasService.toggleCanvas();
-    //     console.log(this.canvasService.isPlantCanvas())
-    //   }
-    //   // this.context.strokeStyle = '#f00';  // some color/style
-    //   // this.context.lineWidth = 2;         // thickness
-    //   this.imgDim.x = x - this.imgDim.width * .5;
-    //   this.imgDim.y = y - this.imgDim.height * .5;
-    //   // console.log('mouse x coordinate: ' + x + ' mouse y coordinate: ' + y );
-    //   if(this.canvasService.isToggled()) {
-    //     this.context.clearRect(0,0,canvas.width, canvas.height);
-    //     this.context.drawImage(this.img, this.imgDim.x, this.imgDim.y, 100, 100);
-    //     // this.context.strokeRect(this.imgDim.x, this.imgDim.y, 100, 100);
-    //   }
-    // }
   }
 
   ngOnInit() {
@@ -140,7 +90,9 @@ export class PlantListComponent implements OnInit {
       this.imgDim.y = 10;
       this.imgDim.width = 100;
       this.imgDim.height = 100;
-      // console.log(this.imgDim);
+      let canvas = document.getElementById('plant-list-canvas') as HTMLCanvasElement;
+      this.imgDim.xRel = this.imgDim.x / canvas.width;
+      this.imgDim.yRel = this.imgDim.y / canvas.height;
     }
   }
 }

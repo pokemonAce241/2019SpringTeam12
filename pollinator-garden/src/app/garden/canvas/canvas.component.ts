@@ -14,13 +14,12 @@ export class CanvasComponent implements OnInit {
 
   @ViewChild('canvasEl') canvasEl: ElementRef;
   private imgDim;
+  private canvasPlant;
+  plant_instances: PlantInstance[];
+  garden = {"id": 2};
   
   /** Canvas 2d context */
   private context: CanvasRenderingContext2D;
-
-  plant_instances: PlantInstance[];
-
-  garden = {"id": 2};
 
   constructor(
     private router: Router,
@@ -30,6 +29,10 @@ export class CanvasComponent implements OnInit {
     this.imgDim = {};
     this.imgDim.width = 100;
     this.imgDim.height = 100;
+    this.imgDim.xRel = NaN;
+    this.imgDim.yRel = NaN;
+    this.canvasPlant = {};
+    this.canvasPlant.img = new Image();
   }
 
   ngAfterViewInit() { 
@@ -43,12 +46,15 @@ export class CanvasComponent implements OnInit {
 
     window.addEventListener("resize", (ev) => {
       canvas.width = canvas.offsetWidth;
-      this.canvasService.setDivider(canvas.width);
       canvas.height = canvas.offsetHeight;
+      if(Number.isNaN(this.imgDim.xRel) || Number.isNaN(this.imgDim.yRel)) {
+        this.imgDim.xRel = this.imgDim.x / canvas.width;
+        this.imgDim.yRel = this.imgDim.y / canvas.height;
+      }
       this.imgDim.x = this.imgDim.xRel * canvas.width;
       this.imgDim.y = this.imgDim.yRel * canvas.height;
       this.context.clearRect(0, 0, canvas.width, canvas.height);
-      this.context.drawImage(this.canvasService.getImg(), this.imgDim.x, this.imgDim.y, 100, 100);
+      this.context.drawImage(this.canvasPlant.img, this.imgDim.x, this.imgDim.y, 100, 100);
     });
 
     document.addEventListener('click', (ev) => {
@@ -56,14 +62,11 @@ export class CanvasComponent implements OnInit {
       rect = canvas.getBoundingClientRect();
       var x = ev.clientX - rect.left;
       var y = ev.clientY - rect.top;
-      // console.log(x + ' ' + y +  ' ' + this.imgDim.x + ' ' + this.imgDim.width + ' ' + this.imgDim.y + ' ' +  this.imgDim.height + ' ' + this.canvasService.isToggled());
       if ((x > 0 && x < canvas.width) &&
       (y > 0 && y < canvas.height) &&
       this.canvasService.isToggled() && !this.canvasService.isPlantCanvas()) {
           this.imgDim.x = x - this.imgDim.width * .5;
           this.imgDim.y = y - this.imgDim.height * .5;
-          this.imgDim.xRel = this.imgDim.x / canvas.width;
-          this.imgDim.yRel = this.imgDim.y / canvas.height;
           this.context.clearRect(0, 0, canvas.width, canvas.height);
           this.context.drawImage(this.canvasService.getImg(), this.imgDim.x, this.imgDim.y, 100, 100);
           this.canvasService.toggleSelected();
@@ -71,8 +74,7 @@ export class CanvasComponent implements OnInit {
       (y > this.imgDim.y && y < this.imgDim.y + this.imgDim.height) &&
       !this.canvasService.isToggled() && !this.canvasService.isPlantCanvas()) {
         this.canvasService.toggleSelected();
-        this.canvasService.toggleCanvas();
-      } else if (this.canvasService.isToggled() && !this.canvasService.isPlantCanvas()) {
+      } else if ((x < 0 || x > canvas.width || y < 0 || y > canvas.height) && !this.canvasService.isPlantCanvas()) {
         alert('Not within canvas.\nPlease try again.');
       }
     });
@@ -81,26 +83,18 @@ export class CanvasComponent implements OnInit {
       rect = canvas.getBoundingClientRect();
       var x = ev.clientX - rect.left;
       var y = ev.clientY - rect.top;
-      // this.context.strokeStyle = '#f00';  // some color/style
-      // this.context.lineWidth = 2;         // thickness
+
       this.imgDim.x = x - this.imgDim.width * .5;
       this.imgDim.y = y - this.imgDim.height * .5;
-      // console.log('mouse x coordinate: ' + x + ' mouse y coordinate: ' + y );
-      if(this.canvasService.isToggled() && !this.canvasService.isPlantCanvas()) {
-        //console.log(this.canvasService.getImg());
-        // console.log('inside');
+      if (x < 0 && !this.canvasService.isPlantCanvas()) {
+        this.canvasPlant.img = this.canvasService.getImg();
+        this.canvasService.setImg(new Image());
+        this.canvasService.toggleCanvas();
+      } else if(this.canvasService.isToggled() && !this.canvasService.isPlantCanvas()) {
         this.context.clearRect(0,0,canvas.width, canvas.height);
-        // console.log(this.imgDim.x + ' ' + this.imgDim.y)
         this.context.drawImage(this.canvasService.getImg(), this.imgDim.x, this.imgDim.y, 100, 100);
-        // this.context.strokeRect(this.imgDim.x, this.imgDim.y, 100, 100);
-      
-        console.log('x: ' + x + ' divider: ' + this.canvasService.getDivider());
-        if(x < this.canvasService.getDivider()) {
-          this.canvasService.setImg(new Image());
-          this.canvasService.toggleCanvas();
-          // console.log('x: ' + x + ' divider: ' + this.canvasService.getDivider());
-          // console.log(this.canvasService.isPlantCanvas())
-        }
+      } else if(this.canvasService.isToggled() && this.canvasService.isPlantCanvas()) {
+        this.context.clearRect(0,0,canvas.width, canvas.height);
       }
     });
 

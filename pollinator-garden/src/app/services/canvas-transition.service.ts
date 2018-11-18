@@ -7,11 +7,12 @@ export class CanvasTransitionService {
   private img: HTMLImageElement;
   private tog: boolean;         //short for toggle
   private plant: boolean;
-  private divider: Number;
+  private fail: boolean;
   constructor() { 
     this.img = new Image();
     this.tog = false;
     this.plant = true;
+    this.fail = false;
   }
 
   getImg(): HTMLImageElement {
@@ -38,11 +39,11 @@ export class CanvasTransitionService {
     this.plant = !this.plant;
   }
 
-  getDivider(): Number {
-    return this.divider;
+  isFail(): boolean {
+    return this.fail;
   }
 
-  setDivider(divider: Number) {
-    this.divider = divider;
+  toggleFail(fail: boolean) {
+    this.fail = fail;
   }
 }
