@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import {Garden, GardenService } from 'src/app/services/garden.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -10,14 +10,18 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   providers: [GardenService, NgbModal]
 })
 export class MyGardensComponent implements OnInit {
+  @ViewChild('nameGardenModal') nameGardenModal: ElementRef;
 
   gardens: Garden[]
 
   // Name of garden entered by user
-  textValue: string
+  textValue: string = ""
 
   // For now
   user_id = 1;
+
+  lengthError: boolean = false
+  uniqueNameError: boolean = false
 
   constructor(
     private router: Router,
@@ -39,8 +43,8 @@ export class MyGardensComponent implements OnInit {
 
   public goToGarden(id: number) {
     this.router.navigate(['/garden', id]);
+    this.nameGardenModal.nativeElement.classList.remove("fade")
     this.modal.dismissAll();
-    
   }
 
   public createNewGarden() {
@@ -48,8 +52,23 @@ export class MyGardensComponent implements OnInit {
     garden.name = this.textValue;
     garden.user_id = this.user_id;
 
-    // Need to check if name given is unique & if between 1 & 100 characters
-    // error will be caught below
+    // Need to check for errors
+    if (this.textValue.length > 50 || this.textValue.length < 1) {
+      this.lengthError = true
+    } else {
+      this.lengthError = false
+    }
+
+    if (this.gardens.find(val => val.name === this.textValue) != undefined) {
+      this.uniqueNameError = true
+    } else {
+      this.uniqueNameError = false
+    }
+
+    if (this.lengthError || this.uniqueNameError) {
+      return
+    }
+
     this.gardenService.createGarden(garden)
     .subscribe(res => {
       this.goToGarden(res.id)
