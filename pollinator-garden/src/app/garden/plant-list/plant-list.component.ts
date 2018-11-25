@@ -7,7 +7,6 @@ import { CanvasTransitionService } from 'src/app/services/canvas-transition.serv
   selector: 'app-plant-list',
   templateUrl: './plant-list.component.html',
   styleUrls: ['./plant-list.component.css'],
-  // host: { '(click)': 'onMouseClick($event)'}
 })
 
 export class PlantListComponent implements OnInit {
@@ -24,24 +23,14 @@ export class PlantListComponent implements OnInit {
   // reset the canvas to original
   private reset: boolean;
 
-<<<<<<< HEAD
   constructor(private canvasService: CanvasTransitionService,
   ) {
     this.imgDims = [];
     this.img = new Image();
   }
-=======
-  // plants: Plant[];
-  private img: HTMLImageElement;
-  private state: any;
->>>>>>> 36dd031d128c98e8cff16a3a6e9f311d93dfa0c8
 
   ngAfterViewInit() {
 
-<<<<<<< HEAD
-=======
-  ngAfterViewInit() {
->>>>>>> 36dd031d128c98e8cff16a3a6e9f311d93dfa0c8
     let canvas = document.getElementById('plant-list-canvas') as HTMLCanvasElement;
     // size the canvas to fill the div 
     canvas.style.width = '100%';
