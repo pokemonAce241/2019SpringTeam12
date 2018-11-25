@@ -1,25 +1,32 @@
-import { Injectable, ElementRef } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class CanvasTransitionService {
-  private img: HTMLImageElement;
+  private img: string;
   private tog: boolean;         //short for toggle
   private plant: boolean;
-  private fail: boolean;
+  private reset: boolean;
+  private initialize: boolean;
+  private size: any;
+
   constructor() { 
-    this.img = new Image();
+    this.img = '';
     this.tog = false;
     this.plant = true;
-    this.fail = false;
+    this.reset = false;
+    this.initialize = false;
+    this.size = 0;
   }
 
-  getImg(): HTMLImageElement {
+  getImg(): string {
     return this.img;
   }
 
-  setImg(image : HTMLImageElement) {
+  setImg(image : string) {
     this.img = image;
   }
 
@@ -39,11 +46,31 @@ export class CanvasTransitionService {
     this.plant = !this.plant;
   }
 
-  isFail(): boolean {
-    return this.fail;
+  isReset(): boolean {
+    return this.reset;
   }
 
-  toggleFail(fail: boolean) {
-    this.fail = fail;
+  toggleReset() {
+    this.reset = !this.reset;
+  }
+
+  isInitialize() {
+    return this.initialize;
+  }
+
+  toggleInitialize() {
+    this.initialize = !this.initialize;
+  }
+
+  incrementSize() {
+    this.size++;
+  }
+
+  decrementSize() {
+    this.size--;
+  }
+
+  getSize() {
+    return this.size;
   }
 }
