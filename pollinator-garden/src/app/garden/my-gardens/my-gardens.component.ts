@@ -7,7 +7,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   selector: 'app-my-gardens',
   templateUrl: './my-gardens.component.html',
   styleUrls: ['./my-gardens.component.css'],
-  providers: [GardenService, NgbModal]
 })
 export class MyGardensComponent implements OnInit {
 
