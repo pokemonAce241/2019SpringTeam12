@@ -42,6 +42,7 @@ WHERE garden.id = ?`;
 router.get('/', function(req, res, next) {
     db.query(getAllGardensQuery, function(err, rows, fields) {
         if (err) throw err;
+
         res.json(rows);
     });
 });
@@ -49,6 +50,8 @@ router.get('/', function(req, res, next) {
 // GET single garden
 router.get('/:id(\\d+)', function(req, res, next) {
     db.query(getSingleGardenQuery, req.params.id, function(err, rows, fields) {
+        if (err) throw err;
+
         if (rows.length === 0) {
             return next();
         }
@@ -90,21 +93,21 @@ router.post('/', function(req, res, next) {
     });
 });
 
-// PUT garden
-router.put('/:id(\\d+)', function(req, res, next) {
-    console.log(req.params.id);
-    console.log(req.body);
+// // PUT garden
+// router.put('/:id(\\d+)', function(req, res, next) {
+//     console.log(req.params.id);
+//     console.log(req.body);
 
-    var garden = MOCK_GARDENS.find(g => g.id == req.params.id);
-    if (garden === undefined) {
-        return next();
-    }
+//     var garden = MOCK_GARDENS.find(g => g.id == req.params.id);
+//     if (garden === undefined) {
+//         return next();
+//     }
 
-    if (req.body.user_id === undefined) {
-        return res.status(400).send("Bad request");
-    }
+//     if (req.body.user_id === undefined) {
+//         return res.status(400).send("Bad request");
+//     }
 
-    res.json(garden);
-});
+//     res.json(garden);
+// });
 
 module.exports = router;
