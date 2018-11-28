@@ -1,3 +1,19 @@
 button {
     width: 100%;
 }
+
+label {
+    cursor: pointer;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
+.dropdown-item {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.dropdown-item:active {
+    background: none;
+    color: #16181b
+}

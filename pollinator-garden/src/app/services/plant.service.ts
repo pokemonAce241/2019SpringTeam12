@@ -29,7 +29,9 @@ const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class PlantService {
 
   baseUrl = "http://localhost:3000/";

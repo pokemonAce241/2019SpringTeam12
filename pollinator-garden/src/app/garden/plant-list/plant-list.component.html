@@ -1,70 +1,126 @@
 <div class="row my-1">
-  <div ngbDropdown autoClose='outside' class="col-sm">
-    <button class="btn btn-outline-danger dropdown-toggle" id="bloomSeason" ngbDropdownToggle>Bloom Season</button>
-    <div ngbDropdownMenu>
-      <button class="dropdown-item"><input type="checkbox" itemid="spring" />Spring</button>
-      <button class="dropdown-item"><input type="checkbox" itemid="summer" />Summer</button>
-      <button class="dropdown-item"><input type="checkbox" itemid="fall" />Fall</button>
-      <button class="dropdown-item"><input type="checkbox" itemid="winter" />Winter</button>
+  <div class="col-sm">
+    <button class="btn btn-outline-danger dropdown-toggle" id="bloomSeason" data-toggle="dropdown">Bloom Season</button>
+    <div class="dropdown-menu" (click)="$event.stopPropagation()">
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input class="" type="checkbox" id="springCheck" /> Spring</label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+      </div>
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input class="" type="checkbox" id="summerCheck" /> Summer</label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+      </div>
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input class="" type="checkbox" id="fallCheck" /> Fall</label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+      </div>
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input class="" type="checkbox" id="winterCheck" /> Winter</label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+      </div>
     </div>
   </div>
-  <div ngbDropdown class="col-sm">
-    <button class="btn btn-outline-danger dropdown-toggle" id="region" ngbDropdownToggle>Region</button>
-    <div ngbDropdownMenu>
-      <button class="dropdown-item">Mountains</button>
-      <button class="dropdown-item">Native</button>
-      <button class="dropdown-item">Non-Native</button>
+
+  <div class="col-sm">
+    <button class="btn btn-outline-danger dropdown-toggle" id="region" data-toggle="dropdown">Region</button>
+    <div class="dropdown-menu" (click)="$event.stopPropagation()">
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input class="" type="checkbox" id="mountainsCheck" /> Mountains</label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+      </div>
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input class="" type="checkbox" id="piedmontCheck" /> Piedmont</label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+      </div>
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input class="" type="checkbox" id="coastCheck" /> Coast</label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+      </div>
     </div>
   </div>
-  <div ngbDropdown class="col-sm">
-    <button class="btn btn-outline-danger dropdown-toggle" id="color" ngbDropdownToggle>Color</button>
-    <div ngbDropdownMenu>
-      <button class="dropdown-item">
-        <div class="square" style="background: red;"></div>
-      </button>
-      <button class="dropdown-item">
-        <div class="square" style="background: orange;"></div>
-      </button>
-      <button class="dropdown-item">
-        <div class="square" style="background: yellow;"></div>
-      </button>
-      <button class="dropdown-item">
-        <div class="square" style="background: green;"></div>
-      </button>
-      <button class="dropdown-item">
-        <div class="square" style="background: blue;"></div>
-      </button>
-      <button class="dropdown-item">
-        <div class="square" style="background: indigo;"></div>
-      </button>
-      <button class="dropdown-item">
-        <div class="square" style="background: violet;"></div>
-      </button>
+
+  <div class="col-sm">
+    <button class="btn btn-outline-danger dropdown-toggle" id="bloomSeason" data-toggle="dropdown">Color</button>
+    <div class="dropdown-menu" (click)="$event.stopPropagation()">
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="redCheck" />&nbsp;&nbsp;<div class="square" style="display: inline-block; background: red; vertical-align: middle"></div></label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+      </div>
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="orangeCheck" />&nbsp;&nbsp;<div class="square" style="display: inline-block; background: orange; vertical-align: middle"></div></label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+      </div>
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="yellowCheck" />&nbsp;&nbsp;<div class="square" style="display: inline-block; background: yellow; vertical-align: middle"></div></label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+      </div>
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="greenCheck" />&nbsp;&nbsp;<div class="square" style="display: inline-block; background: green; vertical-align: middle"></div></label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+      </div>
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="blueCheck" />&nbsp;&nbsp;<div class="square" style="display: inline-block; background: blue; vertical-align: middle"></div></label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+      </div>
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="indigoCheck" />&nbsp;&nbsp;<div class="square" style="display: inline-block; background: indigo; vertical-align: middle"></div></label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+      </div>
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="violetCheck" />&nbsp;&nbsp;<div class="square" style="display: inline-block; background: violet; vertical-align: middle"></div></label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+      </div>
     </div>
   </div>
-  <div ngbDropdown class="col-sm">
-    <button class="btn btn-outline-danger dropdown-toggle" id="type" ngbDropdownToggle>Type</button>
-    <div ngbDropdownMenu>
-      <button class="dropdown-item">Vine</button>
-      <button class="dropdown-item">Shrub</button>
-      <button class="dropdown-item">Perennial</button>
-      <button class="dropdown-item">Annual</button>
+
+  <div class="col-sm">
+    <button class="btn btn-outline-danger dropdown-toggle" id="type" data-toggle="dropdown">Type</button>
+    <div class="dropdown-menu" (click)="$event.stopPropagation()">
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input class="" type="checkbox" id="vineCheck" /> Vine</label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+      </div>
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input class="" type="checkbox" id="shrubCheck" /> Shrub</label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+      </div>
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input class="" type="checkbox" id="perennialCheck" /> Perennial</label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+      </div>
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input class="" type="checkbox" id="annualCheck" /> Annual</label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+      </div>
     </div>
   </div>
 </div>
+
 <div class="row">
-  <div ngbDropdown autoClose="outside" class="col-sm-4">
-    <button class="btn btn-outline-danger dropdown-toggle" id="soil" ngbDropdownToggle>Soil</button>
-    <div ngbDropdownMenu>
-      <button class="dropdown-item"><input type="checkbox" itemid="wet" />Wet</button>
-      <button class="dropdown-item"><input type="checkbox" itemid="moist" />Moist</button>
-      <button class="dropdown-item"><input type="checkbox" itemid="dry" />Dry</button>
+
+  <div class="col-sm-4">
+    <button class="btn btn-outline-danger dropdown-toggle" id="soil" data-toggle="dropdown">Soil</button>
+    <div class="dropdown-menu" (click)="$event.stopPropagation()">
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input class="" type="checkbox" id="wetCheck" /> Wet</label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+      </div>
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input class="" type="checkbox" id="moistCheck" /> Moist</label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+      </div>
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input class="" type="checkbox" id="dryCheck" /> Dry</label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+      </div>
     </div>
   </div>
-  <div ngbDropdown autoClose='outside' class="col-sm-8">
-    <button class="btn btn-outline-danger dropdown-toggle" id="height" ngbDropdownToggle>Height</button>
-    <div ngbDropdownMenu>
-      <button class="dropdown-item"><input type="text" /> - <input type="text"> </button>
+
+  <div class="col-sm-8">
+    <button class="btn btn-outline-danger dropdown-toggle" id="height" data-toggle="dropdown">Height</button>
+    <div class="dropdown-menu" (click)="$event.stopPropagation()">
+      <div class="dropdown-item">
+        <input type="text" /> ft. - <input type="text"> ft.
     </div>
   </div>
 </div>
