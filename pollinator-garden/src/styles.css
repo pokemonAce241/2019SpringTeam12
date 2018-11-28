@@ -8,3 +8,7 @@
     height: 70% !important;
     width: 90% !important;
 }
+
+body {
+    overflow: hidden;
+}
