@@ -3,19 +3,19 @@
     <button class="btn btn-outline-danger dropdown-toggle" id="bloomSeason" data-toggle="dropdown">Bloom Season</button>
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="springCheck" /> Spring</label>
+        <label class="w-100 my-0"><input class="" type="checkbox" id="springCheck" [(ngModel)]="seasonFilters.spring" (change)="filterPlants()" /> Spring</label>
         <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="summerCheck" /> Summer</label>
+        <label class="w-100 my-0"><input class="" type="checkbox" id="summerCheck" [(ngModel)]="seasonFilters.summer" (change)="filterPlants()" /> Summer</label>
         <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="fallCheck" /> Fall</label>
+        <label class="w-100 my-0"><input class="" type="checkbox" id="fallCheck" [(ngModel)]="seasonFilters.fall" (change)="filterPlants()" /> Fall</label>
         <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="winterCheck" /> Winter</label>
+        <label class="w-100 my-0"><input class="" type="checkbox" id="winterCheck" [(ngModel)]="seasonFilters.winter" (change)="filterPlants()" /> Winter</label>
         <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
     </div>
@@ -25,15 +25,15 @@
     <button class="btn btn-outline-danger dropdown-toggle" id="region" data-toggle="dropdown">Region</button>
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="mountainsCheck" /> Mountains</label>
+        <label class="w-100 my-0"><input class="" type="checkbox" id="mountainCheck" [(ngModel)]="regionFilters.mountain" (change)="filterPlants()" /> Mountain</label>
         <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="piedmontCheck" /> Piedmont</label>
+        <label class="w-100 my-0"><input class="" type="checkbox" id="piedmontCheck" [(ngModel)]="regionFilters.piedmont" (change)="filterPlants()" /> Piedmont</label>
         <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="coastCheck" /> Coast</label>
+        <label class="w-100 my-0"><input class="" type="checkbox" id="coastCheck" [(ngModel)]="regionFilters.coast" (change)="filterPlants()" /> Coast</label>
         <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
     </div>
@@ -43,31 +43,39 @@
     <button class="btn btn-outline-danger dropdown-toggle" id="bloomSeason" data-toggle="dropdown">Color</button>
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="redCheck" />&nbsp;&nbsp;<div class="square" style="display: inline-block; background: red; vertical-align: middle"></div></label>
+        <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="redCheck" [(ngModel)]="colorFilters.red" (change)="filterPlants()" />&nbsp;&nbsp;<div class="square" style="display: inline-block; background: red; vertical-align: middle"></div></label>
         <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="orangeCheck" />&nbsp;&nbsp;<div class="square" style="display: inline-block; background: orange; vertical-align: middle"></div></label>
+        <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="blueCheck" [(ngModel)]="colorFilters.blue" (change)="filterPlants()" />&nbsp;&nbsp;<div class="square" style="display: inline-block; background: blue; vertical-align: middle"></div></label>
         <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="yellowCheck" />&nbsp;&nbsp;<div class="square" style="display: inline-block; background: yellow; vertical-align: middle"></div></label>
+        <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="purpleCheck" [(ngModel)]="colorFilters.purple" (change)="filterPlants()" />&nbsp;&nbsp;<div class="square" style="display: inline-block; background: purple; vertical-align: middle"></div></label>
         <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="greenCheck" />&nbsp;&nbsp;<div class="square" style="display: inline-block; background: green; vertical-align: middle"></div></label>
+        <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="pinkCheck" [(ngModel)]="colorFilters.pink" (change)="filterPlants()" />&nbsp;&nbsp;<div class="square" style="display: inline-block; background: fuchsia; vertical-align: middle"></div></label>
         <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="blueCheck" />&nbsp;&nbsp;<div class="square" style="display: inline-block; background: blue; vertical-align: middle"></div></label>
+        <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="yellowCheck" [(ngModel)]="colorFilters.yellow" (change)="filterPlants()" />&nbsp;&nbsp;<div class="square" style="display: inline-block; background: yellow; vertical-align: middle"></div></label>
         <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="indigoCheck" />&nbsp;&nbsp;<div class="square" style="display: inline-block; background: indigo; vertical-align: middle"></div></label>
+        <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="whiteCheck" [(ngModel)]="colorFilters.white" (change)="filterPlants()" />&nbsp;&nbsp;<div class="square" style="display: inline-block; background: white; vertical-align: middle"></div></label>
         <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="violetCheck" />&nbsp;&nbsp;<div class="square" style="display: inline-block; background: violet; vertical-align: middle"></div></label>
+        <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="orangeCheck" [(ngModel)]="colorFilters.orange" (change)="filterPlants()" />&nbsp;&nbsp;<div class="square" style="display: inline-block; background: orange; vertical-align: middle"></div></label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+      </div>
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="greenCheck" [(ngModel)]="colorFilters.green" (change)="filterPlants()" />&nbsp;&nbsp;<div class="square" style="display: inline-block; background: green; vertical-align: middle"></div></label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+      </div>
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="otherCheck" [(ngModel)]="colorFilters.other" (change)="filterPlants()" /> Other</label>
         <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
     </div>
@@ -77,19 +85,19 @@
     <button class="btn btn-outline-danger dropdown-toggle" id="type" data-toggle="dropdown">Type</button>
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="vineCheck" /> Vine</label>
+        <label class="w-100 my-0"><input class="" type="checkbox" id="vineCheck" [(ngModel)]="typeFilters.vine" (change)="filterPlants()" /> Vine</label>
         <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="shrubCheck" /> Shrub</label>
+        <label class="w-100 my-0"><input class="" type="checkbox" id="shrubCheck" [(ngModel)]="typeFilters.shrub" (change)="filterPlants()" /> Shrub</label>
         <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="perennialCheck" /> Perennial</label>
+        <label class="w-100 my-0"><input class="" type="checkbox" id="perennialCheck" [(ngModel)]="typeFilters.perennial" (change)="filterPlants()" /> Perennial</label>
         <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="annualCheck" /> Annual</label>
+        <label class="w-100 my-0"><input class="" type="checkbox" id="annualCheck" [(ngModel)]="typeFilters.annual" (change)="filterPlants()"/> Annual</label>
         <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
     </div>
@@ -102,15 +110,15 @@
     <button class="btn btn-outline-danger dropdown-toggle" id="soil" data-toggle="dropdown">Soil</button>
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="wetCheck" /> Wet</label>
+        <label class="w-100 my-0"><input class="" type="checkbox" id="wetCheck" [(ngModel)]="soilFilters.wet" (change)="filterPlants()" /> Wet</label>
         <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="moistCheck" /> Moist</label>
+        <label class="w-100 my-0"><input class="" type="checkbox" id="moistCheck" [(ngModel)]="soilFilters.moist" (change)="filterPlants()" /> Moist</label>
         <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="dryCheck" /> Dry</label>
+        <label class="w-100 my-0"><input class="" type="checkbox" id="dryCheck" [(ngModel)]="soilFilters.dry" (change)="filterPlants()" /> Dry</label>
         <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
     </div>
@@ -120,7 +128,7 @@
     <button class="btn btn-outline-danger dropdown-toggle" id="height" data-toggle="dropdown">Height</button>
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
       <div class="dropdown-item">
-        <input type="text" /> ft. - <input type="text"> ft.
+        <input type="text" [(ngModel)]="minHeight" /> ft. - <input type="text" [(ngModel)]="maxHeight" /> ft.
     </div>
   </div>
 </div>
