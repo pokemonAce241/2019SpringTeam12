@@ -121,7 +121,6 @@ export class CanvasComponent implements OnInit {
     });
     setTimeout(() => this.checkRouteId());
     // this.checkRouteId();
-  }
 
     // one of two mousemove event listeners (performs operations on the garden canvas)
     document.addEventListener('mousemove', (ev) => {
@@ -216,8 +215,19 @@ export class CanvasComponent implements OnInit {
         console.log(res);
         this.plant_instances = res;
         this.draw();
+      });
+  }
 
-      })
+  draw() {
+    this.clearCanvas();
+    this.plant_instances.forEach(instance => {
+      var img = new Image();
+      img.src = instance.front_image_path;
+
+      img.onload = () => {
+        this.context.drawImage(img, instance.x, instance.y, 100, 100);
+      }
+    });
   }
 
   checkRouteId() {
@@ -232,5 +242,9 @@ export class CanvasComponent implements OnInit {
         this.getPlantInstances()
       }
     })
+  }
+
+  private clearCanvas() {
+    this.context.clearRect(0,0, this.context.canvas.width, this.context.canvas.height);
   }
 }
