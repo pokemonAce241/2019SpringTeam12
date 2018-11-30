@@ -45,5 +45,9 @@ export class GardenService {
     );
   }
 
+  deleteGarden(gardenId: number): Observable<Garden> {
+    return this.http.delete<Garden>(this.baseUrl + this.gardenUrl + gardenId);
+  }
+
 }
 

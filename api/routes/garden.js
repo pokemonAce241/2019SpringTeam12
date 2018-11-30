@@ -110,4 +110,18 @@ router.post('/', function(req, res, next) {
 //     res.json(garden);
 // });
 
+deleteGardenQuery = `DELETE FROM garden WHERE id = ?`;
+
+// DELETE garden
+router.delete('/:id(\\d+)', function(req, res, next) {
+    db.query(deleteGardenQuery, req.params.id, function(err, result, fields) {
+        if (err) throw err;
+
+        if (result.affectedRows === 0) {
+            return next();
+        }
+        res.status(200).send();
+    });
+});
+
 module.exports = router;
