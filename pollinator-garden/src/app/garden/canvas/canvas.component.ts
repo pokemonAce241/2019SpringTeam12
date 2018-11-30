@@ -59,15 +59,17 @@ export class CanvasComponent implements OnInit {
     window.addEventListener("resize", (ev) => {
       canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
-      if (Number.isNaN(this.imgDims[this.index].xRel) || Number.isNaN(this.imgDims[this.index].yRel)) {
-        this.imgDims[this.index].xRel = this.imgDims[this.index].x / canvas.width;
-        this.imgDims[this.index].yRel = this.imgDims[this.index].y / canvas.height;
+      if (this.imgDims[this.index] !== undefined) {
+        if (Number.isNaN(this.imgDims[this.index].xRel) || Number.isNaN(this.imgDims[this.index].yRel)) {
+          this.imgDims[this.index].xRel = this.imgDims[this.index].x / canvas.width;
+          this.imgDims[this.index].yRel = this.imgDims[this.index].y / canvas.height;
+        }
+        //update the new position based on the relative position
+        this.imgDims[this.index].x = this.imgDims[this.index].xRel * canvas.width;
+        this.imgDims[this.index].y = this.imgDims[this.index].yRel * canvas.height;
       }
-      //update the new position based on the relative position
-      this.imgDims[this.index].x = this.imgDims[this.index].xRel * canvas.width;
-      this.imgDims[this.index].y = this.imgDims[this.index].yRel * canvas.height;
       this.context.clearRect(0, 0, canvas.width, canvas.height);
-      for(var i = 0; i < this.size; i++) {
+      for (var i = 0; i < this.size; i++) {
         this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
       }
     });
@@ -104,7 +106,8 @@ export class CanvasComponent implements OnInit {
           }
         }
       } else if ((x < 0 || x > canvas.width || y < 0 || y > canvas.height) && !this.canvasService.isPlantCanvas()) { //if not in garden canvas and toggle display error message
-        alert('Not within canvas.\nPlease try again.');
+        this.canvasService.decrementSize();
+        this.canvasService.toggleSelected();
       }
 
       // unselected send signal back to plantlist canvas to reset itself
@@ -177,33 +180,11 @@ export class CanvasComponent implements OnInit {
   }
 
   ngOnInit() {
-    //this.getPlantInstances();
-  }
-
-  private draw() {
-    // this.plant_instances.forEach(instance => {
-    //   var img = new Image();
-    //   img.src = instance.front_image_path;
-
-    //   img.onload = () => {
-    //     this.context.drawImage(img, instance.x, instance.y, 100, 100);
-    //   }
-    // })
   }
 
   public goToShoppingList(): void {
     this.router.navigate(['/shopping-list']);
   }
-
-  // getPlantInstances() {
-  //   this.instanceService.getInstances(this.garden.id)
-  //     .subscribe(res => {
-  //       console.log(res);
-  //       this.plant_instances = res;
-  //       this.draw();
-
-  //     })
-  // }
 
   // async method calls getSize helper method to get size from plantlist canvas (race condition)
   async addNew() {
