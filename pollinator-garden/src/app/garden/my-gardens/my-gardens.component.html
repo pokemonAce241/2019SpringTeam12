@@ -7,7 +7,16 @@
 <div class="modal-body" style="height: 265px; width: 100%;overflow-y: auto;">
     <!-- <p>Hello, {{name}}!</p> -->
     <div style="max-height:290px;">
-    <button data-toggle="modal" data-target="#NameGardenModal" style="width: 20%; height: 45%;background: rgba(255, 255, 255, 0.911); text-align: center;"><img src="src\assets\site-images\plus.png" style="height:30%; width:20%;margin: 10%; margin-bottom: 5%;"><p>New Garden Project</p></button>
+        <div style="width: 20%; height: 45%;background: rgba(255, 255, 255, 0.911);display: inline-block;border:1px solid;">
+            <div style="width:15%; height:15%;">
+                <button data-toggle="modal" data-target="#NameGardenModal" style="width:100%; height:100%; background: transparent; border: transparent;">
+                </button>
+            </div>
+            <button data-toggle="modal" data-target="#NameGardenModal" style="width: 100%; height: 90%;background: rgba(255, 255, 255, 0.911); text-align: center;border: transparent;outline: none;">
+                <img src="src\assets\site-images\plus.png" style="height:30%; width:20%;margin: 10%; margin-bottom: 5%;">
+                <p>New Garden Project</p>
+            </button>
+        </div>
         <div *ngFor="let garden of gardens" style="width: 20%; height: 45%;background: rgba(255, 255, 255, 0.911);display: inline-block;border:1px solid;">
             <div style="width:15%; height:15%;">
                 <button (click)="deleteGarden(garden.id)" style="width:100%; height:100%; background: transparent; border: transparent;">
@@ -15,14 +24,14 @@
                 </button>
             </div>
             <div>
-                <button (click)="goToGarden(garden.id)" style="width: 100%; height: 90%;background: transparent; text-align: center; border: transparent;">
+                <button (click)="goToGarden(garden.id)" style="width: 100%; height: 90%;background: transparent; text-align: center; border: transparent;outline: none;">
                     <img src="src\assets\site-images\image_placeholder.png" style="height:20%; width:50%;margin-top: 2%">
                     <div class="button_text">
                         <p>{{garden.name}}</p>
                     </div>
                 </button>
             </div>
-            
+
         </div>
     </div>
 </div>
@@ -32,7 +41,7 @@
 </div>
 
 <!-- Name Garden Modal -->
-<div class="modal" id="NameGardenModal" data-backdrop="static" data-keyboard="false" #nameGardenModal >
+<div class="modal" id="NameGardenModal" data-backdrop="static" data-keyboard="false" #nameGardenModal>
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -50,7 +59,8 @@
             <!-- Modal footer -->
             <div class="modal-footer">
                 <p id="lengthError" class="error" *ngIf="lengthError">Garden name must be between 1 and 50 characters.</p>
-                <p id="uniqueNameError" class="error" *ngIf="uniqueNameError">A garden project already exists with the given name. Please enter a new name.</p>
+                <p id="uniqueNameError" class="error" *ngIf="uniqueNameError">A garden project already exists with the
+                    given name. Please enter a new name.</p>
                 <button type="button" class="btn btn-success" (click)="createNewGarden()">Create Garden</button>
             </div>
 
