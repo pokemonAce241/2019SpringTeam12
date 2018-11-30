@@ -1,67 +1,71 @@
-<div ngbDropdown autoClose='outside' class="d-inline-block">
-  <button class="btn btn-outline-danger dropdown-toggle" id="bloomSeason" ngbDropdownToggle>Bloom Season</button>
-  <div ngbDropdownMenu>
-    <button class="dropdown-item"><input type="checkbox" itemid="spring" />Spring</button>
-    <button class="dropdown-item"><input type="checkbox" itemid="summer" />Summer</button>
-    <button class="dropdown-item"><input type="checkbox" itemid="fall" />Fall</button>
-    <button class="dropdown-item"><input type="checkbox" itemid="winter" />Winter</button>
+<div class="row my-1">
+  <div ngbDropdown autoClose='outside' class="col-sm">
+    <button class="btn btn-outline-danger dropdown-toggle" id="bloomSeason" ngbDropdownToggle>Bloom Season</button>
+    <div ngbDropdownMenu>
+      <button class="dropdown-item"><input type="checkbox" itemid="spring" />Spring</button>
+      <button class="dropdown-item"><input type="checkbox" itemid="summer" />Summer</button>
+      <button class="dropdown-item"><input type="checkbox" itemid="fall" />Fall</button>
+      <button class="dropdown-item"><input type="checkbox" itemid="winter" />Winter</button>
+    </div>
+  </div>
+  <div ngbDropdown class="col-sm">
+    <button class="btn btn-outline-danger dropdown-toggle" id="region" ngbDropdownToggle>Region</button>
+    <div ngbDropdownMenu>
+      <button class="dropdown-item">Mountains</button>
+      <button class="dropdown-item">Native</button>
+      <button class="dropdown-item">Non-Native</button>
+    </div>
+  </div>
+  <div ngbDropdown class="col-sm">
+    <button class="btn btn-outline-danger dropdown-toggle" id="color" ngbDropdownToggle>Color</button>
+    <div ngbDropdownMenu>
+      <button class="dropdown-item">
+        <div class="square" style="background: red;"></div>
+      </button>
+      <button class="dropdown-item">
+        <div class="square" style="background: orange;"></div>
+      </button>
+      <button class="dropdown-item">
+        <div class="square" style="background: yellow;"></div>
+      </button>
+      <button class="dropdown-item">
+        <div class="square" style="background: green;"></div>
+      </button>
+      <button class="dropdown-item">
+        <div class="square" style="background: blue;"></div>
+      </button>
+      <button class="dropdown-item">
+        <div class="square" style="background: indigo;"></div>
+      </button>
+      <button class="dropdown-item">
+        <div class="square" style="background: violet;"></div>
+      </button>
+    </div>
+  </div>
+  <div ngbDropdown class="col-sm">
+    <button class="btn btn-outline-danger dropdown-toggle" id="type" ngbDropdownToggle>Type</button>
+    <div ngbDropdownMenu>
+      <button class="dropdown-item">Vine</button>
+      <button class="dropdown-item">Shrub</button>
+      <button class="dropdown-item">Perennial</button>
+      <button class="dropdown-item">Annual</button>
+    </div>
   </div>
 </div>
-<div ngbDropdown autoClose='outside' class="d-inline-block">
-  <button class="btn btn-outline-danger dropdown-toggle" id="bloomSeason" ngbDropdownToggle>Height</button>
-  <div ngbDropdownMenu>
-    <button class="dropdown-item"><input type="text" /> - <input type="text"> </button>
+<div class="row">
+  <div ngbDropdown autoClose="outside" class="col-sm-4">
+    <button class="btn btn-outline-danger dropdown-toggle" id="soil" ngbDropdownToggle>Soil</button>
+    <div ngbDropdownMenu>
+      <button class="dropdown-item"><input type="checkbox" itemid="wet" />Wet</button>
+      <button class="dropdown-item"><input type="checkbox" itemid="moist" />Moist</button>
+      <button class="dropdown-item"><input type="checkbox" itemid="dry" />Dry</button>
+    </div>
   </div>
-</div>
-<div ngbDropdown class="d-inline-block">
-  <button class="btn btn-outline-danger dropdown-toggle" id="height" ngbDropdownToggle>Color</button>
-  <div ngbDropdownMenu>
-    <button class="dropdown-item">
-      <div class="square" style="background: red;"></div>
-    </button>
-    <button class="dropdown-item">
-      <div class="square" style="background: orange;"></div>
-    </button>
-    <button class="dropdown-item">
-      <div class="square" style="background: yellow;"></div>
-    </button>
-    <button class="dropdown-item">
-      <div class="square" style="background: green;"></div>
-    </button>
-    <button class="dropdown-item">
-      <div class="square" style="background: blue;"></div>
-    </button>
-    <button class="dropdown-item">
-      <div class="square" style="background: indigo;"></div>
-    </button>
-    <button class="dropdown-item">
-      <div class="square" style="background: violet;"></div>
-    </button>
-  </div>
-</div>
-<div ngbDropdown class="d-inline-block">
-  <button class="btn btn-outline-danger dropdown-toggle" id="height" ngbDropdownToggle>Type</button>
-  <div ngbDropdownMenu>
-    <button class="dropdown-item">Vine</button>
-    <button class="dropdown-item">Shrub</button>
-    <button class="dropdown-item">Perennial</button>
-    <button class="dropdown-item">Annual</button>
-  </div>
-</div>
-<div ngbDropdown autoClose="outside" class="d-inline-block">
-  <button class="btn btn-outline-danger dropdown-toggle" id="height" ngbDropdownToggle>Soil</button>
-  <div ngbDropdownMenu>
-    <button class="dropdown-item"><input type="checkbox" itemid="wet" />Wet</button>
-    <button class="dropdown-item"><input type="checkbox" itemid="moist" />Moist</button>
-    <button class="dropdown-item"><input type="checkbox" itemid="dry" />Dry</button>
-  </div>
-</div>
-<div ngbDropdown class="d-inline-block">
-  <button class="btn btn-outline-danger dropdown-toggle" id="height" ngbDropdownToggle>Region</button>
-  <div ngbDropdownMenu>
-    <button class="dropdown-item">Mountains</button>
-    <button class="dropdown-item">Native</button>
-    <button class="dropdown-item">Non-Native</button>
+  <div ngbDropdown autoClose='outside' class="col-sm-8">
+    <button class="btn btn-outline-danger dropdown-toggle" id="height" ngbDropdownToggle>Height</button>
+    <div ngbDropdownMenu>
+      <button class="dropdown-item"><input type="text" /> - <input type="text"> </button>
+    </div>
   </div>
 </div>
 

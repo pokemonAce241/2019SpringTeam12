@@ -1,14 +1,16 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { PlantInstance, InstanceService } from 'src/app/services/instance.service';
 import { CanvasTransitionService } from 'src/app/services/canvas-transition.service';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { MyGardensComponent } from '../my-gardens/my-gardens.component';
 
 @Component({
   selector: 'app-canvas',
   templateUrl: './canvas.component.html',
   styleUrls: ['./canvas.component.css'],
-  providers: [InstanceService]
+  providers: [MyGardensComponent, InstanceService, NgbActiveModal]
 })
 export class CanvasComponent implements OnInit {
 
@@ -26,14 +28,16 @@ export class CanvasComponent implements OnInit {
   plant_instances: PlantInstance[];
   // which garden to load
   garden = { "id": 2 };
-
+  gardenId = null;
   /** Canvas 2d context */
   private context: CanvasRenderingContext2D;
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private instanceService: InstanceService,
     private canvasService: CanvasTransitionService,
+    private modalService: NgbModal,
   ) {
     this.imgDims = [];
     this.canvasPlants = [];
@@ -115,6 +119,9 @@ export class CanvasComponent implements OnInit {
         this.canvasService.toggleReset();
       }
     });
+    setTimeout(() => this.checkRouteId());
+    // this.checkRouteId();
+  }
 
     // one of two mousemove event listeners (performs operations on the garden canvas)
     document.addEventListener('mousemove', (ev) => {
@@ -200,5 +207,30 @@ export class CanvasComponent implements OnInit {
         resolve(this.canvasService.getSize());
       }, 10);
     });
+  }
+  
+  getPlantInstances() {
+    console.log("get plant instances called")
+    this.instanceService.getInstances(this.gardenId)
+      .subscribe(res => {
+        console.log(res);
+        this.plant_instances = res;
+        this.draw();
+
+      })
+  }
+
+  checkRouteId() {
+    this.route.params.subscribe(params => {
+      this.gardenId = +params['id'];
+      if (!this.gardenId) {
+        // open modal
+        console.log("open modal");
+        var modalRef = this.modalService.open(MyGardensComponent, { windowClass: 'dialog-modal content-modal' });
+        modalRef.componentInstance.name = 'World';
+      } else {
+        this.getPlantInstances()
+      }
+    })
   }
 }
