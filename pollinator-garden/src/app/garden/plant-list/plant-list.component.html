@@ -69,12 +69,14 @@
   </div>
 </div>
 
-<div style="display:block">
-  <!-- can just use a ngFor all images and populate the bar -->
-  <img src="https://www.fiftyflowers.com/site_files/FiftyFlowers/Image/Product/peony-sarah-bernhardt-bloom-500_b572106d.jpg"
-    style="width: 50%">
-  <img src="https://www.fiftyflowers.com/site_files/FiftyFlowers/Image/Product/peony-sarah-bernhardt-bloom-500_b572106d.jpg"
-    style="width: 50%">
-  <img src="https://www.fiftyflowers.com/site_files/FiftyFlowers/Image/Product/peony-sarah-bernhardt-bloom-500_b572106d.jpg"
-    style="width: 50%">
+<div style="display:block" id="canvasContainer">
+    <canvas #canvasEl id="plant-list-canvas" style="width: 100%; height: 100%;"></canvas>
 </div>
+
+  <!-- can just use a ngFor all images and populate the bar -->
+  <!-- <img src="https://www.fiftyflowers.com/site_files/FiftyFlowers/Image/Product/peony-sarah-bernhardt-bloom-500_b572106d.jpg"
+    style="width: 50%">
+  <img src="https://www.fiftyflowers.com/site_files/FiftyFlowers/Image/Product/peony-sarah-bernhardt-bloom-500_b572106d.jpg"
+    style="width: 50%">
+  <img src="https://www.fiftyflowers.com/site_files/FiftyFlowers/Image/Product/peony-sarah-bernhardt-bloom-500_b572106d.jpg"
+    style="width: 50%"> -->
