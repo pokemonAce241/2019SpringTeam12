@@ -75,4 +75,12 @@ export class MyGardensComponent implements OnInit {
     })
   }
 
+  public deleteGarden(id: number) {
+    // TODO
+  }
+  public cancelNameGardenModal() {
+    this.lengthError = false;
+    this.uniqueNameError = false;
+    console.log(this.lengthError, this.uniqueNameError);
+  }
 }
