@@ -6,33 +6,53 @@ var getAllPlantsQuery = `SELECT p.id, p.common_name, p.genus, p.species, p.min_h
 p.native, p.min_hardiness, p.max_hardiness, p.color_id, c.name as color, p.front_image_path, p.side_image_path,
 s.seasons, r.regions, t.soil_types
 FROM plant as p
-INNER JOIN plant_type as t ON (p.type_id = t.id)
-INNER JOIN color as c ON (p.color_id = c.id)
-INNER JOIN (
+LEFT JOIN plant_type as t ON (p.type_id = t.id)
+LEFT JOIN color as c ON (p.color_id = c.id)
+LEFT JOIN (
     SELECT ps.plant_id, JSON_ARRAYAGG(season.name) as seasons
     FROM season
-    INNER JOIN plant_season_xref as ps ON (ps.season_id = season.id)
+    LEFT JOIN plant_season_xref as ps ON (ps.season_id = season.id)
 ) as s ON (p.id = s.plant_id)
-INNER JOIN (
+LEFT JOIN (
     SELECT pr.plant_id, JSON_ARRAYAGG(region.name) as regions
     FROM region
-    INNER JOIN plant_region_xref as pr ON (pr.region_id = region.id)
+    LEFT JOIN plant_region_xref as pr ON (pr.region_id = region.id)
 ) as r ON (p.id = r.plant_id)
-INNER JOIN (
+LEFT JOIN (
     SELECT pt.plant_id, JSON_ARRAYAGG(soil_type.name) as soil_types
     FROM soil_type
-    INNER JOIN plant_soil_xref as pt ON (pt.soil_type_id = soil_type.id)
-) as t ON (p.id = t.plant_id)`;
+    LEFT JOIN plant_soil_xref as pt ON (pt.soil_type_id = soil_type.id)
+) as t ON (p.id = t.plant_id)
+GROUP BY p.id`;
+
+var getAllPlantsQuery2 = `SELECT p.id, p.common_name, p.genus, p.species, p.min_height, p.max_height, p.min_spread, p.max_spread, p.type_id, t.name as plant_type,
+p.native, p.min_hardiness, p.max_hardiness, p.color_id, c.name as color, p.front_image_path, p.side_image_path,
+JSON_ARRAYAGG(s.name) as seasons, JSON_ARRAYAGG(r.name) as regions, JSON_ARRAYAGG(st.name) as soil_types
+FROM plant as p
+LEFT JOIN plant_type as t ON (p.type_id = t.id)
+LEFT JOIN color as c ON (p.color_id = c.id)
+LEFT JOIN plant_season_xref as ps ON (ps.plant_id = p.id)
+LEFT JOIN season as s ON (s.id = ps.season_id)
+LEFT JOIN plant_region_xref as pr ON (pr.plant_id = p.id)
+LEFT JOIN region as r ON (r.id = pr.region_id)
+LEFT JOIN plant_soil_xref as pt ON (pt.plant_id = p.id)
+LEFT JOIN soil_type as st ON (st.id = pt.soil_type_id)
+GROUP BY p.id`
 
 // Get all plants
 router.get('/', function(req, res, next) {
-    db.query(getAllPlantsQuery, function(err, rows, fields) {
+    db.query(getAllPlantsQuery2, function(err, rows, fields) {
         if (err) throw err;
+
+        console.log(rows);
 
         rows.forEach(row => {
             row.seasons = JSON.parse(row.seasons);
+            row.seasons = row.seasons.filter((v, i, a) => a.indexOf(v) === i);
             row.regions = JSON.parse(row.regions);
+            row.regions = row.regions.filter((v, i, a) => a.indexOf(v) === i);
             row.soil_types = JSON.parse(row.soil_types);
+            row.soil_types = row.soil_types.filter((v, i, a) => a.indexOf(v) === i);
         });
 
         res.json(rows);
