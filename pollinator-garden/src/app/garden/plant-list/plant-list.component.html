@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-sm my-1">
-    <button class="btn btn-outline-danger dropdown-toggle" id="bloomSeason" data-toggle="dropdown">Bloom Season</button>
+    <button [ngStyle]="{'background-color': seasonActive ? '#dc3545' : '', 'color': seasonActive ? '#ffffff' : ''}" class="btn btn-outline-danger dropdown-toggle" id="bloomSeason" data-toggle="dropdown">Bloom Season</button>
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
       <div class="dropdown-item pr-0">
         <label class="w-100 my-0"><input class="" type="checkbox" id="springCheck" [(ngModel)]="seasonFilters.spring" (change)="filterPlants()" /> Spring</label>
@@ -22,7 +22,7 @@
   </div>
 
   <div class="col-sm my-1">
-    <button class="btn btn-outline-danger dropdown-toggle" id="region" data-toggle="dropdown">Region</button>
+    <button [ngStyle]="{'background-color': regionActive ? '#dc3545' : '', 'color': regionActive ? '#ffffff' : ''}" class="btn btn-outline-danger dropdown-toggle" id="region" data-toggle="dropdown">Region</button>
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
       <div class="dropdown-item pr-0">
         <label class="w-100 my-0"><input class="" type="checkbox" id="mountainCheck" [(ngModel)]="regionFilters.mountain" (change)="filterPlants()" /> Mountain</label>
@@ -40,7 +40,7 @@
   </div>
 
   <div class="col-sm my-1">
-    <button class="btn btn-outline-danger dropdown-toggle" id="bloomSeason" data-toggle="dropdown">Color</button>
+    <button [ngStyle]="{'background-color': colorActive ? '#dc3545' : '', 'color': colorActive ? '#ffffff' : ''}" class="btn btn-outline-danger dropdown-toggle" id="bloomSeason" data-toggle="dropdown">Color</button>
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
       <div class="dropdown-item pr-0">
         <label class="w-100 my-0"><input style="vertical-align: middle" type="checkbox" id="redCheck" [(ngModel)]="colorFilters.red" (change)="filterPlants()" />&nbsp;&nbsp;<div class="square" style="display: inline-block; background: red; vertical-align: middle"></div></label>
@@ -82,7 +82,7 @@
   </div>
 
   <div class="col-sm my-1">
-    <button class="btn btn-outline-danger dropdown-toggle" id="type" data-toggle="dropdown">Type</button>
+    <button [ngStyle]="{'background-color': typeActive ? '#dc3545' : '', 'color': typeActive ? '#ffffff' : ''}" class="btn btn-outline-danger dropdown-toggle" id="type" data-toggle="dropdown">Type</button>
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
       <div class="dropdown-item pr-0">
         <label class="w-100 my-0"><input class="" type="checkbox" id="vineCheck" [(ngModel)]="typeFilters.vine" (change)="filterPlants()" /> Vine</label>
@@ -107,7 +107,7 @@
 <div class="row">
 
   <div class="col-sm-4 my-1">
-    <button class="btn btn-outline-danger dropdown-toggle" id="soil" data-toggle="dropdown">Soil</button>
+    <button [ngStyle]="{'background-color': soilActive ? '#dc3545' : '', 'color': soilActive ? '#ffffff' : ''}" class="btn btn-outline-danger dropdown-toggle" id="soil" data-toggle="dropdown">Soil</button>
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
       <div class="dropdown-item pr-0">
         <label class="w-100 my-0"><input class="" type="checkbox" id="wetCheck" [(ngModel)]="soilFilters.wet" (change)="filterPlants()" /> Wet</label>
@@ -125,7 +125,7 @@
   </div>
 
   <div class="col-sm-8 my-1">
-    <button class="btn btn-outline-danger dropdown-toggle" id="height" data-toggle="dropdown">Height</button>
+    <button [ngStyle]="{'background-color': heightActive ? '#dc3545' : '', 'color': heightActive ? '#ffffff' : ''}" class="btn btn-outline-danger dropdown-toggle" id="height" data-toggle="dropdown">Height</button>
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
       <div class="dropdown-item">
         <input type="text" [(ngModel)]="minHeight" (change)="filterPlants()"/> ft. - <input type="text" [(ngModel)]="maxHeight" (change)="filterPlants()"/> ft.

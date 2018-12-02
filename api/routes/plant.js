@@ -44,7 +44,7 @@ router.get('/', function(req, res, next) {
     db.query(getAllPlantsQuery2, function(err, rows, fields) {
         if (err) throw err;
 
-        console.log(rows);
+        // console.log(rows);
 
         rows.forEach(row => {
             row.seasons = JSON.parse(row.seasons);

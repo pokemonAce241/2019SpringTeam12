@@ -18,11 +18,15 @@ export class PlantListComponent implements OnInit {
     "winter": false
   }
 
+  seasonActive = false;
+
   regionFilters = {
     "mountain": false,
     "piedmont": false,
     "coast": false
   }
+
+  regionActive = false;
 
   colorFilters = {
     "red": false,
@@ -36,6 +40,8 @@ export class PlantListComponent implements OnInit {
     "other": false
   }
 
+  colorActive = false;
+
   typeFilters = {
     "vine": false,
     "shrub": false,
@@ -43,14 +49,20 @@ export class PlantListComponent implements OnInit {
     "annual": false
   }
 
+  typeActive = false;
+
   soilFilters = {
     "wet": false,
     "moist": false,
     "dry": false
   }
 
+  soilActive = false;
+
   minHeight: number;
   maxHeight: number;
+
+  heightActive = false;
 
   constructor(
     private plantService: PlantService
@@ -92,9 +104,11 @@ export class PlantListComponent implements OnInit {
           !this.seasonFilters.summer &&
           !this.seasonFilters.fall &&
           !this.seasonFilters.winter) {
+        this.seasonActive = false;
         return true;
       }
 
+      this.seasonActive = true;
       return match;
     });
 
@@ -115,9 +129,11 @@ export class PlantListComponent implements OnInit {
       if (!this.regionFilters.mountain &&
           !this.regionFilters.piedmont &&
           !this.regionFilters.coast) {
+        this.regionActive = false;
         return true;
       }
 
+      this.regionActive = true;
       return match;
     });
     
@@ -162,9 +178,11 @@ export class PlantListComponent implements OnInit {
           !this.colorFilters.orange &&
           !this.colorFilters.green &&
           !this.colorFilters.other) {
+        this.colorActive = false;
         return true;
       }
 
+      this.colorActive = true;
       return match;
     });
 
@@ -189,13 +207,15 @@ export class PlantListComponent implements OnInit {
           !this.typeFilters.shrub &&
           !this.typeFilters.annual &&
           !this.typeFilters.perennial) {
+        this.typeActive = false;
         return true;
       }
 
+      this.typeActive = true;
       return match;
     });
 
-    // TYPES
+    // SOILS
     this.filteredPlants = this.filteredPlants.filter(plant => {
       var match = false;
 
@@ -212,9 +232,11 @@ export class PlantListComponent implements OnInit {
       if (!this.soilFilters.wet &&
           !this.soilFilters.dry &&
           !this.soilFilters.moist) {
+        this.soilActive = false;
         return true;
       }
 
+      this.soilActive = true;
       return match;
     });
 
@@ -227,6 +249,12 @@ export class PlantListComponent implements OnInit {
       }
       if (this.maxHeight === undefined) {
         this.maxHeight = 20;
+      }
+
+      if (this.minHeight == 0 && this.maxHeight == 20) {
+        this.heightActive = false;
+      } else {
+        this.heightActive = true;
       }
 
       if (plant.min_height >= this.minHeight && plant.max_height <= this.maxHeight) {
