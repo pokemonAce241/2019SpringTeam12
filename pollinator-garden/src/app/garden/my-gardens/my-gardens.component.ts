@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import {Garden, GardenService } from 'src/app/services/garden.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { htmlAstToRender3Ast } from '@angular/compiler/src/render3/r3_template_transform';
 
 @Component({
   selector: 'app-my-gardens',
@@ -43,9 +44,8 @@ export class MyGardensComponent implements OnInit {
 
   public goToGarden(id: number) {
     this.router.navigate(['/garden', id]);
-    this.nameGardenModal.nativeElement.classList.remove("fade")
     this.modal.dismissAll();
-    this.modal.dismissAll();
+    window.location.reload();
   }
 
   public createNewGarden() {
