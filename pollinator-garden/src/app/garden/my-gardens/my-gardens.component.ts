@@ -45,6 +45,7 @@ export class MyGardensComponent implements OnInit {
     this.router.navigate(['/garden', id]);
     this.nameGardenModal.nativeElement.classList.remove("fade")
     this.modal.dismissAll();
+    this.modal.dismissAll();
   }
 
   public createNewGarden() {
@@ -79,6 +80,7 @@ export class MyGardensComponent implements OnInit {
     if (confirm("Are you sure you want to delete this garden?").valueOf()) {
       this.gardenService.deleteGarden(id)
       .subscribe(res => {
+        this.getGardens()
         alert("Garden has been deleted.")
         console.log("Garden " + id + "deleted.")
       })

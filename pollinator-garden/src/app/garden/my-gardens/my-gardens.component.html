@@ -61,7 +61,7 @@
                 <p id="lengthError" class="error" *ngIf="lengthError">Garden name must be between 1 and 50 characters.</p>
                 <p id="uniqueNameError" class="error" *ngIf="uniqueNameError">A garden project already exists with the
                     given name. Please enter a new name.</p>
-                <button type="button" class="btn btn-success" (click)="createNewGarden()">Create Garden</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" (click)="createNewGarden()">Create Garden</button>
             </div>
 
         </div>

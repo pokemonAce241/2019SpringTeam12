@@ -3,3 +3,16 @@ div.button_text {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+#lengthError {
+    color: red;
+}
+
+#uniqueNameError {
+    color: red;
+}
+
+#NameGardenModal {
+    max-width: 60%;
+    max-height: 60%;
+}

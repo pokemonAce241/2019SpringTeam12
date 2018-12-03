@@ -10,9 +10,11 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { MyGardensComponent } from 'src/app/garden/my-gardens/my-gardens.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   imports: [
+    CommonModule,
     BrowserModule,
     LoginModule,
     GardenModule,
