@@ -267,11 +267,40 @@ export class PlantListComponent implements OnInit {
     });
 
     // SEARCH
-    this.filteredPlants = this.filteredPlants.filter(plant => {
-      return plant.common_name.includes(this.searchText);
-    });
+    if (this.searchText != "" && this.searchText != undefined) {
+      this.filteredPlants = this.filteredPlants.filter(plant => {
+        return plant.common_name.includes(this.searchText);
+      });
+    }
 
     console.log(this.filteredPlants);
+  }
+
+  clearFilter() {
+    for (var property in this.seasonFilters) {
+      this.seasonFilters[property] = false;
+    }
+
+    for (var property in this.regionFilters) {
+      this.regionFilters[property] = false;
+    }
+
+    for (var property in this.colorFilters) {
+      this.colorFilters[property] = false;
+    }
+
+    for (var property in this.typeFilters) {
+      this.typeFilters[property] = false;
+    }
+
+    for (var property in this.soilFilters) {
+      this.soilFilters[property] = false;
+    }
+
+    this.minHeight = 0;
+    this.maxHeight = 20;
+
+    this.filterPlants();
   }
 
 }

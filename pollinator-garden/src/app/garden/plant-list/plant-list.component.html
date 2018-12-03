@@ -1,6 +1,13 @@
 <div class="row mx-0" style="background-color: seagreen; width: 100%">
-  <label class="my-0" style="padding-left: 5%; padding-right: 15%; display: inline-block;"><strong>Plants</strong></label>
-  <input [(ngModel)]="searchText" (input)="filterPlants()" class="form-control my-1" style="width: 200px; display: inline-block;" type="search" placeholder="Search">
+  <div class="col-sm-3 mt-1">
+    <label class="my-0"><strong>Plants</strong></label>
+  </div>
+  <div class="col-sm-6">
+    <input [(ngModel)]="searchText" (input)="filterPlants()" class="form-control my-1" type="search" placeholder="Search">
+  </div>
+  <div class="col-sm-3 mt-1">
+    <button class="btn mdi mdi-filter-remove" title="Clear Filter" (click)="clearFilter()"></button>
+  </div>
 </div>
 
 <div class="row mx-1">
