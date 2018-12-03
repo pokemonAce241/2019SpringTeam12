@@ -64,6 +64,8 @@ export class PlantListComponent implements OnInit {
 
   heightActive = false;
 
+  searchText: string;
+
   constructor(
     private plantService: PlantService
   ) { }
@@ -262,6 +264,11 @@ export class PlantListComponent implements OnInit {
       }
 
       return match;
+    });
+
+    // SEARCH
+    this.filteredPlants = this.filteredPlants.filter(plant => {
+      return plant.common_name.includes(this.searchText);
     });
 
     console.log(this.filteredPlants);
