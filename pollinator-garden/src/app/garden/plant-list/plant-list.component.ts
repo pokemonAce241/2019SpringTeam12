@@ -69,6 +69,12 @@ export class PlantListComponent implements OnInit {
 
     document.addEventListener('click', (ev) => {
 
+      var test = ev.target as HTMLElement;
+      console.log(test.tagName);
+      if (test.tagName !== "CANVAS") {
+        return;
+      }
+
       // async method below that gets whether to reset the canvas
       this.updateReset().then(() => {
         // if reset then restore image back to original dimensions
