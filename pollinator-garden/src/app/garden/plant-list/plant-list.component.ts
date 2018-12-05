@@ -222,10 +222,12 @@ export class PlantListComponent implements OnInit {
   ngOnInit() {
     this.plantService.getPlants()
       .subscribe(res => {
-        console.log(res);
         this.plants = res;
-        this.filteredPlants = res;
-        this.loadPlants();
+        this.plants.forEach(plant => {
+          plant.img = new Image();
+          plant.img.src = plant.front_image_path;
+        });
+        this.plants[this.plants.length - 1].img.onload = () => {this.filterPlants()}
       });
 
       // this.getPlants();
@@ -251,53 +253,53 @@ export class PlantListComponent implements OnInit {
     this.context.clearRect(0, 0, canvas.width, canvas.height);
     this.imgDims = [];
     this.size = 0;
+    
+    console.log(this.filteredPlants);
+    
 
     this.filteredPlants.forEach(plant => {
-      var img = new Image();
-      img.src = plant.front_image_path;
-      img.onload = () => {
-        // if the image is mod 0 then begin pic on line
-        if (this.size % 2 === 0) {
-          this.imgDims[this.size] = {};
-          // x is just the margin off
-          this.imgDims[this.size].ox = margin;
-          // y depends on the line size
-          this.imgDims[this.size].oy = 10 + line * (size + 20);
-          this.context.drawImage(img, this.imgDims[this.size].ox, this.imgDims[this.size].oy, size, size);
-          this.imgDims[this.size].x = this.imgDims[this.size].ox;
-          this.imgDims[this.size].y = this.imgDims[this.size].oy;
-          this.imgDims[this.size].width = size;
-          this.imgDims[this.size].height = size;
-          let canvas = document.getElementById('plant-list-canvas') as HTMLCanvasElement;
-          this.imgDims[this.size].xRel = this.imgDims[this.size].x / canvas.width;
-          this.imgDims[this.size].yRel = this.imgDims[this.size].y / canvas.height;
-          this.imgDims[this.size].img = img;
-          this.imgDims[this.size].name = plant.common_name;
-          this.imgDims[this.size].id = plant.id;
-          this.context.fillText(this.imgDims[this.size].name, this.imgDims[this.size].x, this.imgDims[this.size].y + this.imgDims[this.size].height + 10);
-          this.size++;
-        } else {
-          this.imgDims[this.size] = {};
-          // margin image margin = x location
-          this.imgDims[this.size].ox = 2 * margin + size;
-          this.imgDims[this.size].oy = 10 + line * (size + 20);
-          this.context.drawImage(img, this.imgDims[this.size].ox, this.imgDims[this.size].oy, size, size);
-          this.imgDims[this.size].x = this.imgDims[this.size].ox;
-          this.imgDims[this.size].y = this.imgDims[this.size].oy;
-          this.imgDims[this.size].width = size;
-          this.imgDims[this.size].height = size;
-          let canvas = document.getElementById('plant-list-canvas') as HTMLCanvasElement;
-          this.imgDims[this.size].xRel = this.imgDims[this.size].x / canvas.width;
-          this.imgDims[this.size].yRel = this.imgDims[this.size].y / canvas.height;
-          this.imgDims[this.size].img = img;
-          this.imgDims[this.size].name = plant.common_name;
-          this.imgDims[this.size].id = plant.id;
-          this.context.fillText(this.imgDims[this.size].name, this.imgDims[this.size].x, this.imgDims[this.size].y + this.imgDims[this.size].height + 10);
-          this.size++;
-          // line complete so increment for the next line
-          line++;
-        }
+      // if the image is mod 0 then begin pic on line
+      if (this.size % 2 === 0) {
+        this.imgDims[this.size] = {};
+        // x is just the margin off
+        this.imgDims[this.size].ox = margin;
+        // y depends on the line size
+        this.imgDims[this.size].oy = 10 + line * (size + 20);
+        this.context.drawImage(plant.img, this.imgDims[this.size].ox, this.imgDims[this.size].oy, size, size);
+        this.imgDims[this.size].x = this.imgDims[this.size].ox;
+        this.imgDims[this.size].y = this.imgDims[this.size].oy;
+        this.imgDims[this.size].width = size;
+        this.imgDims[this.size].height = size;
+        let canvas = document.getElementById('plant-list-canvas') as HTMLCanvasElement;
+        this.imgDims[this.size].xRel = this.imgDims[this.size].x / canvas.width;
+        this.imgDims[this.size].yRel = this.imgDims[this.size].y / canvas.height;
+        this.imgDims[this.size].img = plant.img;
+        this.imgDims[this.size].name = plant.common_name;
+        this.imgDims[this.size].id = plant.id;
+        this.context.fillText(this.imgDims[this.size].name, this.imgDims[this.size].x, this.imgDims[this.size].y + this.imgDims[this.size].height + 10);
+      } else {
+        this.imgDims[this.size] = {};
+        // margin image margin = x location
+        this.imgDims[this.size].ox = 2 * margin + size;
+        this.imgDims[this.size].oy = 10 + line * (size + 20);
+        this.context.drawImage(plant.img, this.imgDims[this.size].ox, this.imgDims[this.size].oy, size, size);
+        this.imgDims[this.size].x = this.imgDims[this.size].ox;
+        this.imgDims[this.size].y = this.imgDims[this.size].oy;
+        this.imgDims[this.size].width = size;
+        this.imgDims[this.size].height = size;
+        let canvas = document.getElementById('plant-list-canvas') as HTMLCanvasElement;
+        this.imgDims[this.size].xRel = this.imgDims[this.size].x / canvas.width;
+        this.imgDims[this.size].yRel = this.imgDims[this.size].y / canvas.height;
+        this.imgDims[this.size].img = plant.img;
+        this.imgDims[this.size].name = plant.common_name;
+        this.imgDims[this.size].id = plant.id;
+        this.context.fillText(this.imgDims[this.size].name, this.imgDims[this.size].x, this.imgDims[this.size].y + this.imgDims[this.size].height + 10);
+        
       }
+      if (this.size % 2 !== 0) {
+        line++;
+      }
+      this.size++;
     });
   }
 
@@ -514,6 +516,16 @@ export class PlantListComponent implements OnInit {
         return plant.common_name.toLowerCase().includes(this.searchText.toLowerCase());
       });
     }
+
+    this.filteredPlants.sort((a, b) => {
+      if (a.common_name < b.common_name) {
+        return -1;
+      }
+      if (a.common_name > b.common_name) {
+        return 1;
+      }
+      return 0;
+    })
 
     console.log(this.filteredPlants);
 

@@ -23,6 +23,7 @@ export class Plant {
   seasons: string[];
   regions: string[];
   soil_types: string[];
+  img: any;
 }
 
 const httpOptions = {
