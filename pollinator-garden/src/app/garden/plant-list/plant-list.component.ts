@@ -195,6 +195,7 @@ export class PlantListComponent implements OnInit {
         this.context.clearRect(0, 0, canvas.width, canvas.height);
         this.canvasService.toggleInitialize();
         this.canvasService.setImg(this.imgDims[this.index].img.src);
+        this.canvasService.setId(this.imgDims[this.index].id);
       } else if (this.canvasService.getImg() === '' && this.canvasService.isPlantCanvas() && x > canvas.width && y > 0 && y < canvas.height) { // if no image then still signal change of canvas
         this.canvasService.toggleCanvas();
       } else if (this.canvasService.isToggled() && this.canvasService.isPlantCanvas()) { // otherwise in canvas still so update and draw
@@ -272,6 +273,7 @@ export class PlantListComponent implements OnInit {
           this.imgDims[this.size].yRel = this.imgDims[this.size].y / canvas.height;
           this.imgDims[this.size].img = img;
           this.imgDims[this.size].name = plant.common_name;
+          this.imgDims[this.size].id = plant.id;
           this.context.fillText(this.imgDims[this.size].name, this.imgDims[this.size].x, this.imgDims[this.size].y + this.imgDims[this.size].height + 10);
           this.size++;
         } else {
@@ -289,6 +291,7 @@ export class PlantListComponent implements OnInit {
           this.imgDims[this.size].yRel = this.imgDims[this.size].y / canvas.height;
           this.imgDims[this.size].img = img;
           this.imgDims[this.size].name = plant.common_name;
+          this.imgDims[this.size].id = plant.id;
           this.context.fillText(this.imgDims[this.size].name, this.imgDims[this.size].x, this.imgDims[this.size].y + this.imgDims[this.size].height + 10);
           this.size++;
           // line complete so increment for the next line
@@ -508,7 +511,7 @@ export class PlantListComponent implements OnInit {
     // SEARCH
     if (this.searchText != "" && this.searchText != undefined) {
       this.filteredPlants = this.filteredPlants.filter(plant => {
-        return plant.common_name.includes(this.searchText);
+        return plant.common_name.toLowerCase().includes(this.searchText.toLowerCase());
       });
     }
 

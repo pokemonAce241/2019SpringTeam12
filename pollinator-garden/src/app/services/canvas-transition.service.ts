@@ -7,6 +7,7 @@ import { Observable, of } from 'rxjs';
 })
 export class CanvasTransitionService {
   private img: string;
+  private id: number;
   private tog: boolean;         //short for toggle
   private plant: boolean;
   private reset: boolean;
@@ -28,6 +29,14 @@ export class CanvasTransitionService {
 
   setImg(image : string) {
     this.img = image;
+  }
+
+  getId(): number {
+    return this.id;
+  }
+
+  setId(id: number) {
+    this.id = id;
   }
 
   isToggled(): boolean {
