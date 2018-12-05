@@ -8,12 +8,14 @@ import { MainGardenComponent } from './main-garden/main-garden.component';
 import { RouterModule } from '@angular/router';
 import {NgbModule, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { SearchComponent } from './search/search.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
-    NgbModule    
+    NgbModule,
+    FormsModule
   ],
   declarations: [CanvasComponent, PlantListComponent, ToolbarComponent, MainGardenComponent, SearchComponent],
   bootstrap: [MainGardenComponent],
