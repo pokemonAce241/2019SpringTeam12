@@ -138,10 +138,11 @@ export class PlantListComponent implements OnInit {
         // if reset then restore image back to original dimensions
         if (this.reset) {
           this.canvasService.toggleReset();
-          if(this.index !== -1) {
-          this.imgDims[this.index].x = this.imgDims[this.index].ox;
-          this.imgDims[this.index].y = this.imgDims[this.index].oy;
-          this.index = -1;
+          if(this.index !== undefined && this.index !== -1) {
+            // console.log(this.index);
+            this.imgDims[this.index].x = this.imgDims[this.index].ox;
+            this.imgDims[this.index].y = this.imgDims[this.index].oy;
+            this.index = -1;
           }
           for(var i = 0; i < this.size; i++) {
             this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
@@ -218,75 +219,83 @@ export class PlantListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.instanceService.getInstances(this.garden.id)
+    this.plantService.getPlants()
       .subscribe(res => {
         console.log(res);
-        this.plant_instances = res;
-
-        // get canvas for width
-        let canvas = document.getElementById('plant-list-canvas') as HTMLCanvasElement;
-        // gets the line # for plants
-        var line = 0;
-        // margin percentage
-        let marginP = .1;
-        // margin that surround the image on both sides (based on margin percentage)
-        var margin = canvas.width * marginP;
-        // size of the image  (left over dimensions)
-        var size = canvas.width * ((1 - 3 * marginP) / 2);
-        // depending on the screen size this can be very big image (max size 100)
-        if (size > 100) {
-          size = 100
-          margin = (canvas.width - 200) / 3;
-        }
-
-        this.plant_instances.forEach(instance => {
-          var img = new Image();
-          img.src = instance.front_image_path;
-          img.onload = () => {
-            // if the image is mod 0 then begin pic on line
-            if (this.size % 2 === 0) {
-              this.imgDims[this.size] = {};
-              // x is just the margin off
-              this.imgDims[this.size].ox = margin;
-              // y depends on the line size
-              this.imgDims[this.size].oy = 10 + line * (size + 10);
-              this.context.drawImage(img, this.imgDims[this.size].ox, this.imgDims[this.size].oy, size, size);
-              this.imgDims[this.size].x = this.imgDims[this.size].ox;
-              this.imgDims[this.size].y = this.imgDims[this.size].oy;
-              this.imgDims[this.size].width = size;
-              this.imgDims[this.size].height = size;
-              let canvas = document.getElementById('plant-list-canvas') as HTMLCanvasElement;
-              this.imgDims[this.size].xRel = this.imgDims[this.size].x / canvas.width;
-              this.imgDims[this.size].yRel = this.imgDims[this.size].y / canvas.height;
-              this.imgDims[this.size].img = img;
-              this.imgDims[this.size].name = 'left plant';
-              this.context.fillText(this.imgDims[this.size].name, this.imgDims[this.size].x, this.imgDims[this.size].y + this.imgDims[this.size].height + 10);
-              this.size++;
-            } else {
-              this.imgDims[this.size] = {};
-              // margin image margin = x location
-              this.imgDims[this.size].ox = 2 * margin + size;
-              this.imgDims[this.size].oy = 10 + line * (size + 10);
-              this.context.drawImage(img, this.imgDims[this.size].ox, this.imgDims[this.size].oy, size, size);
-              this.imgDims[this.size].x = this.imgDims[this.size].ox;
-              this.imgDims[this.size].y = this.imgDims[this.size].oy;
-              this.imgDims[this.size].width = size;
-              this.imgDims[this.size].height = size;
-              let canvas = document.getElementById('plant-list-canvas') as HTMLCanvasElement;
-              this.imgDims[this.size].xRel = this.imgDims[this.size].x / canvas.width;
-              this.imgDims[this.size].yRel = this.imgDims[this.size].y / canvas.height;
-              this.imgDims[this.size].img = img;
-              this.imgDims[this.size].name = 'right plant';
-              this.context.fillText(this.imgDims[this.size].name, this.imgDims[this.size].x, this.imgDims[this.size].y + this.imgDims[this.size].height + 10);
-              this.size++;
-              // line complete so increment for the next line
-              line++;
-            }
-          }
-        });
+        this.plants = res;
+        this.filteredPlants = res;
+        this.loadPlants();
       });
 
-      this.getPlants();
+      // this.getPlants();
+  }
+
+  loadPlants() {
+    // get canvas for width
+    let canvas = document.getElementById('plant-list-canvas') as HTMLCanvasElement;
+    // gets the line # for plants
+    var line = 0;
+    // margin percentage
+    let marginP = .1;
+    // margin that surround the image on both sides (based on margin percentage)
+    var margin = canvas.width * marginP;
+    // size of the image  (left over dimensions)
+    var size = canvas.width * ((1 - 3 * marginP) / 2);
+    // depending on the screen size this can be very big image (max size 100)
+    if (size > 100) {
+      size = 100
+      margin = (canvas.width - 200) / 3;
+    }
+
+    this.context.clearRect(0, 0, canvas.width, canvas.height);
+    this.imgDims = [];
+    this.size = 0;
+
+    this.filteredPlants.forEach(plant => {
+      var img = new Image();
+      img.src = plant.front_image_path;
+      img.onload = () => {
+        // if the image is mod 0 then begin pic on line
+        if (this.size % 2 === 0) {
+          this.imgDims[this.size] = {};
+          // x is just the margin off
+          this.imgDims[this.size].ox = margin;
+          // y depends on the line size
+          this.imgDims[this.size].oy = 10 + line * (size + 20);
+          this.context.drawImage(img, this.imgDims[this.size].ox, this.imgDims[this.size].oy, size, size);
+          this.imgDims[this.size].x = this.imgDims[this.size].ox;
+          this.imgDims[this.size].y = this.imgDims[this.size].oy;
+          this.imgDims[this.size].width = size;
+          this.imgDims[this.size].height = size;
+          let canvas = document.getElementById('plant-list-canvas') as HTMLCanvasElement;
+          this.imgDims[this.size].xRel = this.imgDims[this.size].x / canvas.width;
+          this.imgDims[this.size].yRel = this.imgDims[this.size].y / canvas.height;
+          this.imgDims[this.size].img = img;
+          this.imgDims[this.size].name = plant.common_name;
+          this.context.fillText(this.imgDims[this.size].name, this.imgDims[this.size].x, this.imgDims[this.size].y + this.imgDims[this.size].height + 10);
+          this.size++;
+        } else {
+          this.imgDims[this.size] = {};
+          // margin image margin = x location
+          this.imgDims[this.size].ox = 2 * margin + size;
+          this.imgDims[this.size].oy = 10 + line * (size + 20);
+          this.context.drawImage(img, this.imgDims[this.size].ox, this.imgDims[this.size].oy, size, size);
+          this.imgDims[this.size].x = this.imgDims[this.size].ox;
+          this.imgDims[this.size].y = this.imgDims[this.size].oy;
+          this.imgDims[this.size].width = size;
+          this.imgDims[this.size].height = size;
+          let canvas = document.getElementById('plant-list-canvas') as HTMLCanvasElement;
+          this.imgDims[this.size].xRel = this.imgDims[this.size].x / canvas.width;
+          this.imgDims[this.size].yRel = this.imgDims[this.size].y / canvas.height;
+          this.imgDims[this.size].img = img;
+          this.imgDims[this.size].name = plant.common_name;
+          this.context.fillText(this.imgDims[this.size].name, this.imgDims[this.size].x, this.imgDims[this.size].y + this.imgDims[this.size].height + 10);
+          this.size++;
+          // line complete so increment for the next line
+          line++;
+        }
+      }
+    });
   }
 
   // getPlantInstances() {
@@ -504,6 +513,8 @@ export class PlantListComponent implements OnInit {
     }
 
     console.log(this.filteredPlants);
+
+    this.loadPlants();
   }
 
   clearFilter() {

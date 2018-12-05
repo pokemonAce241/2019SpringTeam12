@@ -105,6 +105,7 @@ export class CanvasComponent implements OnInit {
             (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
             !this.canvasService.isPlantCanvas()) {
             this.index = i;
+            console.log(this.index);
             this.canvasService.toggleSelected();
           }
         }
@@ -211,8 +212,31 @@ export class CanvasComponent implements OnInit {
       .subscribe(res => {
         console.log(res);
         this.plant_instances = res;
-        this.draw();
+
+        this.plant_instances.forEach(plant => {
+          this.index = this.canvasService.getSize();
+          console.log(this.index);
+          this.canvasPlants[this.index] = {};  // sets the new plant
+          this.canvasPlants[this.index].img = new Image();
+          this.canvasPlants[this.index].img.src = plant.front_image_path;
+          this.imgDims[this.index] = {};       //sets the plant properties
+          this.imgDims[this.index].width = 100;
+          this.imgDims[this.index].height = 100;
+          this.imgDims[this.index].xRel = NaN;
+          this.imgDims[this.index].yRel = NaN;
+          this.imgDims[this.index].x = plant.x;
+          this.imgDims[this.index].y = plant.y;
+          this.imgDims[this.index].ox = plant.x;
+          this.imgDims[this.index].oy = plant.y;
+          this.canvasService.incrementSize();
+
+          this.context.drawImage(this.canvasPlants[this.index].img, this.imgDims[this.index].x, this.imgDims[this.index].y, 100, 100);
+        })
+
+        // this.draw();
       });
+
+    console.log(this.imgDims);
   }
 
   draw() {
