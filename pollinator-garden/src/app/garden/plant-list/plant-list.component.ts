@@ -61,22 +61,24 @@ export class PlantListComponent implements OnInit {
           this.imgDims[i].xRel = this.imgDims[i].x / canvas.width;
           this.imgDims[i].yRel = this.imgDims[i].y / canvas.height;
         }
-        // console.log('this is x before: ' + this.imgDims[i].x + ' this is y before: ' + this.imgDims[i].y);
         this.imgDims[i].x = this.imgDims[i].xRel * canvas.width;
         this.imgDims[i].y = this.imgDims[i].yRel * canvas.height;
-        // console.log('this is x after: ' + this.imgDims[i].x + ' this is y after: ' + this.imgDims[i].y);
         this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
       }
     });
 
     document.addEventListener('click', (ev) => {
+
       // async method below that gets whether to reset the canvas
       this.updateReset().then(() => {
         // if reset then restore image back to original dimensions
         if (this.reset) {
           this.canvasService.toggleReset();
+          if(this.index !== -1) {
           this.imgDims[this.index].x = this.imgDims[this.index].ox;
           this.imgDims[this.index].y = this.imgDims[this.index].oy;
+          this.index = -1;
+          }
           for(var i = 0; i < this.size; i++) {
             this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
           }
@@ -98,7 +100,6 @@ export class PlantListComponent implements OnInit {
           }
         }
 
-        //todo
         if (this.canvasService.isToggled() && this.canvasService.isPlantCanvas()) {
           this.canvasService.toggleSelected();
           this.imgDims[this.index].x = this.imgDims[this.index].ox;
@@ -106,9 +107,16 @@ export class PlantListComponent implements OnInit {
           this.context.clearRect(0, 0, canvas.width, canvas.height);
           for(var i = 0; i < this.size; i++) {
             this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+            this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
           }
         }
       });
+
+      // console.log(this.canvasService.isToggled() + ' ' + this.index);
+      // if(!this.canvasService.isToggled() && this.index >= 0) {
+      //   this.index = -1;
+      //   console.log(this.index);
+      // }
     });
 
     document.addEventListener('mousemove', (ev) => {
@@ -130,13 +138,17 @@ export class PlantListComponent implements OnInit {
         this.context.clearRect(0, 0, canvas.width, canvas.height);
         for (var i = 0; i < this.size; i++) {
           this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+          this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
         }
-      } else {
+      } else if(this.imgDims[this.index] !== undefined && this.canvasService.isToggled() && !this.canvasService.isPlantCanvas()) {
+        this.context.clearRect(0, 0, canvas.width, canvas.height);
         for (var i = 0; i < this.size; i++) {
           if(i !== this.index) {
           this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+          this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
           }
         }
+        this.context.fillText(this.imgDims[this.index].name, this.imgDims[this.index].ox, this.imgDims[this.index].oy + this.imgDims[this.index].height + 10);
       }
     });
   }
@@ -183,6 +195,8 @@ export class PlantListComponent implements OnInit {
               this.imgDims[this.size].xRel = this.imgDims[this.size].x / canvas.width;
               this.imgDims[this.size].yRel = this.imgDims[this.size].y / canvas.height;
               this.imgDims[this.size].img = img;
+              this.imgDims[this.size].name = 'left plant';
+              this.context.fillText(this.imgDims[this.size].name, this.imgDims[this.size].x, this.imgDims[this.size].y + this.imgDims[this.size].height + 10);
               this.size++;
             } else {
               this.imgDims[this.size] = {};
@@ -198,6 +212,8 @@ export class PlantListComponent implements OnInit {
               this.imgDims[this.size].xRel = this.imgDims[this.size].x / canvas.width;
               this.imgDims[this.size].yRel = this.imgDims[this.size].y / canvas.height;
               this.imgDims[this.size].img = img;
+              this.imgDims[this.size].name = 'right plant';
+              this.context.fillText(this.imgDims[this.size].name, this.imgDims[this.size].x, this.imgDims[this.size].y + this.imgDims[this.size].height + 10);
               this.size++;
               // line complete so increment for the next line
               line++;
