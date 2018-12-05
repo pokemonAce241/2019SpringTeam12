@@ -87,7 +87,6 @@ export class CanvasComponent implements OnInit {
       var x = ev.clientX - rect.left;
       var y = ev.clientY - rect.top;
 
-      console.log("x is " + x + " canvas width: " + canvas.width + " y is: " + y + " canvas height: " + canvas.height + " plant canvas?: " + this.canvasService.isPlantCanvas());
       // if within the garden canvas and toggled then update the current index image information
       if (this.imgDims !== undefined &&
         (x > 0 && x < canvas.width) &&
@@ -128,7 +127,6 @@ export class CanvasComponent implements OnInit {
       let x = ev.clientX - rect.left;
       let y = ev.clientY - rect.top;
 
-      // console.log('this is the image in the garden canvas: ' + this.canvasService.getImg());
       //async method below that gets the size and evaluates whether to instantiate a new plant object
       this.addNew().then(() => {
         // if the first time with the increased size then initialized
@@ -164,7 +162,6 @@ export class CanvasComponent implements OnInit {
           this.canvasService.setImg('');     //reset image
           this.canvasService.toggleCanvas(); //update active canvas
           if (this.canvasService.isToggled() && this.index === this.size - 1) {
-            // console.log(this.index + 'is the one that is cleared')
             this.canvasPlants[this.index].img = new Image();
             this.canvasService.decrementSize();
           }
