@@ -1,10 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 
-import { InstanceService } from './instance.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { HttpClient } from '@angular/common/http';
+import { PlantService } from './plant.service';
+import { HttpClient } from 'selenium-webdriver/http';
 
-describe('InstanceService', () => {
+describe('PlantService', () => {
 
   const httpSpy = jasmine.createSpyObj('HttpClient', ['get']);
 
@@ -17,7 +16,7 @@ describe('InstanceService', () => {
   });
 
   it('should be created', () => {
-    const service: InstanceService = new InstanceService(httpSpy);
+    const service: PlantService = new PlantService(httpSpy);
     expect(service).toBeTruthy();
   });
 });

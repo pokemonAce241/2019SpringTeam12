@@ -33,6 +33,11 @@ const routes: Routes = [
     //canActivate: [AuthGuard]
   },
   {
+    path: 'garden/:id',
+    component: MainGardenComponent,
+    //canActivate: [AuthGuard]
+  },
+  {
     path: 'shopping-list',
     component: ShoppingListComponent,
     //canActivate: [AuthGuard]

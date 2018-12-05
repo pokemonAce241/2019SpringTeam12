@@ -7,6 +7,7 @@ var index = require('./routes');
 var test = require('./routes/test');
 var garden = require('./routes/garden');
 var instance = require('./routes/instance');
+var plant = require('./routes/plant');
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -22,6 +23,7 @@ app.use(bodyParser.json());
 app.use('/', index);
 app.use('/gardens', garden);
 app.use('/instances', instance);
+app.use('/plants', plant);
 // app.use('/test', test);
 
 // error handler
