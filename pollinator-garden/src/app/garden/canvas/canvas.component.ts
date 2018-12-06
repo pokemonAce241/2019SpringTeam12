@@ -95,6 +95,7 @@ export class CanvasComponent implements OnInit {
       }
 
       //This is where we locally reset the plant and can do the same from the api to the database
+      this.deleteInstance(this.imgDims[this.index]);
       this.imgDims[this.index] = {};
       this.canvasPlants[this.index] = {};
       this.canvasPlants[this.index].img = new Image();
@@ -332,5 +333,13 @@ export class CanvasComponent implements OnInit {
       .subscribe(res => {
         console.log(res);
       });
+  }
+
+  deleteInstance(imgDims) {
+    console.log(imgDims.id);
+    this.instanceService.deleteInstance(imgDims.id)
+      .subscribe(res => {
+        console.log(res);
+      })
   }
 }

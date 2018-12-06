@@ -50,4 +50,8 @@ export class InstanceService {
       })
     );
   }
+
+  deleteInstance(instanceId: number): Observable<PlantInstance> {
+    return this.http.delete<PlantInstance>(this.baseUrl + "instances/" + instanceId);
+  }
 }
