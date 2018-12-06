@@ -270,7 +270,18 @@ export class CanvasComponent implements OnInit {
           this.imgDims[this.index].placed = true;
           this.canvasService.incrementSize();
 
-          this.context.drawImage(this.canvasPlants[this.index].img, this.imgDims[this.index].x, this.imgDims[this.index].y, 100, 100);
+          // this.context.drawImage(this.canvasPlants[this.index].img, this.imgDims[this.index].x, this.imgDims[this.index].y, 100, 100);
+        })
+
+        this.canvasPlants.forEach((plant, i) => {
+          plant.img.onload = () => {
+            console.log("image loaded");
+            this.context.drawImage(plant.img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
+            // this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
+            // for (var i = 0; i < this.size; i++) {
+            //   this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
+            // }
+          }
         })
 
         // this.draw();
