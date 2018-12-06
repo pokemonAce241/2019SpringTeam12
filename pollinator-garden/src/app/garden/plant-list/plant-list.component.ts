@@ -115,13 +115,16 @@ export class PlantListComponent implements OnInit {
       canvas.height = canvas.offsetHeight;
       this.context.clearRect(0, 0, canvas.width, canvas.height);
       for (var i = 0; i < this.size; i++) {
-        if (this.imgDims[i].xRel !== undefined || this.imgDims[i].yRel !== undefined) {
+        if (this.imgDims[i].xRel === undefined || this.imgDims[i].yRel === undefined) {
           this.imgDims[i].xRel = this.imgDims[i].x / canvas.width;
           this.imgDims[i].yRel = this.imgDims[i].y / canvas.height;
         }
         this.imgDims[i].x = this.imgDims[i].xRel * canvas.width;
         this.imgDims[i].y = this.imgDims[i].yRel * canvas.height;
         this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+        console.log("oxRel " + this.imgDims[i].oxRel);
+        this.context.fillText(this.imgDims[i].name, canvas.width * this.imgDims[i].oxRel, this.imgDims[i].oy + this.imgDims[i].height + 10);
+        this.imgDims[i].oxRel = (canvas.width * this.imgDims[i].oxRel) / canvas.width;
       }
     });
 
@@ -261,7 +264,7 @@ export class PlantListComponent implements OnInit {
       // if the image is mod 0 then begin pic on line
       if (this.size % 2 === 0) {
         this.imgDims[this.size] = {};
-        // x is just the margin off
+        // x is just the margin off (original x for reset and a reference of origin)
         this.imgDims[this.size].ox = margin;
         // y depends on the line size
         this.imgDims[this.size].oy = 10 + line * (size + 20);
@@ -271,6 +274,7 @@ export class PlantListComponent implements OnInit {
         this.imgDims[this.size].width = size;
         this.imgDims[this.size].height = size;
         let canvas = document.getElementById('plant-list-canvas') as HTMLCanvasElement;
+        this.imgDims[this.size].oxRel = this.imgDims[this.size].ox / canvas.width;
         this.imgDims[this.size].xRel = this.imgDims[this.size].x / canvas.width;
         this.imgDims[this.size].yRel = this.imgDims[this.size].y / canvas.height;
         this.imgDims[this.size].img = plant.img;
@@ -288,6 +292,7 @@ export class PlantListComponent implements OnInit {
         this.imgDims[this.size].width = size;
         this.imgDims[this.size].height = size;
         let canvas = document.getElementById('plant-list-canvas') as HTMLCanvasElement;
+        this.imgDims[this.size].oxRel = this.imgDims[this.size].ox / canvas.width;
         this.imgDims[this.size].xRel = this.imgDims[this.size].x / canvas.width;
         this.imgDims[this.size].yRel = this.imgDims[this.size].y / canvas.height;
         this.imgDims[this.size].img = plant.img;
