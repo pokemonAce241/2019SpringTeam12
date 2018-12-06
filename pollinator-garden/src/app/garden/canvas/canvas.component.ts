@@ -78,6 +78,35 @@ export class CanvasComponent implements OnInit {
       }
     });
 
+    // for deleting a plant from the canvas
+    document.addEventListener('dblclick', (ev) => {
+      rect = canvas.getBoundingClientRect();
+      var x = ev.clientX - rect.left;
+      var y = ev.clientY - rect.top;
+
+      // similar to selecting a plant but no toggle flag
+      for (var i = 0; i < this.size; i++) {
+        if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
+          (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
+          !this.canvasService.isPlantCanvas()) {
+          this.index = i;
+          break;
+        }
+      }
+
+      //This is where we locally reset the plant and can do the same from the api to the database
+      this.imgDims[this.index] = {};
+      this.canvasPlants[this.index] = {};
+      this.canvasPlants[this.index].img = new Image();
+
+      // update the garden
+      this.context.clearRect(0, 0, canvas.width, canvas.height);
+      for (var i = 0; i < this.size; i++) {
+        this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
+      }
+
+    });
+
     // one of two click event listeners (performs operations on garden canvas)
     document.addEventListener('click', (ev) => {
       // rect is the rectangle boundary of the canvas
@@ -111,7 +140,6 @@ export class CanvasComponent implements OnInit {
             (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
             !this.canvasService.isPlantCanvas()) {
             this.index = i;
-            // console.log(this.index);
             this.canvasService.toggleSelected();
           }
         }
