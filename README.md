@@ -1,6 +1,6 @@
-# 2018FallTeam05
+# 2019SpringTeam12
 
-Updated as of: December 13, 2018
+Updated as of: January 17, 2018
 
 This repository contains the following:
 1. *api* directory: contains files related to the REST API
