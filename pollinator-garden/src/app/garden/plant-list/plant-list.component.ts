@@ -508,7 +508,13 @@ export class PlantListComponent implements OnInit {
         this.heightActive = true;
       }
 
-      if (plant.min_height >= this.minHeight && plant.max_height <= this.maxHeight) {
+      /*Updated if statement to check if the ranges overlap at all. Originally this was setup to check
+        if the plant min height was greater than the entered min height and the plant max height was less
+        than the entered max height.*/
+      if (plant.min_height >= this.minHeight && plant.max_height <= this.maxHeight
+        || plant.min_height <= this.minHeight && plant.max_height >= this.minHeight && plant.max_height <= this.maxHeight
+        || plant.max_height <= this.maxHeight && plant.min_height >= this.minHeight && plant.min_height <= this.maxHeight
+        || plant.min_height <= this.minHeight && plant.max_height >= this.maxHeight) {
         match = true;
       }
 
