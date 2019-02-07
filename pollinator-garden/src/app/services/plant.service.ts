@@ -24,6 +24,14 @@ export class Plant {
   regions: string[];
   soil_types: string[];
   img: any;
+  espring: boolean;
+  lspring: boolean;
+  esummer: boolean;
+  lsummer: boolean;
+  efall: boolean;
+  lfall: boolean;
+  ewinter: boolean;
+  lwinter: boolean;
 }
 
 const httpOptions = {

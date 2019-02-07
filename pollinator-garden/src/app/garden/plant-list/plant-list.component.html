@@ -15,20 +15,28 @@
     <button [ngStyle]="{'background-color': seasonActive ? '#dc3545' : '', 'color': seasonActive ? '#ffffff' : ''}" class="btn btn-outline-danger dropdown-toggle" id="bloomSeason" data-toggle="dropdown">Bloom Season</button>
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="springCheck" [(ngModel)]="seasonFilters.spring" (change)="filterPlants()" /> Spring</label>
-        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+        <label class="w-100 my-0"><input class="" type="checkbox" id="espringCheck" [(ngModel)]="seasonFilters.espring" (change)="filterPlants()" />Early Spring</label>
       </div>
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="summerCheck" [(ngModel)]="seasonFilters.summer" (change)="filterPlants()" /> Summer</label>
-        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+        <label class="w-100 my-0"><input class="" type="checkbox" id="lspringCheck" [(ngModel)]="seasonFilters.lspring" (change)="filterPlants()" />Late Spring</label>
       </div>
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="fallCheck" [(ngModel)]="seasonFilters.fall" (change)="filterPlants()" /> Fall</label>
-        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+        <label class="w-100 my-0"><input class="" type="checkbox" id="esummerCheck" [(ngModel)]="seasonFilters.esummer" (change)="filterPlants()" />Early Summer</label>
       </div>
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="winterCheck" [(ngModel)]="seasonFilters.winter" (change)="filterPlants()" /> Winter</label>
-        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
+        <label class="w-100 my-0"><input class="" type="checkbox" id="lsummerCheck" [(ngModel)]="seasonFilters.lsummer" (change)="filterPlants()" />Late Summer</label>
+      </div>
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input class="" type="checkbox" id="efallCheck" [(ngModel)]="seasonFilters.efall" (change)="filterPlants()" />Early Fall</label>
+      </div>
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input class="" type="checkbox" id="lfallCheck" [(ngModel)]="seasonFilters.lfall" (change)="filterPlants()" />Late Fall</label>
+      </div>
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input class="" type="checkbox" id="ewinterCheck" [(ngModel)]="seasonFilters.ewinter" (change)="filterPlants()" />Early Winter</label>
+      </div>
+      <div class="dropdown-item pr-0">
+        <label class="w-100 my-0"><input class="" type="checkbox" id="lwinterCheck" [(ngModel)]="seasonFilters.lwinter" (change)="filterPlants()" />Late Winter</label>
       </div>
     </div>
   </div>

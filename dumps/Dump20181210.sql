@@ -93,6 +93,14 @@ CREATE TABLE `plant` (
   `color_id` int(11) NOT NULL,
   `front_image_path` varchar(255) DEFAULT NULL,
   `side_image_path` varchar(255) DEFAULT NULL,
+  `espring` BOOLEAN NOT NULL,
+  `lspring` BOOLEAN NOT NULL,
+  `esummer` BOOLEAN NOT NULL,
+  `lsummer` BOOLEAN NOT NULL,
+  `efall` BOOLEAN NOT NULL,
+  `lfall` BOOLEAN NOT NULL,
+  `ewinter` BOOLEAN NOT NULL,
+  `lwinter` BOOLEAN NOT NULL,
   PRIMARY KEY (`id`),
   KEY `plant_type_fk_idx` (`type_id`),
   KEY `color_fk_idx` (`color_id`),
@@ -107,7 +115,7 @@ CREATE TABLE `plant` (
 
 LOCK TABLES `plant` WRITE;
 /*!40000 ALTER TABLE `plant` DISABLE KEYS */;
-INSERT INTO `plant` VALUES (1,'Golden Alexander','Zizia','aurea',2,3,1,3,1,1,3,8,5,'assets/images/zizia-aurea.png','assets/images/zizia-aurea.png'),(2,'Carolina jessamine','Gelsemium','sempervirens',12,20,3,6,3,1,7,10,5,'assets/images/gelsemium-sempervirens.png','assets/images/gelsemium-sempervirens.png'),(3,'Rabbiteye blueberry','Vaccinium','ashei',3,12,4,5,4,1,6,9,6,'assets/images/vaccinium-ashei-spring.png','assets/images/vaccinium-ashei-spring.png'),(4,'Cosmos','Cosmos','bipinnatus',1,4,2,3,2,0,2,11,4,'assets/images/cosmos-bipinnatus.png','assets/images/cosmos-bipinnatus.png'),(5,'Rattlesnake master','Eryngium','yuccifolium',4,5,2,3,1,1,3,8,6,'assets/images/eryngium-yuccifolium.png','assets/images/eryngium-yuccifolium.png'),(6,'Butterfly weed','Asclepias','tuberosa',1,3,1,2,1,1,3,9,7,'assets/images/asclepias-tuberosa.png','assets/images/asclepias-tuberosa.png'),(7,'Rough goldenrod','Solidago','rugosa \'fireworks\'',3,4,3,4,1,1,4,8,5,'assets/images/solidago-rugosa.png','assets/images/solidago-rugosa.png'),(8,'Aromatic aster','Symphiotrichum','oblongifolium',1,3,1,3,1,1,3,8,3,'assets/images/symphiotrichum-oblongifolium.png','assets/images/symphiotrichum-oblongifolium.png'),(9,'Joe-pye weed','Eutrochium','dubium',3,4,1,3,1,1,3,9,4,'assets/images/eutrochium-dubium.png','assets/images/eutrochium-dubium.png');
+INSERT INTO `plant` VALUES (1,'Golden Alexander','Zizia','aurea',2,3,1,3,1,1,3,8,5,'assets/images/zizia-aurea.png','assets/images/zizia-aurea.png', false, true, false, false, false, false, false, false),(2,'Carolina jessamine','Gelsemium','sempervirens',12,20,3,6,3,1,7,10,5,'assets/images/gelsemium-sempervirens.png','assets/images/gelsemium-sempervirens.png', true, true, false, false, false, false, false, false),(3,'Rabbiteye blueberry','Vaccinium','ashei',3,12,4,5,4,1,6,9,6,'assets/images/vaccinium-ashei-spring.png','assets/images/vaccinium-ashei-spring.png', false, true, false, false, false, false, false, false),(4,'Cosmos','Cosmos','bipinnatus',1,4,2,3,2,0,2,11,4,'assets/images/cosmos-bipinnatus.png','assets/images/cosmos-bipinnatus.png', false, false, true, true, true, true, false, false),(5,'Rattlesnake master','Eryngium','yuccifolium',4,5,2,3,1,1,3,8,6,'assets/images/eryngium-yuccifolium.png','assets/images/eryngium-yuccifolium.png', false, false, true, true, true, false, false, false),(6,'Butterfly weed','Asclepias','tuberosa',1,3,1,2,1,1,3,9,7,'assets/images/asclepias-tuberosa.png','assets/images/asclepias-tuberosa.png', false, false, true, true, false, false, false, false),(7,'Rough goldenrod','Solidago','rugosa \'fireworks\'',3,4,3,4,1,1,4,8,5,'assets/images/solidago-rugosa.png','assets/images/solidago-rugosa.png', false, false, false, false, true, false, false, false),(8,'Aromatic aster','Symphiotrichum','oblongifolium',1,3,1,3,1,1,3,8,3,'assets/images/symphiotrichum-oblongifolium.png','assets/images/symphiotrichum-oblongifolium.png', false, false, false, false, true, false, false, false),(9,'Joe-pye weed','Eutrochium','dubium',3,4,1,3,1,1,3,9,4,'assets/images/eutrochium-dubium.png','assets/images/eutrochium-dubium.png', false, false, false, true, true, false, false, false);
 /*!40000 ALTER TABLE `plant` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -160,45 +168,6 @@ CREATE TABLE `plant_region_xref` (
   CONSTRAINT `region_fk` FOREIGN KEY (`region_id`) REFERENCES `region` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `plant_region_xref`
---
-
-LOCK TABLES `plant_region_xref` WRITE;
-/*!40000 ALTER TABLE `plant_region_xref` DISABLE KEYS */;
-INSERT INTO `plant_region_xref` VALUES (1,1,1),(2,1,2),(3,2,2),(4,2,3),(5,3,1),(6,3,2),(7,3,3),(8,4,1),(9,4,2),(10,4,3),(11,5,2),(12,5,3),(13,6,1),(14,6,2),(15,6,3),(16,7,1),(17,7,2),(18,7,3),(19,8,1),(20,8,2),(21,9,1),(22,9,2);
-/*!40000 ALTER TABLE `plant_region_xref` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `plant_season_xref`
---
-
-DROP TABLE IF EXISTS `plant_season_xref`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
-CREATE TABLE `plant_season_xref` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `plant_id` int(11) NOT NULL,
-  `season_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `plant_id_idx` (`plant_id`),
-  KEY `season_fk_idx` (`season_id`),
-  CONSTRAINT `plant_season_fk` FOREIGN KEY (`plant_id`) REFERENCES `plant` (`id`),
-  CONSTRAINT `season_fk` FOREIGN KEY (`season_id`) REFERENCES `season` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `plant_season_xref`
---
-
-LOCK TABLES `plant_season_xref` WRITE;
-/*!40000 ALTER TABLE `plant_season_xref` DISABLE KEYS */;
-INSERT INTO `plant_season_xref` VALUES (1,1,1),(3,2,1),(5,3,1),(6,4,2),(7,5,2),(8,6,2),(9,7,3),(10,8,3),(11,9,3);
-/*!40000 ALTER TABLE `plant_season_xref` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `plant_soil_xref`
@@ -275,30 +244,6 @@ LOCK TABLES `region` WRITE;
 /*!40000 ALTER TABLE `region` DISABLE KEYS */;
 INSERT INTO `region` VALUES (1,'mountain'),(2,'piedmont'),(3,'coast');
 /*!40000 ALTER TABLE `region` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `season`
---
-
-DROP TABLE IF EXISTS `season`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
-CREATE TABLE `season` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `season`
---
-
-LOCK TABLES `season` WRITE;
-/*!40000 ALTER TABLE `season` DISABLE KEYS */;
-INSERT INTO `season` VALUES (1,'spring'),(2,'summer'),(3,'fall');
-/*!40000 ALTER TABLE `season` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

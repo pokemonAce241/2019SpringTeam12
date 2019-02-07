@@ -35,7 +35,10 @@ CREATE TABLE `season` (
 
 LOCK TABLES `season` WRITE;
 /*!40000 ALTER TABLE `season` DISABLE KEYS */;
-INSERT INTO `season` VALUES (1,'spring'),(2,'summer'),(3,'fall');
+/*INSERT INTO `season` VALUES (1,'spring'),(2,'summer'),(3,'fall'); */
+
+/* Need a way to break up the seasons, so the seasons (or combination of subseasons) have been expanded */
+INSERT INTO 'season' VALUES (1, 'espring'), (2, 'lspring'), (3, 'esummer'), (4, 'lsummer'), (5, 'efall'), (6, 'lfall'), (7, 'ewinter'), (8, 'lwinter');
 /*!40000 ALTER TABLE `season` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

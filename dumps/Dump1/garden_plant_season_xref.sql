@@ -25,12 +25,20 @@ DROP TABLE IF EXISTS `plant_season_xref`;
 CREATE TABLE `plant_season_xref` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `plant_id` int(11) NOT NULL,
-  `season_id` int(11) NOT NULL,
+  /*`season_id` int(11) NOT NULL, */
+  'espring' BOOLEAN,
+  'lspring' BOOLEAN,
+  'esummer' BOOLEAN,
+  'lsummer' BOOLEAN,
+  'efall' BOOLEAN,
+  'lfall' BOOLEAN,
+  'ewinter' BOOLEAN,
+  'lwinter' BOOLEAN
   PRIMARY KEY (`id`),
   KEY `plant_id_idx` (`plant_id`),
-  KEY `season_fk_idx` (`season_id`),
-  CONSTRAINT `plant_season_fk` FOREIGN KEY (`plant_id`) REFERENCES `plant` (`id`),
-  CONSTRAINT `season_fk` FOREIGN KEY (`season_id`) REFERENCES `season` (`id`)
+  /**KEY `season_fk_idx` (`season_id`),*/
+  CONSTRAINT `plant_season_fk` FOREIGN KEY (`plant_id`) REFERENCES `plant` (`id`)/*,*/
+  /*CONSTRAINT `season_fk` FOREIGN KEY (`season_id`) REFERENCES `season` (`id`)*/
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -40,7 +48,7 @@ CREATE TABLE `plant_season_xref` (
 
 LOCK TABLES `plant_season_xref` WRITE;
 /*!40000 ALTER TABLE `plant_season_xref` DISABLE KEYS */;
-INSERT INTO `plant_season_xref` VALUES (1,1,1),(3,2,1),(5,3,1),(6,4,2),(7,5,2),(8,6,2),(9,7,3),(10,8,3),(11,9,3);
+/*INSERT INTO `plant_season_xref` VALUES (1,1, ),(3,2, ),(5,3, ),(6,4, ),(7,5, ),(8,6, ),(9,7, ),(10,8, ),(11,9, );
 /*!40000 ALTER TABLE `plant_season_xref` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

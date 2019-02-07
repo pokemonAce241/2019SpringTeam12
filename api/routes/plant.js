@@ -3,16 +3,11 @@ var router = express.Router();
 var db = require("../db");
 
 var getAllPlantsQuery = `SELECT p.id, p.common_name, p.genus, p.species, p.min_height, p.max_height, p.min_spread, p.max_spread, p.type_id, t.name as plant_type,
-p.native, p.min_hardiness, p.max_hardiness, p.color_id, c.name as color, p.front_image_path, p.side_image_path,
-s.seasons, r.regions, t.soil_types
+p.native, p.min_hardiness, p.max_hardiness, p.color_id, c.name as color, p.front_image_path, p.side_image_path, p.espring, p.lspring, p.esummer, p.lsummer,
+p.efall, p.lfall, p.ewinter, p.lwinter, r.regions, t.soil_types
 FROM plant as p
 LEFT JOIN plant_type as t ON (p.type_id = t.id)
 LEFT JOIN color as c ON (p.color_id = c.id)
-LEFT JOIN (
-    SELECT ps.plant_id, JSON_ARRAYAGG(season.name) as seasons
-    FROM season
-    LEFT JOIN plant_season_xref as ps ON (ps.season_id = season.id)
-) as s ON (p.id = s.plant_id)
 LEFT JOIN (
     SELECT pr.plant_id, JSON_ARRAYAGG(region.name) as regions
     FROM region
@@ -27,12 +22,10 @@ GROUP BY p.id`;
 
 var getAllPlantsQuery2 = `SELECT p.id, p.common_name, p.genus, p.species, p.min_height, p.max_height, p.min_spread, p.max_spread, p.type_id, t.name as plant_type,
 p.native, p.min_hardiness, p.max_hardiness, p.color_id, c.name as color, p.front_image_path, p.side_image_path,
-JSON_ARRAYAGG(s.name) as seasons, JSON_ARRAYAGG(r.name) as regions, JSON_ARRAYAGG(st.name) as soil_types
+p.espring, p.lspring, p.esummer, p.lsummer, p.efall, p.lfall, p.ewinter, p.lwinter, JSON_ARRAYAGG(r.name) as regions, JSON_ARRAYAGG(st.name) as soil_types
 FROM plant as p
 LEFT JOIN plant_type as t ON (p.type_id = t.id)
 LEFT JOIN color as c ON (p.color_id = c.id)
-LEFT JOIN plant_season_xref as ps ON (ps.plant_id = p.id)
-LEFT JOIN season as s ON (s.id = ps.season_id)
 LEFT JOIN plant_region_xref as pr ON (pr.plant_id = p.id)
 LEFT JOIN region as r ON (r.id = pr.region_id)
 LEFT JOIN plant_soil_xref as pt ON (pt.plant_id = p.id)
@@ -47,8 +40,13 @@ router.get('/', function(req, res, next) {
         // console.log(rows);
 
         rows.forEach(row => {
-            row.seasons = JSON.parse(row.seasons);
-            row.seasons = row.seasons.filter((v, i, a) => a.indexOf(v) === i);
+            /*row.seasons = JSON.parse(row.seasons);
+            console.log(row.seasons.filter((v, i, a) => a.indexOf(v) === i));
+            row.seasons = row.seasons.filter(function(v, i, a) {
+                console.log(v);
+                console.log(i);
+                return a.indexOf(v) === i;
+            });*/
             row.regions = JSON.parse(row.regions);
             row.regions = row.regions.filter((v, i, a) => a.indexOf(v) === i);
             row.soil_types = JSON.parse(row.soil_types);
