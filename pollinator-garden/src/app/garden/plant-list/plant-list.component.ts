@@ -32,11 +32,16 @@ export class PlantListComponent implements OnInit {
   plants: Plant[];
   filteredPlants: Plant[];
 
+  //Updated the season filters to include early/late seasons
   seasonFilters = {
-    "summer": false,
-    "spring": false,
-    "fall": false,
-    "winter": false
+    "esummer": false,
+    "lsummer": false,
+    "espring": false,
+    "lspring": false,
+    "efall": false,
+    "lfall": false,
+    "ewinter": false,
+    "lwinter": false
   }
 
   seasonActive = false;
@@ -333,28 +338,46 @@ export class PlantListComponent implements OnInit {
 
   filterPlants() {
     this.filteredPlants = this.plants;
+    console.log(this.filteredPlants);
 
     // SEASONS
     this.filteredPlants = this.filteredPlants.filter(plant => {
       var match = false;
 
-      if (this.seasonFilters.spring && plant.seasons.includes("spring")) {
+      //updated filtering to include early and late seasons
+      if (this.seasonFilters.espring && plant.espring) {
         match = true;
       }
-      if (this.seasonFilters.summer && plant.seasons.includes("summer")) {
+      if (this.seasonFilters.lspring && plant.lspring) {
         match = true;
       }
-      if (this.seasonFilters.fall && plant.seasons.includes("fall")) {
+      if (this.seasonFilters.esummer && plant.esummer) {
         match = true;
       }
-      if (this.seasonFilters.winter && plant.seasons.includes("winter")) {
+      if (this.seasonFilters.lsummer && plant.lsummer) {
+        match = true;
+      }
+      if (this.seasonFilters.efall && plant.efall) {
+        match = true;
+      }
+      if (this.seasonFilters.lfall && plant.lfall) {
+        match = true;
+      }
+      if (this.seasonFilters.ewinter && plant.ewinter) {
+        match = true;
+      }
+      if (this.seasonFilters.lwinter && plant.lwinter) {
         match = true;
       }
 
-      if (!this.seasonFilters.spring &&
-          !this.seasonFilters.summer &&
-          !this.seasonFilters.fall &&
-          !this.seasonFilters.winter) {
+      if (!this.seasonFilters.espring &&
+          !this.seasonFilters.esummer &&
+          !this.seasonFilters.efall &&
+          !this.seasonFilters.ewinter &&
+          !this.seasonFilters.lspring &&
+          !this.seasonFilters.lsummer &&
+          !this.seasonFilters.lfall &&
+          !this.seasonFilters.lwinter) {
         this.seasonActive = false;
         return true;
       }
@@ -494,21 +517,27 @@ export class PlantListComponent implements OnInit {
     // HEIGHT
     this.filteredPlants = this.filteredPlants.filter(plant => {
       var match = false;
-
-      if (this.minHeight === undefined) {
+      // added checking if what was entered by user was blank, since this should function the same as if undefined
+      if (this.minHeight === undefined || this.minHeight.toString() === "") {
         this.minHeight = 0;
       }
-      if (this.maxHeight === undefined) {
+      // added checking if what was entered by user was blank, since this should function the same as if undefined
+      if (this.maxHeight === undefined || this.maxHeight.toString() === "") {
         this.maxHeight = 20;
       }
-
+      
       if (this.minHeight == 0 && this.maxHeight == 20) {
         this.heightActive = false;
       } else {
         this.heightActive = true;
       }
-
-      if (plant.min_height >= this.minHeight && plant.max_height <= this.maxHeight) {
+      /*Updated if statement to check if the ranges overlap at all. Originally this was setup to check
+      if the plant min height was greater than the entered min height and the plant max height was less
+      than the entered max height.*/
+      if (plant.min_height >= this.minHeight && plant.max_height <= this.maxHeight
+        || plant.min_height <= this.minHeight && plant.max_height >= this.minHeight && plant.max_height <= this.maxHeight
+        || plant.max_height <= this.maxHeight && plant.min_height >= this.minHeight && plant.min_height <= this.maxHeight
+        || plant.min_height <= this.minHeight && plant.max_height >= this.maxHeight) {
         match = true;
       }
 
