@@ -136,12 +136,14 @@ export class CanvasComponent implements OnInit {
         }
         this.canvasService.toggleDragged();
       } else if (this.imgDims[this.index] !== undefined && !this.canvasService.isDragged()) { //otherwise then selecting image at location (index becomes image index)
-        for (var i = 0; i < this.size; i++) {
+        for (var i = this.size-1; i >= 0; i--) {
           if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
             (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
             !this.canvasService.isPlantCanvas()) {
+            console.log("Selected plant in canvas");
             this.index = i;
             this.canvasService.toggleDragged();
+            break; //breaking after finding plant so it stops searching through plant list
           }
         }
       } else if ((x < 0 || x > canvas.width || y < 0 || y > canvas.height) && !this.canvasService.isPlantCanvas()) { //if not in garden canvas and toggle display error message
@@ -272,7 +274,7 @@ export class CanvasComponent implements OnInit {
         } else if (this.imgDims[this.index] === undefined && x < 0 && !this.canvasService.isPlantCanvas()) { // if not set then ignore crossing over boundary
           this.canvasService.toggleCanvas();
         } else if (this.canvasService.isDragged() && !this.canvasService.isPlantCanvas()) { // update and draw canvas with new coordinates of image
-          console.log("made it to final else if");
+          console.log("updating placed plant information");
           this.context.clearRect(0, 0, canvas.width, canvas.height);
           for (var i = 0; i < this.size; i++) {
             this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
