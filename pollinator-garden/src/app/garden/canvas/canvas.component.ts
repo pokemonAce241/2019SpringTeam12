@@ -256,9 +256,12 @@ export class CanvasComponent implements OnInit {
         // do not change x < -50 (anomoly)
         // checks to see if the image crosses over the canvas boundary
         if (this.imgDims[this.index] !== undefined && x < -50 && !this.canvasService.isPlantCanvas()) {
+          console.log("Mouse is over plant list");
+          this.canvasService.setDraggedToFalse(); //testing
+          console.log("set drag to false");
           this.canvasService.setImg('');     //reset image
           this.canvasService.toggleCanvas(); //update active canvas
-          if (this.canvasService.isToggled() && this.index === this.size - 1) {
+          if (this.canvasService.isDragged() && this.index === this.size - 1) {
             this.canvasPlants[this.index].img = new Image();
             this.canvasService.decrementSize();
           }
@@ -269,6 +272,7 @@ export class CanvasComponent implements OnInit {
         } else if (this.imgDims[this.index] === undefined && x < 0 && !this.canvasService.isPlantCanvas()) { // if not set then ignore crossing over boundary
           this.canvasService.toggleCanvas();
         } else if (this.canvasService.isDragged() && !this.canvasService.isPlantCanvas()) { // update and draw canvas with new coordinates of image
+          console.log("made it to final else if");
           this.context.clearRect(0, 0, canvas.width, canvas.height);
           for (var i = 0; i < this.size; i++) {
             this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
