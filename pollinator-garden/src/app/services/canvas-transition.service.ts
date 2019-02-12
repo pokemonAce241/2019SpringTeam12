@@ -9,6 +9,7 @@ export class CanvasTransitionService {
   private img: string;
   private id: number;
   private tog: boolean;         //short for toggle
+  private drag: boolean;
   private plant: boolean;
   private reset: boolean;
   private initialize: boolean;
@@ -17,6 +18,7 @@ export class CanvasTransitionService {
   constructor() { 
     this.img = '';
     this.tog = false;
+    this.drag = false;
     this.plant = true;
     this.reset = false;
     this.initialize = false;
@@ -47,12 +49,28 @@ export class CanvasTransitionService {
     this.tog = !this.tog;
   }
 
+  isDragged(): boolean {
+    return this.drag;
+  }
+
+  toggleDragged() {
+    this.drag = !this.drag;
+  }
+
+  setDraggedToFalse() {
+    this.drag = false;
+  }
+
   isPlantCanvas() {
     return this.plant;
   }
 
   toggleCanvas() {
     this.plant = !this.plant;
+  }
+
+  setPlantCanvas() {
+    this.plant = true;
   }
 
   isReset(): boolean {

@@ -1,4 +1,4 @@
-<div class="row mx-0 noselect" style="background-color: seagreen; width: 100%">
+<div class="row mx-0" style="background-color: seagreen; width: 100%">
   <div class="col-sm-3 mt-1">
     <label class="my-0"><strong>Plants</strong></label>
   </div>
@@ -15,28 +15,20 @@
     <button [ngStyle]="{'background-color': seasonActive ? '#dc3545' : '', 'color': seasonActive ? '#ffffff' : ''}" class="btn btn-outline-danger dropdown-toggle" id="bloomSeason" data-toggle="dropdown">Bloom Season</button>
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="espringCheck" [(ngModel)]="seasonFilters.espring" (change)="filterPlants()" />Early Spring</label>
+        <label class="w-100 my-0"><input class="" type="checkbox" id="springCheck" [(ngModel)]="seasonFilters.spring" (change)="filterPlants()" /> Spring</label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="lspringCheck" [(ngModel)]="seasonFilters.lspring" (change)="filterPlants()" />Late Spring</label>
+        <label class="w-100 my-0"><input class="" type="checkbox" id="summerCheck" [(ngModel)]="seasonFilters.summer" (change)="filterPlants()" /> Summer</label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="esummerCheck" [(ngModel)]="seasonFilters.esummer" (change)="filterPlants()" />Early Summer</label>
+        <label class="w-100 my-0"><input class="" type="checkbox" id="fallCheck" [(ngModel)]="seasonFilters.fall" (change)="filterPlants()" /> Fall</label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
       <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="lsummerCheck" [(ngModel)]="seasonFilters.lsummer" (change)="filterPlants()" />Late Summer</label>
-      </div>
-      <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="efallCheck" [(ngModel)]="seasonFilters.efall" (change)="filterPlants()" />Early Fall</label>
-      </div>
-      <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="lfallCheck" [(ngModel)]="seasonFilters.lfall" (change)="filterPlants()" />Late Fall</label>
-      </div>
-      <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="ewinterCheck" [(ngModel)]="seasonFilters.ewinter" (change)="filterPlants()" />Early Winter</label>
-      </div>
-      <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="lwinterCheck" [(ngModel)]="seasonFilters.lwinter" (change)="filterPlants()" />Late Winter</label>
+        <label class="w-100 my-0"><input class="" type="checkbox" id="winterCheck" [(ngModel)]="seasonFilters.winter" (change)="filterPlants()" /> Winter</label>
+        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
       </div>
     </div>
   </div>
@@ -154,8 +146,7 @@
 </div>
 
 <div style="display:block; width:100%" id="canvasContainer">
-    <canvas #canvasEl id="plant-list-canvas" style="width: 100%; height: 100%;"></canvas>
-    <!-- <img *ngFor="let plant of plants" src="{{plant.front_image_path}}" style="width: 40%; height: 40%"> -->
+    <!-- <canvas #canvasEl id="plant-list-canvas" style="width: 100%; height: 100%;"></canvas> -->
 </div>
 
   <!-- can just use a ngFor all images and populate the bar -->

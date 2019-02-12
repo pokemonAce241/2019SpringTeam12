@@ -103,6 +103,16 @@ export class PlantListComponent implements OnInit {
 
   ngAfterViewInit() {
 
+    // this.plantService.getPlants()
+    //   .subscribe(res => {
+    //     this.plants = res;
+    //     this.plants.forEach(plant => {
+    //       plant.img = new Image();
+    //       plant.img.src = plant.front_image_path;
+    //     });
+    //     this.plants[this.plants.length - 1].img.onload = () => {this.filterPlants()}
+    //   });
+
     let canvas = document.getElementById('plant-list-canvas') as HTMLCanvasElement;
     // size the canvas to fill the div 
     canvas.style.width = '100%';
@@ -133,98 +143,156 @@ export class PlantListComponent implements OnInit {
       }
     });
 
-    document.addEventListener('click', (ev) => {
-
+    canvas.addEventListener('mousedown', (ev) => {
       var test = ev.target as HTMLElement;
       console.log(test.tagName);
       if (test.tagName !== "CANVAS") {
         return;
       }
-
-      // async method below that gets whether to reset the canvas
-      this.updateReset().then(() => {
-        // if reset then restore image back to original dimensions
-        if (this.reset) {
-          this.canvasService.toggleReset();
-          if(this.index !== undefined && this.index !== -1) {
-            // console.log(this.index);
-            this.imgDims[this.index].x = this.imgDims[this.index].ox;
-            this.imgDims[this.index].y = this.imgDims[this.index].oy;
-            this.index = -1;
-          }
-          for(var i = 0; i < this.size; i++) {
-            this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
-          }
-          return;
-        }
+      
 
         rect = canvas.getBoundingClientRect();
         var x = ev.clientX - rect.left;
         var y = ev.clientY - rect.top;
 
+        // Checks if mouse click is within dimensions of any of the images
         for (var i = 0; i < this.size; i++) {
           // if not selected and clicked then toggle and break
           if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
             (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
-            !this.canvasService.isToggled() && this.canvasService.isPlantCanvas()) {
-            this.canvasService.toggleSelected();
+            !this.canvasService.isDragged() && this.canvasService.isPlantCanvas()) {
+            this.canvasService.toggleDragged();
             this.index = i;
             return;
           }
         }
 
-        if (this.canvasService.isToggled() && this.canvasService.isPlantCanvas()) {
-          this.canvasService.toggleSelected();
+        // Checks if image selected toggle has been turned on
+        if (this.canvasService.isDragged() && this.canvasService.isPlantCanvas()) {
+          this.canvasService.toggleDragged();
           this.imgDims[this.index].x = this.imgDims[this.index].ox;
           this.imgDims[this.index].y = this.imgDims[this.index].oy;
           this.context.clearRect(0, 0, canvas.width, canvas.height);
+          
+          // this part might be redundant
           for(var i = 0; i < this.size; i++) {
             this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
             this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
           }
         }
-      });
+      console.log("drag start");
+      console.log(this.canvasService.isDragged());
+      console.log(this.imgDims[this.index].img.src);
+    });
 
-      // console.log(this.canvasService.isToggled() + ' ' + this.index);
-      // if(!this.canvasService.isToggled() && this.index >= 0) {
-      //   this.index = -1;
-      //   console.log(this.index);
-      // }
+    document.addEventListener('mouseup', (ev) => {
+  
+      console.log("Watermelon");
+      this.canvasService.setDraggedToFalse();
+      if (this.index !== undefined) {
+        this.imgDims[this.index].x = this.imgDims[this.index].ox;
+        this.imgDims[this.index].y = this.imgDims[this.index].oy;
+        this.context.clearRect(0, 0, canvas.width, canvas.height);
+      }
+
+      for(var i = 0; i < this.size; i++) {
+        this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+        this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
+      }
+
     });
 
     document.addEventListener('mousemove', (ev) => {
+
       rect = canvas.getBoundingClientRect();
+      // Get mouse location
       var x = ev.clientX - rect.left;
       var y = ev.clientY - rect.top;
-      // image selected and crossing boundary pass information
-      if (this.canvasService.getImg() === '' && this.canvasService.isToggled() && this.canvasService.isPlantCanvas() && x > canvas.width && y > 0 && y < canvas.height) {
-        this.canvasService.incrementSize();
-        this.canvasService.toggleCanvas();
-        this.context.clearRect(0, 0, canvas.width, canvas.height);
-        this.canvasService.toggleInitialize();
-        this.canvasService.setImg(this.imgDims[this.index].img.src);
-        this.canvasService.setId(this.imgDims[this.index].id);
-      } else if (this.canvasService.getImg() === '' && this.canvasService.isPlantCanvas() && x > canvas.width && y > 0 && y < canvas.height) { // if no image then still signal change of canvas
-        this.canvasService.toggleCanvas();
-      } else if (this.canvasService.isToggled() && this.canvasService.isPlantCanvas()) { // otherwise in canvas still so update and draw
-        this.imgDims[this.index].x = x - this.imgDims[this.index].width * .5;
-        this.imgDims[this.index].y = y - this.imgDims[this.index].height * .5;
-        this.context.clearRect(0, 0, canvas.width, canvas.height);
-        for (var i = 0; i < this.size; i++) {
-          this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
-          this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
-        }
-      } else if(this.imgDims[this.index] !== undefined && this.canvasService.isToggled() && !this.canvasService.isPlantCanvas()) {
-        this.context.clearRect(0, 0, canvas.width, canvas.height);
-        for (var i = 0; i < this.size; i++) {
-          if(i !== this.index) {
-          this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
-          this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
+
+      if (this.canvasService.isPlantCanvas()) {
+          // image selected and crossing boundary pass information
+        if (this.canvasService.isDragged() && x > canvas.width && y > 0 && y < canvas.height) {
+          this.canvasService.incrementSize();
+          // Resets plant toggle to false (so it is no longer selected in the plant window)
+          this.canvasService.toggleCanvas();
+          this.context.clearRect(0, 0, canvas.width, canvas.height);
+          this.canvasService.toggleInitialize();
+          // Takes the image source from the assets file and stores it in the canvas img field
+          this.canvasService.setImg(this.imgDims[this.index].img.src);
+          console.log("Image Set");
+          // Stores the id of the image
+          this.canvasService.setId(this.imgDims[this.index].id);
+
+          // async method below that gets whether to reset the canvas
+          if (this.canvasService.isReset()) {
+            
+            //return;
+          }
+
+        } else if (this.canvasService.getImg() === '' && x > canvas.width && y > 0 && y < canvas.height) { // if no image then still signal change of canvas
+          this.canvasService.toggleCanvas();
+        } else if (this.canvasService.isDragged()) { // otherwise in canvas still so update and draw
+          if (this.canvasService.getImg() === '') {
+              // Takes the image source from the assets file and stores it in the canvas img field
+              console.log(this.imgDims);
+            this.canvasService.setImg(this.imgDims[this.index].img.src);
+            // Stores the id of the image
+            this.canvasService.setId(this.imgDims[this.index].id);
+          }
+          this.imgDims[this.index].x = x - this.imgDims[this.index].width * .5;
+          this.imgDims[this.index].y = y - this.imgDims[this.index].height * .5;
+          this.context.clearRect(0, 0, canvas.width, canvas.height);
+          // this will replace the images in the plant list when you move the mouse back and forth between the plant canvas
+          // and the garden canvas
+          for (var i = 0; i < this.size; i++) {
+            this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+            this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
           }
         }
-        this.context.fillText(this.imgDims[this.index].name, this.imgDims[this.index].ox, this.imgDims[this.index].oy + this.imgDims[this.index].height + 10);
+      } else {
+        if(this.imgDims[this.index] !== undefined && this.canvasService.isDragged()) {
+          this.context.clearRect(0, 0, canvas.width, canvas.height);
+          // This makes sure all plants in plant list stay visible when mouse switches canvases
+          for (var i = 0; i < this.size; i++) {
+            if(i !== this.index) {
+            this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+            this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
+            }
+          }
+          
+          this.context.fillText(this.imgDims[this.index].name, this.imgDims[this.index].ox, this.imgDims[this.index].oy + this.imgDims[this.index].height + 10);
+        }
       }
+
+      // document.addEventListener("drag", (ev) => {
+      //     //if (this.index !== undefined) {
+      //       this.imgDims[this.index].x = this.imgDims[this.index].ox;
+      //       this.imgDims[this.index].y = this.imgDims[this.index].oy;
+      //       this.context.clearRect(0, 0, canvas.width, canvas.height);
+          
+      //       for(var i = 0; i < this.size; i++) {
+      //         this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+      //         this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
+      //       }
+      //       console.log("Sucessssss");
+      //     //}
+      // });
+      
+
+
     });
+
+    // document.addEventListener('mousedown', (ev) => {
+    //   var test = ev.target as HTMLElement;
+    //   console.log(test.tagName);
+    //   if (test.tagName !== "CANVAS") {
+    //     return;
+    //   } else {
+    //     //this.canvasService.setPlantCanvas();
+    //   }
+    //   //console.log(this.canvasService.isPlantCanvas());
+
+    // });
   }
 
   ngOnInit() {
@@ -238,7 +306,7 @@ export class PlantListComponent implements OnInit {
         this.plants[this.plants.length - 1].img.onload = () => {this.filterPlants()}
       });
 
-      // this.getPlants();
+      // Plants();
   }
 
   loadPlants() {
