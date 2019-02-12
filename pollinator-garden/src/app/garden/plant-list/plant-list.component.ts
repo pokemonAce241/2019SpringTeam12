@@ -223,11 +223,18 @@ export class PlantListComponent implements OnInit {
           // Stores the id of the image
           this.canvasService.setId(this.imgDims[this.index].id);
 
-          // async method below that gets whether to reset the canvas
-          if (this.canvasService.isReset()) {
-            
-            //return;
+          this.imgDims[this.index].x = this.imgDims[this.index].ox;
+          this.imgDims[this.index].y = this.imgDims[this.index].oy;
+          this.context.clearRect(0, 0, canvas.width, canvas.height);
+          // This makes sure all plants in plant list stay visible when mouse switches canvases
+          for (var i = 0; i < this.size; i++) {
+            //if(i !== this.index) {
+            this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+            this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
+            //}
           }
+          
+          this.context.fillText(this.imgDims[this.index].name, this.imgDims[this.index].ox, this.imgDims[this.index].oy + this.imgDims[this.index].height + 10);
 
         } else if (this.canvasService.getImg() === '' && x > canvas.width && y > 0 && y < canvas.height) { // if no image then still signal change of canvas
           this.canvasService.toggleCanvas();
@@ -254,10 +261,10 @@ export class PlantListComponent implements OnInit {
           this.context.clearRect(0, 0, canvas.width, canvas.height);
           // This makes sure all plants in plant list stay visible when mouse switches canvases
           for (var i = 0; i < this.size; i++) {
-            if(i !== this.index) {
+            //if(i !== this.index) {
             this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
             this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
-            }
+            //}
           }
           
           this.context.fillText(this.imgDims[this.index].name, this.imgDims[this.index].ox, this.imgDims[this.index].oy + this.imgDims[this.index].height + 10);
