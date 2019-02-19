@@ -70,6 +70,7 @@ INSERT INTO `garden` VALUES (1,'test',1,'2018-10-29 15:19:00','2018-10-29 15:19:
 /*!40000 ALTER TABLE `garden` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
 --
 -- Table structure for table `plant`
 --
@@ -93,14 +94,6 @@ CREATE TABLE `plant` (
   `color_id` int(11) NOT NULL,
   `front_image_path` varchar(255) DEFAULT NULL,
   `side_image_path` varchar(255) DEFAULT NULL,
-  `espring` BOOLEAN NOT NULL,
-  `lspring` BOOLEAN NOT NULL,
-  `esummer` BOOLEAN NOT NULL,
-  `lsummer` BOOLEAN NOT NULL,
-  `efall` BOOLEAN NOT NULL,
-  `lfall` BOOLEAN NOT NULL,
-  `ewinter` BOOLEAN NOT NULL,
-  `lwinter` BOOLEAN NOT NULL,
   PRIMARY KEY (`id`),
   KEY `plant_type_fk_idx` (`type_id`),
   KEY `color_fk_idx` (`color_id`),
@@ -112,11 +105,10 @@ CREATE TABLE `plant` (
 --
 -- Dumping data for table `plant`
 --
-
 LOCK TABLES `plant` WRITE;
-/*!40000 ALTER TABLE `plant` DISABLE KEYS */;
-INSERT INTO `plant` VALUES (1,'Golden Alexander','Zizia','aurea',2,3,1,3,1,1,3,8,5,'assets/images/zizia-aurea.png','assets/images/zizia-aurea.png', false, true, false, false, false, false, false, false),(2,'Carolina jessamine','Gelsemium','sempervirens',12,20,3,6,3,1,7,10,5,'assets/images/gelsemium-sempervirens.png','assets/images/gelsemium-sempervirens.png', true, true, false, false, false, false, false, false),(3,'Rabbiteye blueberry','Vaccinium','ashei',3,12,4,5,4,1,6,9,6,'assets/images/vaccinium-ashei-spring.png','assets/images/vaccinium-ashei-spring.png', false, true, false, false, false, false, false, false),(4,'Cosmos','Cosmos','bipinnatus',1,4,2,3,2,0,2,11,4,'assets/images/cosmos-bipinnatus.png','assets/images/cosmos-bipinnatus.png', false, false, true, true, true, true, false, false),(5,'Rattlesnake master','Eryngium','yuccifolium',4,5,2,3,1,1,3,8,6,'assets/images/eryngium-yuccifolium.png','assets/images/eryngium-yuccifolium.png', false, false, true, true, true, false, false, false),(6,'Butterfly weed','Asclepias','tuberosa',1,3,1,2,1,1,3,9,7,'assets/images/asclepias-tuberosa.png','assets/images/asclepias-tuberosa.png', false, false, true, true, false, false, false, false),(7,'Rough goldenrod','Solidago','rugosa \'fireworks\'',3,4,3,4,1,1,4,8,5,'assets/images/solidago-rugosa.png','assets/images/solidago-rugosa.png', false, false, false, false, true, false, false, false),(8,'Aromatic aster','Symphiotrichum','oblongifolium',1,3,1,3,1,1,3,8,3,'assets/images/symphiotrichum-oblongifolium.png','assets/images/symphiotrichum-oblongifolium.png', false, false, false, false, true, false, false, false),(9,'Joe-pye weed','Eutrochium','dubium',3,4,1,3,1,1,3,9,4,'assets/images/eutrochium-dubium.png','assets/images/eutrochium-dubium.png', false, false, false, true, true, false, false, false);
-/*!40000 ALTER TABLE `plant` ENABLE KEYS */;
+
+INSERT INTO `plant` VALUES (1,'Golden Alexander','Zizia','aurea',2,3,1,3,1,1,3,8,5,'assets/images/zizia-aurea.png','assets/images/zizia-aurea.png'),(2,'Carolina jessamine','Gelsemium','sempervirens',12,20,3,6,3,1,7,10,5,'assets/images/gelsemium-sempervirens.png','assets/images/gelsemium-sempervirens.png'),(3,'Rabbiteye blueberry','Vaccinium','ashei',3,12,4,5,4,1,6,9,6,'assets/images/vaccinium-ashei-spring.png','assets/images/vaccinium-ashei-spring.png'),(4,'Cosmos','Cosmos','bipinnatus',1,4,2,3,2,0,2,11,4,'assets/images/cosmos-bipinnatus.png','assets/images/cosmos-bipinnatus.png'),(5,'Rattlesnake master','Eryngium','yuccifolium',4,5,2,3,1,1,3,8,6,'assets/images/eryngium-yuccifolium.png','assets/images/eryngium-yuccifolium.png'),(6,'Butterfly weed','Asclepias','tuberosa',1,3,1,2,1,1,3,9,7,'assets/images/asclepias-tuberosa.png','assets/images/asclepias-tuberosa.png'),(7,'Rough goldenrod','Solidago','rugosa \'fireworks\'',3,4,3,4,1,1,4,8,5,'assets/images/solidago-rugosa.png','assets/images/solidago-rugosa.png'),(8,'Aromatic aster','Symphiotrichum','oblongifolium',1,3,1,3,1,1,3,8,3,'assets/images/symphiotrichum-oblongifolium.png','assets/images/symphiotrichum-oblongifolium.png'),(9,'Joe-pye weed','Eutrochium','dubium',3,4,1,3,1,1,3,9,4,'assets/images/eutrochium-dubium.png','assets/images/eutrochium-dubium.png');
+
 UNLOCK TABLES;
 
 --
@@ -268,6 +260,30 @@ LOCK TABLES `soil_type` WRITE;
 /*!40000 ALTER TABLE `soil_type` DISABLE KEYS */;
 INSERT INTO `soil_type` VALUES (1,'wet'),(2,'moist'),(3,'dry');
 /*!40000 ALTER TABLE `soil_type` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+--
+-- Table structure for the seasons table
+--
+DROP TABLE IF EXISTS `seasons`;
+  SET character_set_client = utf8mb4;
+CREATE TABLE `seasons` (
+  `plant_id` int(11) PRIMARY KEY NOT NULL,
+  `espring` BOOLEAN NOT NULL,
+  `lspring` BOOLEAN NOT NULL,
+  `esummer` BOOLEAN NOT NULL,
+  `lsummer` BOOLEAN NOT NULL,
+  `efall` BOOLEAN NOT NULL,
+  `lfall` BOOLEAN NOT NULL,
+  `winter` BOOLEAN NOT NULL,
+  FOREIGN KEY(`plant_id`) REFERENCES `plant` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+LOCK TABLES `seasons` WRITE;
+/*!40000 ALTER TABLE `plant` DISABLE KEYS */;
+INSERT INTO `seasons` VALUES (1,false, true, false, false, false, false, false),(2, true, true, false, false, false, false, false),(3, false, true, false, false, false, false, false),(4, false, false, true, true, true, true, false),(5, false, false, true, true, true, false, false),(6, false, false, true, true, false, false, false),(7, false, false, false, false, true, false, false),(8,false, false, false, false, true, false, false),(9,false, false, false, true, true, false, false);
+/*!40000 ALTER TABLE `plant` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
