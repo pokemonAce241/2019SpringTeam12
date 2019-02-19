@@ -30,8 +30,7 @@ export class Plant {
   lsummer: boolean;
   efall: boolean;
   lfall: boolean;
-  ewinter: boolean;
-  lwinter: boolean;
+  winter: boolean;
 }
 
 const httpOptions = {

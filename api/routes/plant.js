@@ -6,7 +6,7 @@ var getAllPlantsQuery = `SELECT p.id, p.common_name, p.genus, p.species, p.min_h
 p.native, p.min_hardiness, p.max_hardiness, p.color_id, c.name as color, p.front_image_path, p.side_image_path, s.espring, s.lspring, s.esummer, s.lsummer,
 s.efall, s.lfall, s.winter, r.regions, t.soil_types
 FROM plant as p
-LEFT JOIN season as s ON (p.id == c.plant_id)
+LEFT JOIN seasons as s ON (p.id = s.plant_id)
 LEFT JOIN plant_type as t ON (p.type_id = t.id)
 LEFT JOIN color as c ON (p.color_id = c.id)
 LEFT JOIN (
@@ -23,10 +23,10 @@ GROUP BY p.id`;
 
 var getAllPlantsQuery2 = `SELECT p.id, p.common_name, p.genus, p.species, p.min_height, p.max_height, p.min_spread, p.max_spread, p.type_id, t.name as plant_type,
 p.native, p.min_hardiness, p.max_hardiness, p.color_id, c.name as color, p.front_image_path, p.side_image_path,
-p.espring, p.lspring, p.esummer, p.lsummer, p.efall, p.lfall, p.ewinter, p.lwinter, JSON_ARRAYAGG(r.name) as regions, JSON_ARRAYAGG(st.name) as soil_types
+s.espring, s.lspring, s.esummer, s.lsummer, s.efall, s.lfall, s.winter, JSON_ARRAYAGG(r.name) as regions, JSON_ARRAYAGG(st.name) as soil_types
 FROM plant as p
 LEFT JOIN plant_type as t ON (p.type_id = t.id)
-LEFT JOIN season as s ON (p.id == c.plant_id)
+LEFT JOIN seasons as s ON (p.id = s.plant_id)
 LEFT JOIN color as c ON (p.color_id = c.id)
 LEFT JOIN plant_region_xref as pr ON (pr.plant_id = p.id)
 LEFT JOIN region as r ON (r.id = pr.region_id)

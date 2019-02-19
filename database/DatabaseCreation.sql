@@ -106,9 +106,9 @@ CREATE TABLE `plant` (
 -- Dumping data for table `plant`
 --
 LOCK TABLES `plant` WRITE;
-
+/*!40000 ALTER TABLE `plant` DISABLE KEYS */;
 INSERT INTO `plant` VALUES (1,'Golden Alexander','Zizia','aurea',2,3,1,3,1,1,3,8,5,'assets/images/zizia-aurea.png','assets/images/zizia-aurea.png'),(2,'Carolina jessamine','Gelsemium','sempervirens',12,20,3,6,3,1,7,10,5,'assets/images/gelsemium-sempervirens.png','assets/images/gelsemium-sempervirens.png'),(3,'Rabbiteye blueberry','Vaccinium','ashei',3,12,4,5,4,1,6,9,6,'assets/images/vaccinium-ashei-spring.png','assets/images/vaccinium-ashei-spring.png'),(4,'Cosmos','Cosmos','bipinnatus',1,4,2,3,2,0,2,11,4,'assets/images/cosmos-bipinnatus.png','assets/images/cosmos-bipinnatus.png'),(5,'Rattlesnake master','Eryngium','yuccifolium',4,5,2,3,1,1,3,8,6,'assets/images/eryngium-yuccifolium.png','assets/images/eryngium-yuccifolium.png'),(6,'Butterfly weed','Asclepias','tuberosa',1,3,1,2,1,1,3,9,7,'assets/images/asclepias-tuberosa.png','assets/images/asclepias-tuberosa.png'),(7,'Rough goldenrod','Solidago','rugosa \'fireworks\'',3,4,3,4,1,1,4,8,5,'assets/images/solidago-rugosa.png','assets/images/solidago-rugosa.png'),(8,'Aromatic aster','Symphiotrichum','oblongifolium',1,3,1,3,1,1,3,8,3,'assets/images/symphiotrichum-oblongifolium.png','assets/images/symphiotrichum-oblongifolium.png'),(9,'Joe-pye weed','Eutrochium','dubium',3,4,1,3,1,1,3,9,4,'assets/images/eutrochium-dubium.png','assets/images/eutrochium-dubium.png');
-
+/*!40000 ALTER TABLE `plant` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -281,9 +281,7 @@ CREATE TABLE `seasons` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 LOCK TABLES `seasons` WRITE;
-/*!40000 ALTER TABLE `plant` DISABLE KEYS */;
 INSERT INTO `seasons` VALUES (1,false, true, false, false, false, false, false),(2, true, true, false, false, false, false, false),(3, false, true, false, false, false, false, false),(4, false, false, true, true, true, true, false),(5, false, false, true, true, true, false, false),(6, false, false, true, true, false, false, false),(7, false, false, false, false, true, false, false),(8,false, false, false, false, true, false, false),(9,false, false, false, true, true, false, false);
-/*!40000 ALTER TABLE `plant` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
