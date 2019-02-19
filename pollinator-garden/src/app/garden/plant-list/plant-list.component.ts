@@ -40,8 +40,7 @@ export class PlantListComponent implements OnInit {
     "lspring": false,
     "efall": false,
     "lfall": false,
-    "ewinter": false,
-    "lwinter": false
+    "winter": false
   }
 
   seasonActive = false;
@@ -114,7 +113,7 @@ export class PlantListComponent implements OnInit {
     //   });
 
     let canvas = document.getElementById('plant-list-canvas') as HTMLCanvasElement;
-    // size the canvas to fill the div 
+    // size the canvas to fill the div
     canvas.style.width = '100%';
     canvas.style.height = '100%';
     // have the height and width attributes match the style (1:1)
@@ -149,7 +148,7 @@ export class PlantListComponent implements OnInit {
       if (test.tagName !== "CANVAS") {
         return;
       }
-      
+
 
         rect = canvas.getBoundingClientRect();
         var x = ev.clientX - rect.left;
@@ -173,7 +172,7 @@ export class PlantListComponent implements OnInit {
           this.imgDims[this.index].x = this.imgDims[this.index].ox;
           this.imgDims[this.index].y = this.imgDims[this.index].oy;
           this.context.clearRect(0, 0, canvas.width, canvas.height);
-          
+
           // this part might be redundant
           for(var i = 0; i < this.size; i++) {
             this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
@@ -186,7 +185,7 @@ export class PlantListComponent implements OnInit {
     });
 
     document.addEventListener('mouseup', (ev) => {
-  
+
       console.log("Watermelon");
       this.canvasService.setDraggedToFalse();
       if (this.index !== undefined) {
@@ -233,7 +232,7 @@ export class PlantListComponent implements OnInit {
             this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
             //}
           }
-          
+
           this.context.fillText(this.imgDims[this.index].name, this.imgDims[this.index].ox, this.imgDims[this.index].oy + this.imgDims[this.index].height + 10);
 
         } else if (this.canvasService.getImg() === '' && x > canvas.width && y > 0 && y < canvas.height) { // if no image then still signal change of canvas
@@ -266,7 +265,7 @@ export class PlantListComponent implements OnInit {
             this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
             //}
           }
-          
+
           this.context.fillText(this.imgDims[this.index].name, this.imgDims[this.index].ox, this.imgDims[this.index].oy + this.imgDims[this.index].height + 10);
         }
       }
@@ -276,7 +275,7 @@ export class PlantListComponent implements OnInit {
       //       this.imgDims[this.index].x = this.imgDims[this.index].ox;
       //       this.imgDims[this.index].y = this.imgDims[this.index].oy;
       //       this.context.clearRect(0, 0, canvas.width, canvas.height);
-          
+
       //       for(var i = 0; i < this.size; i++) {
       //         this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
       //         this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
@@ -284,7 +283,7 @@ export class PlantListComponent implements OnInit {
       //       console.log("Sucessssss");
       //     //}
       // });
-      
+
 
 
     });
@@ -336,9 +335,9 @@ export class PlantListComponent implements OnInit {
     this.context.clearRect(0, 0, canvas.width, canvas.height);
     this.imgDims = [];
     this.size = 0;
-    
+
     console.log(this.filteredPlants);
-    
+
 
     this.filteredPlants.forEach(plant => {
       // if the image is mod 0 then begin pic on line
@@ -379,7 +378,7 @@ export class PlantListComponent implements OnInit {
         this.imgDims[this.size].name = plant.common_name;
         this.imgDims[this.size].id = plant.id;
         this.context.fillText(this.imgDims[this.size].name, this.imgDims[this.size].x, this.imgDims[this.size].y + this.imgDims[this.size].height + 10);
-        
+
       }
       if (this.size % 2 !== 0) {
         line++;
@@ -438,21 +437,17 @@ export class PlantListComponent implements OnInit {
       if (this.seasonFilters.lfall && plant.lfall) {
         match = true;
       }
-      if (this.seasonFilters.ewinter && plant.ewinter) {
-        match = true;
-      }
-      if (this.seasonFilters.lwinter && plant.lwinter) {
+      if (this.seasonFilters.winter && plant.winter) {
         match = true;
       }
 
       if (!this.seasonFilters.espring &&
           !this.seasonFilters.esummer &&
           !this.seasonFilters.efall &&
-          !this.seasonFilters.ewinter &&
           !this.seasonFilters.lspring &&
           !this.seasonFilters.lsummer &&
           !this.seasonFilters.lfall &&
-          !this.seasonFilters.lwinter) {
+          !this.seasonFilters.winter) {
         this.seasonActive = false;
         return true;
       }
@@ -485,7 +480,7 @@ export class PlantListComponent implements OnInit {
       this.regionActive = true;
       return match;
     });
-    
+
     // COLORS
     this.filteredPlants = this.filteredPlants.filter(plant => {
       var match = false;
@@ -600,7 +595,7 @@ export class PlantListComponent implements OnInit {
       if (this.maxHeight === undefined || this.maxHeight.toString() === "") {
         this.maxHeight = 20;
       }
-      
+
       if (this.minHeight == 0 && this.maxHeight == 20) {
         this.heightActive = false;
       } else {
