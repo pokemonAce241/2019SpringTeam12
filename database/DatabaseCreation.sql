@@ -25,10 +25,18 @@ DROP TABLE IF EXISTS `color`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `color` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `plant_id` int(11) PRIMARY KEY NOT NULL,
+  `red` BOOLEAN NOT NULL,
+  `blue` BOOLEAN NOT NULL,
+  `purple` BOOLEAN NOT NULL,
+  `pink` BOOLEAN NOT NULL,
+  `yellow` BOOLEAN NOT NULL,
+  `white` BOOLEAN NOT NULL,
+  `orange` BOOLEAN NOT NULL,
+  `green` BOOLEAN NOT NULL,
+  `other` BOOLEAN NOT NULL,
+  FOREIGN KEY(`plant_id`) REFERENCES `plant` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,7 +45,7 @@ CREATE TABLE `color` (
 
 LOCK TABLES `color` WRITE;
 /*!40000 ALTER TABLE `color` DISABLE KEYS */;
-INSERT INTO `color` VALUES (1,'red'),(2,'blue'),(3,'purple'),(4,'pink'),(5,'yellow'),(6,'white'),(7,'orange'),(8,'green'),(9,'other');
+INSERT INTO `color` VALUES (1, false, false, false, false, true, false, false, false, false), (2, false, false, false, false, true, false, false, false, false), (3, false, false, false, false, false, true, false, false, false), (4, false, false, false, true, false, false, false, false, false), (5, false, false, false, false, false, true, false, false, false), (6, false, false, false, false, false, false, true, false, false), (7, false, false, false, false, true, false, false, false, false), (8, false, false, true, false, false, false, false, false, false), (9, false, false, false, true, false, false, false, false, false);
 /*!40000 ALTER TABLE `color` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -87,18 +95,13 @@ CREATE TABLE `plant` (
   `max_height` int(11) NOT NULL,
   `min_spread` int(11) NOT NULL,
   `max_spread` int(11) NOT NULL,
-  `type_id` int(11) NOT NULL,
+  `plant_type` varchar(45) NOT NULL,
   `native` tinyint(4) NOT NULL,
   `min_hardiness` int(11) NOT NULL,
   `max_hardiness` int(11) NOT NULL,
-  `color_id` int(11) NOT NULL,
   `front_image_path` varchar(255) DEFAULT NULL,
   `side_image_path` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `plant_type_fk_idx` (`type_id`),
-  KEY `color_fk_idx` (`color_id`),
-  CONSTRAINT `color_fk` FOREIGN KEY (`color_id`) REFERENCES `color` (`id`),
-  CONSTRAINT `plant_type_fk` FOREIGN KEY (`type_id`) REFERENCES `plant_type` (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -107,7 +110,7 @@ CREATE TABLE `plant` (
 --
 LOCK TABLES `plant` WRITE;
 /*!40000 ALTER TABLE `plant` DISABLE KEYS */;
-INSERT INTO `plant` VALUES (1,'Golden Alexander','Zizia','aurea',2,3,1,3,1,1,3,8,5,'assets/images/zizia-aurea.png','assets/images/zizia-aurea.png'),(2,'Carolina jessamine','Gelsemium','sempervirens',12,20,3,6,3,1,7,10,5,'assets/images/gelsemium-sempervirens.png','assets/images/gelsemium-sempervirens.png'),(3,'Rabbiteye blueberry','Vaccinium','ashei',3,12,4,5,4,1,6,9,6,'assets/images/vaccinium-ashei-spring.png','assets/images/vaccinium-ashei-spring.png'),(4,'Cosmos','Cosmos','bipinnatus',1,4,2,3,2,0,2,11,4,'assets/images/cosmos-bipinnatus.png','assets/images/cosmos-bipinnatus.png'),(5,'Rattlesnake master','Eryngium','yuccifolium',4,5,2,3,1,1,3,8,6,'assets/images/eryngium-yuccifolium.png','assets/images/eryngium-yuccifolium.png'),(6,'Butterfly weed','Asclepias','tuberosa',1,3,1,2,1,1,3,9,7,'assets/images/asclepias-tuberosa.png','assets/images/asclepias-tuberosa.png'),(7,'Rough goldenrod','Solidago','rugosa \'fireworks\'',3,4,3,4,1,1,4,8,5,'assets/images/solidago-rugosa.png','assets/images/solidago-rugosa.png'),(8,'Aromatic aster','Symphiotrichum','oblongifolium',1,3,1,3,1,1,3,8,3,'assets/images/symphiotrichum-oblongifolium.png','assets/images/symphiotrichum-oblongifolium.png'),(9,'Joe-pye weed','Eutrochium','dubium',3,4,1,3,1,1,3,9,4,'assets/images/eutrochium-dubium.png','assets/images/eutrochium-dubium.png');
+INSERT INTO `plant` VALUES (1,'Golden Alexander','Zizia','aurea',2,3,1,3,'perennial',1,3,8,'assets/images/zizia-aurea.png','assets/images/zizia-aurea.png'),(2,'Carolina jessamine','Gelsemium','sempervirens',12,20,3,6,'vine',1,7,10,'assets/images/gelsemium-sempervirens.png','assets/images/gelsemium-sempervirens.png'),(3,'Rabbiteye blueberry','Vaccinium','ashei',3,12,4,5,'shrub',1,6,9,'assets/images/vaccinium-ashei-spring.png','assets/images/vaccinium-ashei-spring.png'),(4,'Cosmos','Cosmos','bipinnatus',1,4,2,3,'annual',0,2,11,'assets/images/cosmos-bipinnatus.png','assets/images/cosmos-bipinnatus.png'),(5,'Rattlesnake master','Eryngium','yuccifolium',4,5,2,3,'perennial',1,3,8,'assets/images/eryngium-yuccifolium.png','assets/images/eryngium-yuccifolium.png'),(6,'Butterfly weed','Asclepias','tuberosa',1,3,1,2,'perennial',1,3,9,'assets/images/asclepias-tuberosa.png','assets/images/asclepias-tuberosa.png'),(7,'Rough goldenrod','Solidago','rugosa \'fireworks\'',3,4,3,4,'perennial',1,4,8,'assets/images/solidago-rugosa.png','assets/images/solidago-rugosa.png'),(8,'Aromatic aster','Symphiotrichum','oblongifolium',1,3,1,3,'perennial',1,3,8,'assets/images/symphiotrichum-oblongifolium.png','assets/images/symphiotrichum-oblongifolium.png'),(9,'Joe-pye weed','Eutrochium','dubium',3,4,1,3,'perennial',1,3,9,'assets/images/eutrochium-dubium.png','assets/images/eutrochium-dubium.png');
 /*!40000 ALTER TABLE `plant` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -146,121 +149,154 @@ UNLOCK TABLES;
 -- Table structure for table `plant_region_xref`
 --
 
-DROP TABLE IF EXISTS `plant_region_xref`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
-CREATE TABLE `plant_region_xref` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `plant_id` int(11) NOT NULL,
-  `region_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `plant_region_fk_idx` (`plant_id`),
-  KEY `region_fk_idx` (`region_id`),
-  CONSTRAINT `plant_region_fk` FOREIGN KEY (`plant_id`) REFERENCES `plant` (`id`),
-  CONSTRAINT `region_fk` FOREIGN KEY (`region_id`) REFERENCES `region` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `regions`;
+SET character_set_client = utf8mb4 ;
+CREATE TABLE `regions` (
+ `plant_id` int(11) PRIMARY KEY NOT NULL,
+ `mountain` BOOLEAN NOT NULL,
+ `piedmont` BOOLEAN NOT NULL,
+ `coast` BOOLEAN NOT NULL,
+ FOREIGN KEY (`plant_id`) REFERENCES `plant` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Table structure for table `plant_soil_xref`
---
-
-DROP TABLE IF EXISTS `plant_soil_xref`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
-CREATE TABLE `plant_soil_xref` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `plant_id` int(11) NOT NULL,
-  `soil_type_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `plant_soil_fk_idx` (`plant_id`),
-  KEY `soil_fk_idx` (`soil_type_id`),
-  CONSTRAINT `plant_soil_fk` FOREIGN KEY (`plant_id`) REFERENCES `plant` (`id`),
-  CONSTRAINT `soil_fk` FOREIGN KEY (`soil_type_id`) REFERENCES `soil_type` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `plant_soil_xref`
---
-
-LOCK TABLES `plant_soil_xref` WRITE;
-/*!40000 ALTER TABLE `plant_soil_xref` DISABLE KEYS */;
-INSERT INTO `plant_soil_xref` VALUES (1,1,2),(2,2,2),(3,3,2),(4,3,3),(5,4,2),(6,5,2),(7,5,3),(8,6,2),(9,6,3),(10,7,2),(11,8,2),(12,8,3),(13,9,1),(14,9,2);
-/*!40000 ALTER TABLE `plant_soil_xref` ENABLE KEYS */;
+LOCK TABLES `regions` WRITE;
+/*!40000 ALTER TABLE `regions` DISABLE KEYS */;
+INSERT INTO `regions` VALUES (1,true,true,false),(2,false,true,true),(3,true,true, true),(4,true,true, true),(5,false,true, true),(6,true,true, true),(7,true,true,true),(8,true,true, false),(9,true,true,false);
+/*!40000 ALTER TABLE `regions` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+
+
+DROP TABLE IF EXISTS `soil`;
+SET character_set_client = utf8mb4 ;
+CREATE TABLE `soil` (
+ `plant_id` int(11) PRIMARY KEY NOT NULL,
+ `wet` BOOLEAN NOT NULL,
+ `moist` BOOLEAN NOT NULL,
+ `dry` BOOLEAN NOT NULL,
+ FOREIGN KEY (`plant_id`) REFERENCES `plant` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+LOCK TABLES `soil` WRITE;
+INSERT INTO `soil` VALUES (1,false,true,false),(2,false,true,false),(3,false,true, true),(4,false,true, false),(5,false,true, true),(6,false,true, true),(7,false,true,false),(8,false,true, true),(9,true,true,false);
+UNLOCK TABLES;
+
+-- DROP TABLE IF EXISTS `plant_region_xref`;
+-- /*!40101 SET @saved_cs_client     = @@character_set_client */;
+--  SET character_set_client = utf8mb4 ;
+-- CREATE TABLE `plant_region_xref` (
+--   `id` int(11) NOT NULL AUTO_INCREMENT,
+--   `plant_id` int(11) NOT NULL,
+--   `region_id` int(11) NOT NULL,
+--   PRIMARY KEY (`id`),
+--   KEY `plant_region_fk_idx` (`plant_id`),
+--   KEY `region_fk_idx` (`region_id`),
+--   CONSTRAINT `plant_region_fk` FOREIGN KEY (`plant_id`) REFERENCES `plant` (`id`),
+--   CONSTRAINT `region_fk` FOREIGN KEY (`region_id`) REFERENCES `region` (`id`)
+-- ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- /*!40101 SET character_set_client = @saved_cs_client */;
+--
+-- --
+-- -- Table structure for table `plant_soil_xref`
+-- --
+--
+-- DROP TABLE IF EXISTS `plant_soil_xref`;
+-- /*!40101 SET @saved_cs_client     = @@character_set_client */;
+--  SET character_set_client = utf8mb4 ;
+-- CREATE TABLE `plant_soil_xref` (
+--   `id` int(11) NOT NULL AUTO_INCREMENT,
+--   `plant_id` int(11) NOT NULL,
+--   `soil_type_id` int(11) NOT NULL,
+--   PRIMARY KEY (`id`),
+--   KEY `plant_soil_fk_idx` (`plant_id`),
+--   KEY `soil_fk_idx` (`soil_type_id`),
+--   CONSTRAINT `plant_soil_fk` FOREIGN KEY (`plant_id`) REFERENCES `plant` (`id`),
+--   CONSTRAINT `soil_fk` FOREIGN KEY (`soil_type_id`) REFERENCES `soil_type` (`id`)
+-- ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- /*!40101 SET character_set_client = @saved_cs_client */;
+--
+-- --
+-- -- Dumping data for table `plant_soil_xref`
+-- --
+--
+-- LOCK TABLES `plant_soil_xref` WRITE;
+-- /*!40000 ALTER TABLE `plant_soil_xref` DISABLE KEYS */;
+-- INSERT INTO `plant_soil_xref` VALUES (1,1,2),(2,2,2),(3,3,2),(4,3,3),(5,4,2),(6,5,2),(7,5,3),(8,6,2),(9,6,3),(10,7,2),(11,8,2),(12,8,3),(13,9,1),(14,9,2);
+-- /*!40000 ALTER TABLE `plant_soil_xref` ENABLE KEYS */;
+-- UNLOCK TABLES;
 
 --
 -- Table structure for table `plant_type`
 --
-
-DROP TABLE IF EXISTS `plant_type`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
-CREATE TABLE `plant_type` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
+-- 
+-- DROP TABLE IF EXISTS `plant_type`;
+-- /*!40101 SET @saved_cs_client     = @@character_set_client */;
+--  SET character_set_client = utf8mb4 ;
+-- CREATE TABLE `plant_type` (
+--   `id` int(11) NOT NULL AUTO_INCREMENT,
+--   `name` varchar(45) NOT NULL,
+--   PRIMARY KEY (`id`)
+-- ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- /*!40101 SET character_set_client = @saved_cs_client */;
 --
--- Dumping data for table `plant_type`
+-- --
+-- -- Dumping data for table `plant_type`
+-- --
 --
-
-LOCK TABLES `plant_type` WRITE;
-/*!40000 ALTER TABLE `plant_type` DISABLE KEYS */;
-INSERT INTO `plant_type` VALUES (1,'perennial'),(2,'annual'),(3,'vine'),(4,'shrub');
-/*!40000 ALTER TABLE `plant_type` ENABLE KEYS */;
-UNLOCK TABLES;
-
+-- LOCK TABLES `plant_type` WRITE;
+-- /*!40000 ALTER TABLE `plant_type` DISABLE KEYS */;
+-- INSERT INTO `plant_type` VALUES (1,'perennial'),(2,'annual'),(3,'vine'),(4,'shrub');
+-- /*!40000 ALTER TABLE `plant_type` ENABLE KEYS */;
+-- UNLOCK TABLES;
 --
+-- --
 -- Table structure for table `region`
 --
 
-DROP TABLE IF EXISTS `region`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
-CREATE TABLE `region` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
+-- DROP TABLE IF EXISTS `region`;
+-- /*!40101 SET @saved_cs_client     = @@character_set_client */;
+--  SET character_set_client = utf8mb4 ;
+-- CREATE TABLE `region` (
+--   `id` int(11) NOT NULL AUTO_INCREMENT,
+--   `name` varchar(45) NOT NULL,
+--   PRIMARY KEY (`id`)
+-- ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- /*!40101 SET character_set_client = @saved_cs_client */;
 --
--- Dumping data for table `region`
+-- --
+-- -- Dumping data for table `region`
+-- --
 --
-
-LOCK TABLES `region` WRITE;
-/*!40000 ALTER TABLE `region` DISABLE KEYS */;
-INSERT INTO `region` VALUES (1,'mountain'),(2,'piedmont'),(3,'coast');
-/*!40000 ALTER TABLE `region` ENABLE KEYS */;
-UNLOCK TABLES;
+-- LOCK TABLES `region` WRITE;
+-- /*!40000 ALTER TABLE `region` DISABLE KEYS */;
+-- INSERT INTO `region` VALUES (1,'mountain'),(2,'piedmont'),(3,'coast');
+-- /*!40000 ALTER TABLE `region` ENABLE KEYS */;
+-- UNLOCK TABLES;
 
 --
 -- Table structure for table `soil_type`
 --
-
-DROP TABLE IF EXISTS `soil_type`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
-CREATE TABLE `soil_type` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+--
+-- DROP TABLE IF EXISTS `soil_type`;
+-- /*!40101 SET @saved_cs_client     = @@character_set_client */;
+--  SET character_set_client = utf8mb4 ;
+-- CREATE TABLE `soil_type` (
+--   `id` int(11) NOT NULL AUTO_INCREMENT,
+--   `name` varchar(45) NOT NULL,
+--   PRIMARY KEY (`id`)
+-- ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `soil_type`
 --
-
-LOCK TABLES `soil_type` WRITE;
-/*!40000 ALTER TABLE `soil_type` DISABLE KEYS */;
-INSERT INTO `soil_type` VALUES (1,'wet'),(2,'moist'),(3,'dry');
-/*!40000 ALTER TABLE `soil_type` ENABLE KEYS */;
-UNLOCK TABLES;
+--
+-- LOCK TABLES `soil_type` WRITE;
+-- /*!40000 ALTER TABLE `soil_type` DISABLE KEYS */;
+-- INSERT INTO `soil_type` VALUES (1,'wet'),(2,'moist'),(3,'dry');
+-- /*!40000 ALTER TABLE `soil_type` ENABLE KEYS */;
+-- UNLOCK TABLES;
 
 
 --
