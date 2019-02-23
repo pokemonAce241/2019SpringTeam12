@@ -460,13 +460,13 @@ export class PlantListComponent implements OnInit {
     this.filteredPlants = this.filteredPlants.filter(plant => {
       var match = false;
 
-      if (this.regionFilters.mountain && plant.regions.includes("mountain")) {
+      if (this.regionFilters.mountain && plant.mountain) {
         match = true;
       }
-      if (this.regionFilters.piedmont && plant.regions.includes("piedmont")) {
+      if (this.regionFilters.piedmont && plant.piedmont) {
         match = true;
       }
-      if (this.regionFilters.coast && plant.regions.includes("coast")) {
+      if (this.regionFilters.coast && plant.coast) {
         match = true;
       }
 
@@ -485,31 +485,31 @@ export class PlantListComponent implements OnInit {
     this.filteredPlants = this.filteredPlants.filter(plant => {
       var match = false;
 
-      if (this.colorFilters.red && plant.color === "red") {
+      if (this.colorFilters.red && plant.red) {
         match = true;
       }
-      if (this.colorFilters.blue && plant.color === "blue") {
+      if (this.colorFilters.blue && plant.blue) {
         match = true;
       }
-      if (this.colorFilters.purple && plant.color === "purple") {
+      if (this.colorFilters.purple && plant.purple) {
         match = true;
       }
-      if (this.colorFilters.pink && plant.color === "pink") {
+      if (this.colorFilters.pink && plant.pink) {
         match = true;
       }
-      if (this.colorFilters.yellow && plant.color === "yellow") {
+      if (this.colorFilters.yellow && plant.yellow) {
         match = true;
       }
-      if (this.colorFilters.white && plant.color === "white") {
+      if (this.colorFilters.white && plant.white) {
         match = true;
       }
-      if (this.colorFilters.orange && plant.color === "orange") {
+      if (this.colorFilters.orange && plant.orange) {
         match = true;
       }
-      if (this.colorFilters.green && plant.color === "green") {
+      if (this.colorFilters.green && plant.green) {
         match = true;
       }
-      if (this.colorFilters.other && plant.color === "other") {
+      if (this.colorFilters.other && plant.other) {
         match = true;
       }
 
@@ -563,13 +563,13 @@ export class PlantListComponent implements OnInit {
     this.filteredPlants = this.filteredPlants.filter(plant => {
       var match = false;
 
-      if (this.soilFilters.wet && plant.soil_types.includes("wet")) {
+      if (this.soilFilters.wet && plant.wet) {
         match = true;
       }
-      if (this.soilFilters.dry && plant.soil_types.includes("dry")) {
+      if (this.soilFilters.dry && plant.dry) {
         match = true;
       }
-      if (this.soilFilters.moist && plant.soil_types.includes("moist")) {
+      if (this.soilFilters.moist && plant.moist) {
         match = true;
       }
 
