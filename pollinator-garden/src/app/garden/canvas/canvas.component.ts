@@ -48,7 +48,7 @@ export class CanvasComponent implements OnInit {
   ngAfterViewInit() {
     //get the canvas
     let canvas = document.getElementById('canvas') as HTMLCanvasElement;
-    // size the canvas to fill the div 
+    // size the canvas to fill the div
     canvas.style.width = '100%';
     canvas.style.height = '100%';
     // have the height and width attributes match the style (1:1)
@@ -204,8 +204,8 @@ export class CanvasComponent implements OnInit {
       //   this.canvasService.toggleReset();
       // }
       this.canvasService.toggleReset();
-      
-      
+
+
     });
 
     document.addEventListener('paste', (ev) => {
@@ -404,6 +404,9 @@ export class CanvasComponent implements OnInit {
   }
 
   ngOnInit() {
+    // this.plant_instances = [];
+    // this.context.clearRect(0, 0, canvas.width, canvas.height);
+    // this.canvasPlants = [];
   }
 
   public goToShoppingList(): void {
@@ -425,7 +428,7 @@ export class CanvasComponent implements OnInit {
       }, 10);
     });
   }
-  
+
   getPlantInstances() {
     console.log("get plant instances called")
     this.instanceService.getInstances(this.gardenId)

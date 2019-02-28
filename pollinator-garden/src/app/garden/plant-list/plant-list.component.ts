@@ -402,15 +402,21 @@ export class PlantListComponent implements OnInit {
     });
   }
 
-  getPlants() {
+  public getPlants() : Plant[] {
     this.plantService.getPlants()
       .subscribe(res => {
         this.plants = res;
         console.log(this.plants);
       });
+    return this.plants;
   }
 
-  filterPlants() {
+  // Used for testing purposes
+  public getLocalPlantList() : Plant[] {
+    return this.plants;
+  }
+
+  public filterPlants() {
     this.filteredPlants = this.plants;
     console.log(this.filteredPlants);
 
