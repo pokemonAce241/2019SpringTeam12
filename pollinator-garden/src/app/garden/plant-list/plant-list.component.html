@@ -41,18 +41,26 @@
   <div class="col-sm my-1">
     <button [ngStyle]="{'background-color': regionActive ? '#dc3545' : '', 'color': regionActive ? '#ffffff' : ''}" class="btn btn-outline-danger dropdown-toggle" id="region" data-toggle="dropdown">Region</button>
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
-      <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="mountainCheck" [(ngModel)]="regionFilters.mountain" (change)="filterPlants()" /> Mountain</label>
-        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
-      </div>
-      <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="piedmontCheck" [(ngModel)]="regionFilters.piedmont" (change)="filterPlants()" /> Piedmont</label>
-        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
-      </div>
-      <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="coastCheck" [(ngModel)]="regionFilters.coast" (change)="filterPlants()" /> Coast</label>
-        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
-      </div>
+        <div class="form-group">
+            <div class="radio">
+                <label class="w-100 my-0">
+                    <input type="radio" name="region" value="mountain" [(ngModel)]="plantRegion" (change)="filterPlants()">
+                     Mountain
+                </label>
+            </div>
+            <div class="radio">
+                <label class="w-100 my-0">
+                    <input type="radio" name="region" value="piedmont" [(ngModel)]="plantRegion" (change)="filterPlants()">
+                     Piedmont
+                </label>
+            </div>
+            <div class="radio">
+                <label class="w-100 my-0">
+                    <input type="radio" name="region" value="coast" [(ngModel)]="plantRegion" (change)="filterPlants()">
+                     Coast
+                </label>
+            </div>  
+          </div>
     </div>
   </div>
 
@@ -101,78 +109,70 @@
   <div class="col-sm my-1">
     <button [ngStyle]="{'background-color': typeActive ? '#dc3545' : '', 'color': typeActive ? '#ffffff' : ''}" class="btn btn-outline-danger dropdown-toggle" id="type" data-toggle="dropdown">Type</button>
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
-      <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="vineCheck" [(ngModel)]="typeFilters.vine" (change)="filterPlants()" /> Vine</label>
-        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
-      </div>
-      <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="shrubCheck" [(ngModel)]="typeFilters.shrub" (change)="filterPlants()" /> Shrub</label>
-        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
-      </div>
-      <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="perennialCheck" [(ngModel)]="typeFilters.perennial" (change)="filterPlants()" /> Perennial</label>
-        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
-      </div>
-      <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="annualCheck" [(ngModel)]="typeFilters.annual" (change)="filterPlants()"/> Annual</label>
-        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
-      </div>
+        <div class="form-group">
+          <div class="radio">
+              <label class="w-100 my-0">
+                  <input type="radio" name="pType" id="vineCheck" value="vine" [(ngModel)]="plantType" (change)="filterPlants()">
+                   Vine
+              </label>
+          </div>
+          <div class="radio">
+              <label class="w-100 my-0">
+                  <input type="radio" name="pType" id="shrubCheck" value="shrub" [(ngModel)]="plantType" (change)="filterPlants()">
+                   Shrub
+              </label>
+          </div>
+          <div class="radio">
+              <label class="w-100 my-0">
+                  <input type="radio" name="pType" id="perennialCheck" value="perennial" [(ngModel)]="plantType" (change)="filterPlants()">
+                   Perennial
+              </label>
+          </div> 
+          <div class="radio">
+              <label class="w-100 my-0">
+                  <input type="radio" name="pType" id="annualCheck" value="annual" [(ngModel)]="plantType" (change)="filterPlants()">
+                   Annual
+              </label>
+          </div>  
+        </div>
     </div>
   </div>
 </div>
- 
+
 <div class="row mx-1">
 
   <div class="col-sm-4 my-1">
     <button [ngStyle]="{'background-color': soilActive ? '#dc3545' : '', 'color': soilActive ? '#ffffff' : ''}" class="btn btn-outline-danger dropdown-toggle" id="soil" data-toggle="dropdown">Soil</button>
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
-      <div style="padding-left:10px;" class="form-group">
+      <div class="form-group">
         <div class="radio">
-            <label>
+            <label class="w-100 my-0">
                 <input type="radio" name="soil" value="moist" [(ngModel)]="soilStatus" (change)="filterPlants()">
-                Moist
+                 Moist
             </label>
         </div>
         <div class="radio">
-            <label>
+            <label class="w-100 my-0">
                 <input type="radio" name="soil" value="wet" [(ngModel)]="soilStatus" (change)="filterPlants()">
-                Wet
+                 Wet
             </label>
         </div>
         <div class="radio">
-            <label>
+            <label class="w-100 my-0">
                 <input type="radio" name="soil" value="dry" [(ngModel)]="soilStatus" (change)="filterPlants()">
-                Dry
+                 Dry
             </label>
         </div>  
       </div>
     </div>
-
-
-
-
-
-      <!-- <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="wetCheck" [(ngModel)]="soilFilters.wet" (change)="filterPlants()" /> Wet</label> -->
-        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
-      <!-- </div>
-      <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="moistCheck" [(ngModel)]="soilFilters.moist" (change)="filterPlants()" /> Moist</label> -->
-        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
-      <!-- </div>
-      <div class="dropdown-item pr-0">
-        <label class="w-100 my-0"><input class="" type="checkbox" id="dryCheck" [(ngModel)]="soilFilters.dry" (change)="filterPlants()" /> Dry</label> -->
-        <!-- <label class="form-check-label" for="springCheck">Spring</label> -->
-      <!-- </div> -->
-
-
-    </div>
   </div>
+
   <div class="col-sm-8 my-1">
     <button [ngStyle]="{'background-color': heightActive ? '#dc3545' : '', 'color': heightActive ? '#ffffff' : ''}" class="btn btn-outline-danger dropdown-toggle" id="height" data-toggle="dropdown">Height</button>
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
       <div class="dropdown-item">
         <input type="text" [(ngModel)]="minHeight" (change)="filterPlants()"/> ft. - <input type="text" [(ngModel)]="maxHeight" (change)="filterPlants()"/> ft.
+      </div>
     </div>
   </div>
 </div>

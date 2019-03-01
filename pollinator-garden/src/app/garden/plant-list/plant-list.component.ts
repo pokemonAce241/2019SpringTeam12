@@ -51,6 +51,8 @@ export class PlantListComponent implements OnInit {
     "coast": false
   }
 
+  plantRegion: string;
+
   regionActive = false;
 
   colorFilters = {
@@ -73,6 +75,8 @@ export class PlantListComponent implements OnInit {
     "perennial": false,
     "annual": false
   }
+
+  plantType: string;
 
   typeActive = false; 
 
@@ -471,19 +475,19 @@ export class PlantListComponent implements OnInit {
     this.filteredPlants = this.filteredPlants.filter(plant => {
       var match = false;
 
-      if (this.regionFilters.mountain && plant.mountain) {
+      if (this.plantRegion === "mountain" && plant.mountain) {
         match = true;
       }
-      if (this.regionFilters.piedmont && plant.piedmont) {
+      if (this.plantRegion === "piedmont" && plant.piedmont) {
         match = true;
       }
-      if (this.regionFilters.coast && plant.coast) {
+      if (this.plantRegion === "coast" && plant.coast) {
         match = true;
       }
 
-      if (!this.regionFilters.mountain &&
-          !this.regionFilters.piedmont &&
-          !this.regionFilters.coast) {
+      if (this.plantRegion != "mountain" &&
+          this.plantRegion != "piedmont" &&
+          this.plantRegion != "coast") {
         this.regionActive = false;
         return true;
       }
@@ -545,23 +549,23 @@ export class PlantListComponent implements OnInit {
     this.filteredPlants = this.filteredPlants.filter(plant => {
       var match = false;
 
-      if (this.typeFilters.vine && plant.plant_type === "vine") {
+      if (this.plantType === "vine" && plant.plant_type === "vine") {
         match = true;
       }
-      if (this.typeFilters.shrub && plant.plant_type === "shrub") {
+      if (this.plantType === "shrub" && plant.plant_type === "shrub") {
         match = true;
       }
-      if (this.typeFilters.annual && plant.plant_type === "annual") {
+      if (this.plantType === "annual" && plant.plant_type === "annual") {
         match = true;
       }
-      if (this.typeFilters.perennial && plant.plant_type === "perennial") {
+      if (this.plantType === "perennial" && plant.plant_type === "perennial") {
         match = true;
       }
 
-      if (!this.typeFilters.vine &&
-          !this.typeFilters.shrub &&
-          !this.typeFilters.annual &&
-          !this.typeFilters.perennial) {
+      if (this.plantType != "vine" &&
+          this.plantType != "shrub" &&
+          this.plantType != "annual" &&
+          this.plantType != "perennial") {
         this.typeActive = false;
         return true;
       }
@@ -653,7 +657,7 @@ export class PlantListComponent implements OnInit {
     }
 
     for (var property in this.regionFilters) {
-      this.regionFilters[property] = false;
+      this.plantRegion = "";
     }
 
     for (var property in this.colorFilters) {
@@ -661,11 +665,11 @@ export class PlantListComponent implements OnInit {
     }
 
     for (var property in this.typeFilters) {
-      this.typeFilters[property] = false;
+      this.plantType= "";
     }
 
     for (var property in this.soilFilters) {
-      this.soilFilters[property] = false;
+      this.soilStatus = "";
     }
 
     this.minHeight = 0;
