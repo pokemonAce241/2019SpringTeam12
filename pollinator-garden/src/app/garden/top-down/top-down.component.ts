@@ -7,12 +7,12 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MyGardensComponent } from '../my-gardens/my-gardens.component';
 
 @Component({
-  selector: 'app-canvas',
-  templateUrl: './canvas.component.html',
-  styleUrls: ['./canvas.component.css'],
+  selector: 'app-top-down',
+  templateUrl: './top-down.component.html',
+  styleUrls: ['./top-down.component.css'],
   providers: [MyGardensComponent, InstanceService, NgbActiveModal]
 })
-export class CanvasComponent implements OnInit {
+export class TopDownComponent implements OnInit {
 
   // index to the html canvas object
   @ViewChild('canvasEl') canvasEl: ElementRef;
@@ -417,4 +417,5 @@ export class CanvasComponent implements OnInit {
         console.log(res);
       })
   }
+
 }
