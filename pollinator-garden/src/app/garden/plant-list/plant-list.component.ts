@@ -51,6 +51,8 @@ export class PlantListComponent implements OnInit {
     "coast": false
   }
 
+  plantRegion: string;
+
   regionActive = false;
 
   colorFilters = {
@@ -74,13 +76,17 @@ export class PlantListComponent implements OnInit {
     "annual": false
   }
 
-  typeActive = false;
+  plantType: string;
+
+  typeActive = false; 
 
   soilFilters = {
     "wet": false,
     "moist": false,
-    "dry": false
+    "dry": false,
   }
+
+  soilStatus: string;
 
   soilActive = false;
 
@@ -177,6 +183,9 @@ export class PlantListComponent implements OnInit {
     document.addEventListener('mouseup', (ev) => {
 
       console.log("Watermelon");
+      //console.log("Moist: " + this.soilFilters.moist);
+      //console.log("Wet: " + this.soilFilters.wet);
+      //console.log("Dry: " + this.soilFilters.dry);
       this.canvasService.setDraggedToFalse();
       if (this.index !== undefined) {
         this.imgDims[this.index].x = this.imgDims[this.index].ox;
@@ -456,19 +465,19 @@ export class PlantListComponent implements OnInit {
     this.filteredPlants = this.filteredPlants.filter(plant => {
       var match = false;
 
-      if (this.regionFilters.mountain && plant.mountain) {
+      if (this.plantRegion === "mountain" && plant.mountain) {
         match = true;
       }
-      if (this.regionFilters.piedmont && plant.piedmont) {
+      if (this.plantRegion === "piedmont" && plant.piedmont) {
         match = true;
       }
-      if (this.regionFilters.coast && plant.coast) {
+      if (this.plantRegion === "coast" && plant.coast) {
         match = true;
       }
 
-      if (!this.regionFilters.mountain &&
-          !this.regionFilters.piedmont &&
-          !this.regionFilters.coast) {
+      if (this.plantRegion != "mountain" &&
+          this.plantRegion != "piedmont" &&
+          this.plantRegion != "coast") {
         this.regionActive = false;
         return true;
       }
@@ -530,23 +539,23 @@ export class PlantListComponent implements OnInit {
     this.filteredPlants = this.filteredPlants.filter(plant => {
       var match = false;
 
-      if (this.typeFilters.vine && plant.plant_type === "vine") {
+      if (this.plantType === "vine" && plant.plant_type === "vine") {
         match = true;
       }
-      if (this.typeFilters.shrub && plant.plant_type === "shrub") {
+      if (this.plantType === "shrub" && plant.plant_type === "shrub") {
         match = true;
       }
-      if (this.typeFilters.annual && plant.plant_type === "annual") {
+      if (this.plantType === "annual" && plant.plant_type === "annual") {
         match = true;
       }
-      if (this.typeFilters.perennial && plant.plant_type === "perennial") {
+      if (this.plantType === "perennial" && plant.plant_type === "perennial") {
         match = true;
       }
 
-      if (!this.typeFilters.vine &&
-          !this.typeFilters.shrub &&
-          !this.typeFilters.annual &&
-          !this.typeFilters.perennial) {
+      if (this.plantType != "vine" &&
+          this.plantType != "shrub" &&
+          this.plantType != "annual" &&
+          this.plantType != "perennial") {
         this.typeActive = false;
         return true;
       }
@@ -559,23 +568,23 @@ export class PlantListComponent implements OnInit {
     this.filteredPlants = this.filteredPlants.filter(plant => {
       var match = false;
 
-      if (this.soilFilters.wet && plant.wet) {
+      if (this.soilStatus === "wet" && plant.wet) {
         match = true;
-      }
-      if (this.soilFilters.dry && plant.dry) {
+      } 
+      if (this.soilStatus === "moist" && plant.moist) {
         match = true;
-      }
-      if (this.soilFilters.moist && plant.moist) {
+      } 
+      if (this.soilStatus === "dry" && plant.dry) {
         match = true;
       }
 
-      if (!this.soilFilters.wet &&
-          !this.soilFilters.dry &&
-          !this.soilFilters.moist) {
-        this.soilActive = false;
-        return true;
+      if (this.soilStatus != "wet" &&
+          this.soilStatus != "moist" &&
+          this.soilStatus != "dry") {
+            this.soilActive = false;
+            return true;
       }
-
+      //console.log(this.soilStatus);
       this.soilActive = true;
       return match;
     });
@@ -638,7 +647,7 @@ export class PlantListComponent implements OnInit {
     }
 
     for (var property in this.regionFilters) {
-      this.regionFilters[property] = false;
+      this.plantRegion = "";
     }
 
     for (var property in this.colorFilters) {
@@ -646,11 +655,11 @@ export class PlantListComponent implements OnInit {
     }
 
     for (var property in this.typeFilters) {
-      this.typeFilters[property] = false;
+      this.plantType= "";
     }
 
     for (var property in this.soilFilters) {
-      this.soilFilters[property] = false;
+      this.soilStatus = "";
     }
 
     this.minHeight = 0;
