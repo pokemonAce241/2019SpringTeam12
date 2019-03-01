@@ -43,23 +43,23 @@
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
         <div class="form-group">
             <div class="radio">
-                <label class="w-100 my-0">
+                <label class="w-100 my-0" style="padding-left:20px">
                     <input type="radio" name="region" value="mountain" [(ngModel)]="plantRegion" (change)="filterPlants()">
                      Mountain
                 </label>
             </div>
             <div class="radio">
-                <label class="w-100 my-0">
+                <label class="w-100 my-0" style="padding-left:20px">
                     <input type="radio" name="region" value="piedmont" [(ngModel)]="plantRegion" (change)="filterPlants()">
                      Piedmont
                 </label>
             </div>
             <div class="radio">
-                <label class="w-100 my-0">
+                <label class="w-100 my-0" style="padding-left:20px">
                     <input type="radio" name="region" value="coast" [(ngModel)]="plantRegion" (change)="filterPlants()">
                      Coast
                 </label>
-            </div>  
+            </div>
           </div>
     </div>
   </div>
@@ -111,29 +111,29 @@
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
         <div class="form-group">
           <div class="radio">
-              <label class="w-100 my-0">
+              <label class="w-100 my-0" style="padding-left:20px">
                   <input type="radio" name="pType" id="vineCheck" value="vine" [(ngModel)]="plantType" (change)="filterPlants()">
                    Vine
               </label>
           </div>
           <div class="radio">
-              <label class="w-100 my-0">
+              <label class="w-100 my-0" style="padding-left:20px">
                   <input type="radio" name="pType" id="shrubCheck" value="shrub" [(ngModel)]="plantType" (change)="filterPlants()">
                    Shrub
               </label>
           </div>
           <div class="radio">
-              <label class="w-100 my-0">
+              <label class="w-100 my-0" style="padding-left:20px">
                   <input type="radio" name="pType" id="perennialCheck" value="perennial" [(ngModel)]="plantType" (change)="filterPlants()">
                    Perennial
               </label>
-          </div> 
+          </div>
           <div class="radio">
-              <label class="w-100 my-0">
+              <label class="w-100 my-0" style="padding-left:20px">
                   <input type="radio" name="pType" id="annualCheck" value="annual" [(ngModel)]="plantType" (change)="filterPlants()">
                    Annual
               </label>
-          </div>  
+          </div>
         </div>
     </div>
   </div>
@@ -146,23 +146,23 @@
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
       <div class="form-group">
         <div class="radio">
-            <label class="w-100 my-0">
+            <label class="w-100 my-0" style="padding-left:20px">
                 <input type="radio" name="soil" value="moist" [(ngModel)]="soilStatus" (change)="filterPlants()">
                  Moist
             </label>
         </div>
-        <div class="radio">
+        <div class="radio" style="padding-left:20px">
             <label class="w-100 my-0">
                 <input type="radio" name="soil" value="wet" [(ngModel)]="soilStatus" (change)="filterPlants()">
                  Wet
             </label>
         </div>
         <div class="radio">
-            <label class="w-100 my-0">
+            <label class="w-100 my-0" style="padding-left:20px">
                 <input type="radio" name="soil" value="dry" [(ngModel)]="soilStatus" (change)="filterPlants()">
                  Dry
             </label>
-        </div>  
+        </div>
       </div>
     </div>
   </div>
