@@ -77,7 +77,7 @@ export class TopDownComponent implements OnInit {
       }
       this.context.clearRect(0, 0, canvas.width, canvas.height);
       for (var i = 0; i < this.size; i++) {
-        this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, (this.imgDims[i].y + this.imgDims[i].y * this.sSize), (this.imgDims[i].y + this.imgDims[i].y * this.sSize));
+        this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, (this.imgDims[i].width + this.imgDims[i].y * this.sSize), (this.imgDims[i].height + this.imgDims[i].y * this.sSize));
       }
     });
 
@@ -107,7 +107,7 @@ export class TopDownComponent implements OnInit {
       // update the garden
       this.context.clearRect(0, 0, canvas.width, canvas.height);
       for (var i = 0; i < this.size; i++) {
-        this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, (this.imgDims[i].y + this.imgDims[i].y * this.sSize), (this.imgDims[i].y + this.imgDims[i].y * this.sSize));
+        this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, (this.imgDims[i].width + this.imgDims[i].y * this.sSize), (this.imgDims[i].height + this.imgDims[i].y * this.sSize));
       }
 
     });
@@ -135,13 +135,13 @@ export class TopDownComponent implements OnInit {
           this.updateInstance(this.imgDims[this.index]);
         }
         for (var i = 0; i < this.size; i++) {
-          this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, (this.imgDims[i].y + this.imgDims[i].y * this.sSize), (this.imgDims[i].y + this.imgDims[i].y * this.sSize) );
+          this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, (this.imgDims[i].width + this.imgDims[i].y * this.sSize), (this.imgDims[i].height + this.imgDims[i].y * this.sSize) );
         }
         this.canvasService.toggleDragged();
       } else if (this.imgDims[this.index] !== undefined && !this.canvasService.isDragged()) { //otherwise then selecting image at location (index becomes image index)
         for (var i = this.size-1; i >= 0; i--) {
-          if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
-            (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
+          if ((x > this.imgDims[i].x && x < this.imgDims[i].x + (this.imgDims[i].width + this.imgDims[i].y * this.sSize)) &&
+            (y > this.imgDims[i].y && y < this.imgDims[i].y + (this.imgDims[i].height + this.imgDims[i].y * this.sSize)) &&
             !this.canvasService.isPlantCanvas()) {
             console.log("Selected plant in canvas");
             this.index = i;
@@ -185,7 +185,7 @@ export class TopDownComponent implements OnInit {
         }
         // Redraws all plants images on garden canvas
         for (var i = 0; i < this.size; i++) {
-          this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, (this.imgDims[i].y + this.imgDims[i].y * this.sSize), (this.imgDims[i].y + this.imgDims[i].y * this.sSize));
+          this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, (this.imgDims[i].width + this.imgDims[i].y * this.sSize), (this.imgDims[i].height + this.imgDims[i].y * this.sSize));
         }
         this.canvasService.setDraggedToFalse();
       } else if (this.imgDims[this.index] !== undefined && !this.canvasService.isDragged()) { //otherwise then selecting image at location (index becomes image index)
@@ -272,7 +272,7 @@ export class TopDownComponent implements OnInit {
           }
           this.context.clearRect(0, 0, canvas.width, canvas.height);
           for (var i = 0; i < this.canvasService.getSize(); i++) {
-            this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, (this.imgDims[i].y + this.imgDims[i].y * this.sSize), (this.imgDims[i].y + this.imgDims[i].y * this.sSize));
+            this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, (this.imgDims[i].width + this.imgDims[i].y * this.sSize), (this.imgDims[i].height + this.imgDims[i].y * this.sSize));
           }
         } else if (this.imgDims[this.index] === undefined && x < 0 && !this.canvasService.isPlantCanvas()) { // if not set then ignore crossing over boundary
           this.canvasService.toggleCanvas();
@@ -280,7 +280,7 @@ export class TopDownComponent implements OnInit {
           console.log("updating placed plant information");
           this.context.clearRect(0, 0, canvas.width, canvas.height);
           for (var i = 0; i < this.size; i++) {
-            this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, (this.imgDims[i].y + this.imgDims[i].y * this.sSize), (this.imgDims[i].y + this.imgDims[i].y * this.sSize));
+            this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, (this.imgDims[i].width + this.imgDims[i].y * this.sSize), (this.imgDims[i].height + this.imgDims[i].y * this.sSize));
           }
         }
       });
@@ -347,7 +347,7 @@ export class TopDownComponent implements OnInit {
         this.canvasPlants.forEach((plant, i) => {
           plant.img.onload = () => {
             console.log("image loaded");
-            this.context.drawImage(plant.img, this.imgDims[i].x, this.imgDims[i].y, (this.imgDims[i].y + this.imgDims[i].y * this.sSize), (this.imgDims[i].y + this.imgDims[i].y * this.sSize));
+            this.context.drawImage(plant.img, this.imgDims[i].x, this.imgDims[i].y, (this.imgDims[i].width + this.imgDims[i].y * this.sSize), (this.imgDims[i].height + this.imgDims[i].y * this.sSize));
 
           }
         })
