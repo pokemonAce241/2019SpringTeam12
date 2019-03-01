@@ -102,16 +102,6 @@ export class PlantListComponent implements OnInit {
 
   ngAfterViewInit() {
 
-    // this.plantService.getPlants()
-    //   .subscribe(res => {
-    //     this.plants = res;
-    //     this.plants.forEach(plant => {
-    //       plant.img = new Image();
-    //       plant.img.src = plant.front_image_path;
-    //     });
-    //     this.plants[this.plants.length - 1].img.onload = () => {this.filterPlants()}
-    //   });
-
     let canvas = document.getElementById('plant-list-canvas') as HTMLCanvasElement;
     // size the canvas to fill the div
     canvas.style.width = '100%';
