@@ -5,9 +5,12 @@
   <div class="toolbar noselect">
     <app-toolbar></app-toolbar>
   </div>
-  <div class="canvas" id="canvasContainer">
+  <div class="canvas" id="canvasContainer" *ngIf="gardenService.getPerspective()">
     <p>{{gardenService.getPerspective()}}</p>
-    <app-canvas *ngIf="gardenService.getPerspective()"></app-canvas>
-    <!-- <app-top-down *ngIf="!gardenService.getPerspective()"></app-top-down> -->
+    <app-canvas ></app-canvas>
+  </div>
+  <div class="canvas" id="canvasContainer" *ngIf="!gardenService.getPerspective()">
+    <p>{{gardenService.getPerspective()}}</p>
+    <app-top-down></app-top-down>
   </div>
 </div>
