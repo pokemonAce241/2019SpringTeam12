@@ -15,7 +15,7 @@ export class CanvasTransitionService {
   private initialize: boolean;
   private size: any;
 
-  constructor() { 
+  constructor() {
     this.img = '';
     this.tog = false;
     this.drag = false;
@@ -71,6 +71,10 @@ export class CanvasTransitionService {
 
   setPlantCanvas() {
     this.plant = true;
+  }
+
+  setGardenCanvas() {
+    this.plant = false;
   }
 
   isReset(): boolean {
