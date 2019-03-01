@@ -126,26 +126,26 @@
   <div class="col-sm-4 my-1">
     <button [ngStyle]="{'background-color': soilActive ? '#dc3545' : '', 'color': soilActive ? '#ffffff' : ''}" class="btn btn-outline-danger dropdown-toggle" id="soil" data-toggle="dropdown">Soil</button>
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
-      <div class="form-group">
+      <div style="padding-left:10px;" class="form-group">
         <div class="radio">
             <label>
-                <input type="radio" name="soil" value="moist" ng-model="soilFilters.moist">
+                <input type="radio" name="soil" value="moist" [(ngModel)]="soilStatus" (change)="filterPlants()">
                 Moist
             </label>
         </div>
         <div class="radio">
             <label>
-                <input type="radio" name="soil" value="wet" ng-model="soilFilters.wet">
+                <input type="radio" name="soil" value="wet" [(ngModel)]="soilStatus" (change)="filterPlants()">
                 Wet
             </label>
         </div>
         <div class="radio">
             <label>
-                <input type="radio" name="soil" value="dry" ng-model="soilFilters.dry">
+                <input type="radio" name="soil" value="dry" [(ngModel)]="soilStatus" (change)="filterPlants()">
                 Dry
             </label>
         </div>  
-    </div>
+      </div>
     </div>
 
 
@@ -167,7 +167,7 @@
 
 
     </div>
-
+  </div>
   <div class="col-sm-8 my-1">
     <button [ngStyle]="{'background-color': heightActive ? '#dc3545' : '', 'color': heightActive ? '#ffffff' : ''}" class="btn btn-outline-danger dropdown-toggle" id="height" data-toggle="dropdown">Height</button>
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
@@ -177,7 +177,7 @@
   </div>
 </div>
 
-<div style="display:block; width:100%" id="canvasContainer">
+<div style="display:block; width:100%; overflow: scroll" id="canvasContainer">
     <canvas #canvasEl id="plant-list-canvas" style="width: 100%; height: 100%;"></canvas>
     <!-- <img *ngFor="let plant of plants" src="{{plant.front_image_path}}" style="width: 40%; height: 40%"> -->
 </div>

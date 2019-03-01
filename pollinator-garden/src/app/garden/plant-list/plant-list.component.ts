@@ -79,8 +79,10 @@ export class PlantListComponent implements OnInit {
   soilFilters = {
     "wet": false,
     "moist": false,
-    "dry": false
+    "dry": false,
   }
+
+  soilStatus: string;
 
   soilActive = false;
 
@@ -187,6 +189,9 @@ export class PlantListComponent implements OnInit {
     document.addEventListener('mouseup', (ev) => {
 
       console.log("Watermelon");
+      //console.log("Moist: " + this.soilFilters.moist);
+      //console.log("Wet: " + this.soilFilters.wet);
+      //console.log("Dry: " + this.soilFilters.dry);
       this.canvasService.setDraggedToFalse();
       if (this.index !== undefined) {
         this.imgDims[this.index].x = this.imgDims[this.index].ox;
@@ -569,23 +574,23 @@ export class PlantListComponent implements OnInit {
     this.filteredPlants = this.filteredPlants.filter(plant => {
       var match = false;
 
-      if (this.soilFilters.wet && plant.wet) {
+      if (this.soilStatus === "wet" && plant.wet) {
         match = true;
-      }
-      if (this.soilFilters.dry && plant.dry) {
+      } 
+      if (this.soilStatus === "moist" && plant.moist) {
         match = true;
-      }
-      if (this.soilFilters.moist && plant.moist) {
+      } 
+      if (this.soilStatus === "dry" && plant.dry) {
         match = true;
       }
 
-      if (!this.soilFilters.wet &&
-          !this.soilFilters.dry &&
-          !this.soilFilters.moist) {
-        this.soilActive = false;
-        return true;
+      if (this.soilStatus != "wet" &&
+          this.soilStatus != "moist" &&
+          this.soilStatus != "dry") {
+            this.soilActive = false;
+            return true;
       }
-
+      //console.log(this.soilStatus);
       this.soilActive = true;
       return match;
     });
