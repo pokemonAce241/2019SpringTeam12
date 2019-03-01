@@ -21,9 +21,13 @@ const httpOptions = {
 })
 export class GardenService {
 
+  private changeView: boolean;
+
   constructor(
     private http: HttpClient
-  ) { }
+  ) { 
+    this.changeView = false;
+  }
 
   baseUrl = "http://localhost:3000/";
   gardenUrl = "gardens/"
@@ -43,6 +47,15 @@ export class GardenService {
         return of(garden);
       })
     );
+  }
+
+  viewChange() {
+    console.log("Pineapple")
+    this.changeView = !this.changeView;
+  }
+
+  getPerspective() {
+    return this.changeView;
   }
 
   deleteGarden(gardenId: number): Observable<Garden> {

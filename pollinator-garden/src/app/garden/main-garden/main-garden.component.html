@@ -6,7 +6,8 @@
     <app-toolbar></app-toolbar>
   </div>
   <div class="canvas" id="canvasContainer">
-    <app-canvas></app-canvas>
-    <!-- <app-top-down></app-top-down> -->
+    <p>{{gardenService.getPerspective()}}</p>
+    <app-canvas *ngIf="gardenService.getPerspective()"></app-canvas>
+    <!-- <app-top-down *ngIf="!gardenService.getPerspective()"></app-top-down> -->
   </div>
 </div>
