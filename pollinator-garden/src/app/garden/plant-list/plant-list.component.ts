@@ -74,7 +74,7 @@ export class PlantListComponent implements OnInit {
     "annual": false
   }
 
-  typeActive = false;
+  typeActive = false; 
 
   soilFilters = {
     "wet": false,
