@@ -78,7 +78,7 @@ export class PlantListComponent implements OnInit {
 
   plantType: string;
 
-  typeActive = false; 
+  typeActive = false;
 
   soilFilters = {
     "wet": false,
@@ -193,6 +193,7 @@ export class PlantListComponent implements OnInit {
         this.context.clearRect(0, 0, canvas.width, canvas.height);
       }
 
+      this.context.clearRect(0, 0, canvas.width, canvas.height);
       for(var i = 0; i < this.size; i++) {
         this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
         this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
@@ -570,10 +571,10 @@ export class PlantListComponent implements OnInit {
 
       if (this.soilStatus === "wet" && plant.wet) {
         match = true;
-      } 
+      }
       if (this.soilStatus === "moist" && plant.moist) {
         match = true;
-      } 
+      }
       if (this.soilStatus === "dry" && plant.dry) {
         match = true;
       }
