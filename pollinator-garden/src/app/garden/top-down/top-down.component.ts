@@ -117,6 +117,8 @@ export class TopDownComponent implements OnInit {
       var x = ev.clientX - rect.left;
       var y = ev.clientY - rect.top;
 
+      // Sets current canvas to garden canvas
+      this.canvasService.setGardenCanvas();
       // if within the garden canvas and toggled then update the current index image information
       if (this.imgDims !== undefined &&
         (x > 0 && x < canvas.width) &&
@@ -338,7 +340,6 @@ export class TopDownComponent implements OnInit {
           this.imgDims[this.index].id = plant.id;
           this.imgDims[this.index].placed = true;
           this.canvasService.incrementSize();
-
         })
 
         this.canvasPlants.forEach((plant, i) => {
@@ -348,7 +349,6 @@ export class TopDownComponent implements OnInit {
 
           }
         })
-
       });
 
     console.log(this.imgDims);

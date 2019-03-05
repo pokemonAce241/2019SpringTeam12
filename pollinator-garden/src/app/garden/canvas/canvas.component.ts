@@ -3,6 +3,7 @@ import { ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PlantInstance, InstanceService } from 'src/app/services/instance.service';
 import { CanvasTransitionService } from 'src/app/services/canvas-transition.service';
+import { GardenService } from 'src/app/services/garden.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MyGardensComponent } from '../my-gardens/my-gardens.component';
 
@@ -38,6 +39,7 @@ export class CanvasComponent implements OnInit {
     private instanceService: InstanceService,
     private canvasService: CanvasTransitionService,
     private modalService: NgbModal,
+    private gardenService: GardenService,
   ) {
     this.imgDims = [];
     this.canvasPlants = [];

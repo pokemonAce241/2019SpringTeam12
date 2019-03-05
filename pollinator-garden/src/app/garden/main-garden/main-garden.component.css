@@ -61,8 +61,8 @@
 }
 
 .square {
-    width:25%; 
-    padding-top: 25%; 
+    width:25%;
+    padding-top: 25%;
     border: 1px solid black;
 }
 
@@ -76,8 +76,8 @@
 } */
 
 .filterButton {
-    border-radius: 0px; 
-    border: 1px black solid; 
+    border-radius: 0px;
+    border: 1px black solid;
     padding: .375rem .2rem;
     background: inherit;
     height: 100%;

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CanvasComponent } from './canvas/canvas.component';
+import { TopDownComponent } from './top-down/top-down.component';
 import { PlantListComponent } from './plant-list/plant-list.component';
 // import { MyGardensComponent } from './my-gardens/my-gardens.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
@@ -17,7 +18,7 @@ import { FormsModule } from '@angular/forms';
     NgbModule,
     FormsModule
   ],
-  declarations: [CanvasComponent, PlantListComponent, ToolbarComponent, MainGardenComponent, SearchComponent],
+  declarations: [CanvasComponent, TopDownComponent, PlantListComponent, ToolbarComponent, MainGardenComponent, SearchComponent],
   bootstrap: [MainGardenComponent],
   providers: [NgbModal]
 })

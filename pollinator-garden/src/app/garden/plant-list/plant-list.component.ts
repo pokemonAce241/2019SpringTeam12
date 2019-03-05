@@ -270,35 +270,9 @@ export class PlantListComponent implements OnInit {
         }
       }
 
-      // document.addEventListener("drag", (ev) => {
-      //     //if (this.index !== undefined) {
-      //       this.imgDims[this.index].x = this.imgDims[this.index].ox;
-      //       this.imgDims[this.index].y = this.imgDims[this.index].oy;
-      //       this.context.clearRect(0, 0, canvas.width, canvas.height);
-
-      //       for(var i = 0; i < this.size; i++) {
-      //         this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
-      //         this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
-      //       }
-      //       console.log("Sucessssss");
-      //     //}
-      // });
-
-
 
     });
 
-    // document.addEventListener('mousedown', (ev) => {
-    //   var test = ev.target as HTMLElement;
-    //   console.log(test.tagName);
-    //   if (test.tagName !== "CANVAS") {
-    //     return;
-    //   } else {
-    //     //this.canvasService.setPlantCanvas();
-    //   }
-    //   //console.log(this.canvasService.isPlantCanvas());
-
-    // });
   }
 
   ngOnInit() {

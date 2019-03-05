@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GardenService } from 'src/app/services/garden.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ToolbarComponent implements OnInit {
 
-  constructor() { }
+  constructor(private gardenService: GardenService) { 
+    
+  }
 
   ngOnInit() {
   }
 
+  public perspectiveChange() {
+    this.gardenService.viewChange();
+  }
 }
