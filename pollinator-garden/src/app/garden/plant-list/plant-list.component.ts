@@ -32,10 +32,14 @@ export class PlantListComponent implements OnInit {
   plants: Plant[];
   filteredPlants: Plant[];
 
+  //Updated the season filters to include early/late seasons
   seasonFilters = {
-    "summer": false,
-    "spring": false,
-    "fall": false,
+    "esummer": false,
+    "lsummer": false,
+    "espring": false,
+    "lspring": false,
+    "efall": false,
+    "lfall": false,
     "winter": false
   }
 
@@ -46,6 +50,8 @@ export class PlantListComponent implements OnInit {
     "piedmont": false,
     "coast": false
   }
+
+  plantRegion: string;
 
   regionActive = false;
 
@@ -70,13 +76,17 @@ export class PlantListComponent implements OnInit {
     "annual": false
   }
 
+  plantType: string;
+
   typeActive = false;
 
   soilFilters = {
     "wet": false,
     "moist": false,
-    "dry": false
+    "dry": false,
   }
+
+  soilStatus: string;
 
   soilActive = false;
 
@@ -99,7 +109,7 @@ export class PlantListComponent implements OnInit {
   ngAfterViewInit() {
 
     let canvas = document.getElementById('plant-list-canvas') as HTMLCanvasElement;
-    // size the canvas to fill the div 
+    // size the canvas to fill the div
     canvas.style.width = '100%';
     canvas.style.height = '100%';
     // have the height and width attributes match the style (1:1)
@@ -128,98 +138,167 @@ export class PlantListComponent implements OnInit {
       }
     });
 
-    document.addEventListener('click', (ev) => {
-
+    canvas.addEventListener('mousedown', (ev) => {
       var test = ev.target as HTMLElement;
       console.log(test.tagName);
       if (test.tagName !== "CANVAS") {
         return;
       }
 
-      // async method below that gets whether to reset the canvas
-      this.updateReset().then(() => {
-        // if reset then restore image back to original dimensions
-        if (this.reset) {
-          this.canvasService.toggleReset();
-          if(this.index !== undefined && this.index !== -1) {
-            // console.log(this.index);
-            this.imgDims[this.index].x = this.imgDims[this.index].ox;
-            this.imgDims[this.index].y = this.imgDims[this.index].oy;
-            this.index = -1;
-          }
-          for(var i = 0; i < this.size; i++) {
-            this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
-          }
-          return;
-        }
 
         rect = canvas.getBoundingClientRect();
         var x = ev.clientX - rect.left;
         var y = ev.clientY - rect.top;
 
+        // Checks if mouse click is within dimensions of any of the images
         for (var i = 0; i < this.size; i++) {
           // if not selected and clicked then toggle and break
           if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
             (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
-            !this.canvasService.isToggled() && this.canvasService.isPlantCanvas()) {
-            this.canvasService.toggleSelected();
+            !this.canvasService.isDragged() && this.canvasService.isPlantCanvas()) {
+            this.canvasService.toggleDragged();
             this.index = i;
             return;
           }
         }
 
-        if (this.canvasService.isToggled() && this.canvasService.isPlantCanvas()) {
-          this.canvasService.toggleSelected();
+        // Checks if image selected toggle has been turned on
+        if (this.canvasService.isDragged() && this.canvasService.isPlantCanvas()) {
+          this.canvasService.toggleDragged();
           this.imgDims[this.index].x = this.imgDims[this.index].ox;
           this.imgDims[this.index].y = this.imgDims[this.index].oy;
           this.context.clearRect(0, 0, canvas.width, canvas.height);
+
+          // this part might be redundant
           for(var i = 0; i < this.size; i++) {
             this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
             this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
           }
         }
-      });
+      console.log("drag start");
+      console.log(this.canvasService.isDragged());
+      console.log(this.imgDims[this.index].img.src);
+    });
 
-      // console.log(this.canvasService.isToggled() + ' ' + this.index);
-      // if(!this.canvasService.isToggled() && this.index >= 0) {
-      //   this.index = -1;
-      //   console.log(this.index);
-      // }
+    document.addEventListener('mouseup', (ev) => {
+
+      console.log("Watermelon");
+      //console.log("Moist: " + this.soilFilters.moist);
+      //console.log("Wet: " + this.soilFilters.wet);
+      //console.log("Dry: " + this.soilFilters.dry);
+      this.canvasService.setDraggedToFalse();
+      if (this.index !== undefined) {
+        this.imgDims[this.index].x = this.imgDims[this.index].ox;
+        this.imgDims[this.index].y = this.imgDims[this.index].oy;
+        this.context.clearRect(0, 0, canvas.width, canvas.height);
+      }
+
+      this.context.clearRect(0, 0, canvas.width, canvas.height);
+      for(var i = 0; i < this.size; i++) {
+        this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+        this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
+      }
+
     });
 
     document.addEventListener('mousemove', (ev) => {
+
       rect = canvas.getBoundingClientRect();
+      // Get mouse location
       var x = ev.clientX - rect.left;
       var y = ev.clientY - rect.top;
-      // image selected and crossing boundary pass information
-      if (this.canvasService.getImg() === '' && this.canvasService.isToggled() && this.canvasService.isPlantCanvas() && x > canvas.width && y > 0 && y < canvas.height) {
-        this.canvasService.incrementSize();
-        this.canvasService.toggleCanvas();
-        this.context.clearRect(0, 0, canvas.width, canvas.height);
-        this.canvasService.toggleInitialize();
-        this.canvasService.setImg(this.imgDims[this.index].img.src);
-        this.canvasService.setId(this.imgDims[this.index].id);
-      } else if (this.canvasService.getImg() === '' && this.canvasService.isPlantCanvas() && x > canvas.width && y > 0 && y < canvas.height) { // if no image then still signal change of canvas
-        this.canvasService.toggleCanvas();
-      } else if (this.canvasService.isToggled() && this.canvasService.isPlantCanvas()) { // otherwise in canvas still so update and draw
-        this.imgDims[this.index].x = x - this.imgDims[this.index].width * .5;
-        this.imgDims[this.index].y = y - this.imgDims[this.index].height * .5;
-        this.context.clearRect(0, 0, canvas.width, canvas.height);
-        for (var i = 0; i < this.size; i++) {
-          this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
-          this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
-        }
-      } else if(this.imgDims[this.index] !== undefined && this.canvasService.isToggled() && !this.canvasService.isPlantCanvas()) {
-        this.context.clearRect(0, 0, canvas.width, canvas.height);
-        for (var i = 0; i < this.size; i++) {
-          if(i !== this.index) {
-          this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
-          this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
+
+      if (this.canvasService.isPlantCanvas()) {
+          // image selected and crossing boundary pass information
+        if (this.canvasService.isDragged() && x > canvas.width && y > 0 && y < canvas.height) {
+          this.canvasService.incrementSize();
+          // Resets plant toggle to false (so it is no longer selected in the plant window)
+          this.canvasService.toggleCanvas();
+          this.context.clearRect(0, 0, canvas.width, canvas.height);
+          this.canvasService.toggleInitialize();
+          // Takes the image source from the assets file and stores it in the canvas img field
+          this.canvasService.setImg(this.imgDims[this.index].img.src);
+          console.log("Image Set");
+          // Stores the id of the image
+          this.canvasService.setId(this.imgDims[this.index].id);
+
+          this.imgDims[this.index].x = this.imgDims[this.index].ox;
+          this.imgDims[this.index].y = this.imgDims[this.index].oy;
+          this.context.clearRect(0, 0, canvas.width, canvas.height);
+          // This makes sure all plants in plant list stay visible when mouse switches canvases
+          for (var i = 0; i < this.size; i++) {
+            //if(i !== this.index) {
+            this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+            this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
+            //}
+          }
+
+          this.context.fillText(this.imgDims[this.index].name, this.imgDims[this.index].ox, this.imgDims[this.index].oy + this.imgDims[this.index].height + 10);
+
+        } else if (this.canvasService.getImg() === '' && x > canvas.width && y > 0 && y < canvas.height) { // if no image then still signal change of canvas
+          this.canvasService.toggleCanvas();
+        } else if (this.canvasService.isDragged()) { // otherwise in canvas still so update and draw
+          if (this.canvasService.getImg() === '') {
+              // Takes the image source from the assets file and stores it in the canvas img field
+              console.log(this.imgDims);
+            this.canvasService.setImg(this.imgDims[this.index].img.src);
+            // Stores the id of the image
+            this.canvasService.setId(this.imgDims[this.index].id);
+          }
+          this.imgDims[this.index].x = x - this.imgDims[this.index].width * .5;
+          this.imgDims[this.index].y = y - this.imgDims[this.index].height * .5;
+          this.context.clearRect(0, 0, canvas.width, canvas.height);
+          // this will replace the images in the plant list when you move the mouse back and forth between the plant canvas
+          // and the garden canvas
+          for (var i = 0; i < this.size; i++) {
+            this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+            this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
           }
         }
-        this.context.fillText(this.imgDims[this.index].name, this.imgDims[this.index].ox, this.imgDims[this.index].oy + this.imgDims[this.index].height + 10);
+      } else {
+        if(this.imgDims[this.index] !== undefined && this.canvasService.isDragged()) {
+          this.context.clearRect(0, 0, canvas.width, canvas.height);
+          // This makes sure all plants in plant list stay visible when mouse switches canvases
+          for (var i = 0; i < this.size; i++) {
+            //if(i !== this.index) {
+            this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+            this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
+            //}
+          }
+
+          this.context.fillText(this.imgDims[this.index].name, this.imgDims[this.index].ox, this.imgDims[this.index].oy + this.imgDims[this.index].height + 10);
+        }
       }
+
+      // document.addEventListener("drag", (ev) => {
+      //     //if (this.index !== undefined) {
+      //       this.imgDims[this.index].x = this.imgDims[this.index].ox;
+      //       this.imgDims[this.index].y = this.imgDims[this.index].oy;
+      //       this.context.clearRect(0, 0, canvas.width, canvas.height);
+
+      //       for(var i = 0; i < this.size; i++) {
+      //         this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+      //         this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
+      //       }
+      //       console.log("Sucessssss");
+      //     //}
+      // });
+
+
+
     });
+
+    // document.addEventListener('mousedown', (ev) => {
+    //   var test = ev.target as HTMLElement;
+    //   console.log(test.tagName);
+    //   if (test.tagName !== "CANVAS") {
+    //     return;
+    //   } else {
+    //     //this.canvasService.setPlantCanvas();
+    //   }
+    //   //console.log(this.canvasService.isPlantCanvas());
+
+    // });
   }
 
   ngOnInit() {
@@ -233,7 +312,7 @@ export class PlantListComponent implements OnInit {
         this.plants[this.plants.length - 1].img.onload = () => {this.filterPlants()}
       });
 
-      // this.getPlants();
+      // Plants();
   }
 
   loadPlants() {
@@ -256,9 +335,9 @@ export class PlantListComponent implements OnInit {
     this.context.clearRect(0, 0, canvas.width, canvas.height);
     this.imgDims = [];
     this.size = 0;
-    
+
     console.log(this.filteredPlants);
-    
+
 
     this.filteredPlants.forEach(plant => {
       // if the image is mod 0 then begin pic on line
@@ -299,7 +378,7 @@ export class PlantListComponent implements OnInit {
         this.imgDims[this.size].name = plant.common_name;
         this.imgDims[this.size].id = plant.id;
         this.context.fillText(this.imgDims[this.size].name, this.imgDims[this.size].x, this.imgDims[this.size].y + this.imgDims[this.size].height + 10);
-        
+
       }
       if (this.size % 2 !== 0) {
         line++;
@@ -323,37 +402,57 @@ export class PlantListComponent implements OnInit {
     });
   }
 
-  getPlants() {
+  public getPlants() : Plant[] {
     this.plantService.getPlants()
       .subscribe(res => {
         this.plants = res;
         console.log(this.plants);
       });
+    return this.plants;
   }
 
-  filterPlants() {
+  // Used for testing purposes
+  public getLocalPlantList() : Plant[] {
+    return this.plants;
+  }
+
+  public filterPlants() {
     this.filteredPlants = this.plants;
+    console.log(this.filteredPlants);
 
     // SEASONS
     this.filteredPlants = this.filteredPlants.filter(plant => {
       var match = false;
 
-      if (this.seasonFilters.spring && plant.seasons.includes("spring")) {
+      //updated filtering to include early and late seasons
+      if (this.seasonFilters.espring && plant.espring) {
         match = true;
       }
-      if (this.seasonFilters.summer && plant.seasons.includes("summer")) {
+      if (this.seasonFilters.lspring && plant.lspring) {
         match = true;
       }
-      if (this.seasonFilters.fall && plant.seasons.includes("fall")) {
+      if (this.seasonFilters.esummer && plant.esummer) {
         match = true;
       }
-      if (this.seasonFilters.winter && plant.seasons.includes("winter")) {
+      if (this.seasonFilters.lsummer && plant.lsummer) {
+        match = true;
+      }
+      if (this.seasonFilters.efall && plant.efall) {
+        match = true;
+      }
+      if (this.seasonFilters.lfall && plant.lfall) {
+        match = true;
+      }
+      if (this.seasonFilters.winter && plant.winter) {
         match = true;
       }
 
-      if (!this.seasonFilters.spring &&
-          !this.seasonFilters.summer &&
-          !this.seasonFilters.fall &&
+      if (!this.seasonFilters.espring &&
+          !this.seasonFilters.esummer &&
+          !this.seasonFilters.efall &&
+          !this.seasonFilters.lspring &&
+          !this.seasonFilters.lsummer &&
+          !this.seasonFilters.lfall &&
           !this.seasonFilters.winter) {
         this.seasonActive = false;
         return true;
@@ -367,19 +466,19 @@ export class PlantListComponent implements OnInit {
     this.filteredPlants = this.filteredPlants.filter(plant => {
       var match = false;
 
-      if (this.regionFilters.mountain && plant.regions.includes("mountain")) {
+      if (this.plantRegion === "mountain" && plant.mountain) {
         match = true;
       }
-      if (this.regionFilters.piedmont && plant.regions.includes("piedmont")) {
+      if (this.plantRegion === "piedmont" && plant.piedmont) {
         match = true;
       }
-      if (this.regionFilters.coast && plant.regions.includes("coast")) {
+      if (this.plantRegion === "coast" && plant.coast) {
         match = true;
       }
 
-      if (!this.regionFilters.mountain &&
-          !this.regionFilters.piedmont &&
-          !this.regionFilters.coast) {
+      if (this.plantRegion != "mountain" &&
+          this.plantRegion != "piedmont" &&
+          this.plantRegion != "coast") {
         this.regionActive = false;
         return true;
       }
@@ -387,36 +486,36 @@ export class PlantListComponent implements OnInit {
       this.regionActive = true;
       return match;
     });
-    
+
     // COLORS
     this.filteredPlants = this.filteredPlants.filter(plant => {
       var match = false;
 
-      if (this.colorFilters.red && plant.color === "red") {
+      if (this.colorFilters.red && plant.red) {
         match = true;
       }
-      if (this.colorFilters.blue && plant.color === "blue") {
+      if (this.colorFilters.blue && plant.blue) {
         match = true;
       }
-      if (this.colorFilters.purple && plant.color === "purple") {
+      if (this.colorFilters.purple && plant.purple) {
         match = true;
       }
-      if (this.colorFilters.pink && plant.color === "pink") {
+      if (this.colorFilters.pink && plant.pink) {
         match = true;
       }
-      if (this.colorFilters.yellow && plant.color === "yellow") {
+      if (this.colorFilters.yellow && plant.yellow) {
         match = true;
       }
-      if (this.colorFilters.white && plant.color === "white") {
+      if (this.colorFilters.white && plant.white) {
         match = true;
       }
-      if (this.colorFilters.orange && plant.color === "orange") {
+      if (this.colorFilters.orange && plant.orange) {
         match = true;
       }
-      if (this.colorFilters.green && plant.color === "green") {
+      if (this.colorFilters.green && plant.green) {
         match = true;
       }
-      if (this.colorFilters.other && plant.color === "other") {
+      if (this.colorFilters.other && plant.other) {
         match = true;
       }
 
@@ -441,23 +540,23 @@ export class PlantListComponent implements OnInit {
     this.filteredPlants = this.filteredPlants.filter(plant => {
       var match = false;
 
-      if (this.typeFilters.vine && plant.plant_type === "vine") {
+      if (this.plantType === "vine" && plant.plant_type === "vine") {
         match = true;
       }
-      if (this.typeFilters.shrub && plant.plant_type === "shrub") {
+      if (this.plantType === "shrub" && plant.plant_type === "shrub") {
         match = true;
       }
-      if (this.typeFilters.annual && plant.plant_type === "annual") {
+      if (this.plantType === "annual" && plant.plant_type === "annual") {
         match = true;
       }
-      if (this.typeFilters.perennial && plant.plant_type === "perennial") {
+      if (this.plantType === "perennial" && plant.plant_type === "perennial") {
         match = true;
       }
 
-      if (!this.typeFilters.vine &&
-          !this.typeFilters.shrub &&
-          !this.typeFilters.annual &&
-          !this.typeFilters.perennial) {
+      if (this.plantType != "vine" &&
+          this.plantType != "shrub" &&
+          this.plantType != "annual" &&
+          this.plantType != "perennial") {
         this.typeActive = false;
         return true;
       }
@@ -470,23 +569,23 @@ export class PlantListComponent implements OnInit {
     this.filteredPlants = this.filteredPlants.filter(plant => {
       var match = false;
 
-      if (this.soilFilters.wet && plant.soil_types.includes("wet")) {
+      if (this.soilStatus === "wet" && plant.wet) {
         match = true;
       }
-      if (this.soilFilters.dry && plant.soil_types.includes("dry")) {
+      if (this.soilStatus === "moist" && plant.moist) {
         match = true;
       }
-      if (this.soilFilters.moist && plant.soil_types.includes("moist")) {
+      if (this.soilStatus === "dry" && plant.dry) {
         match = true;
       }
 
-      if (!this.soilFilters.wet &&
-          !this.soilFilters.dry &&
-          !this.soilFilters.moist) {
-        this.soilActive = false;
-        return true;
+      if (this.soilStatus != "wet" &&
+          this.soilStatus != "moist" &&
+          this.soilStatus != "dry") {
+            this.soilActive = false;
+            return true;
       }
-
+      //console.log(this.soilStatus);
       this.soilActive = true;
       return match;
     });
@@ -494,11 +593,12 @@ export class PlantListComponent implements OnInit {
     // HEIGHT
     this.filteredPlants = this.filteredPlants.filter(plant => {
       var match = false;
-
-      if (this.minHeight === undefined) {
+      // added checking if what was entered by user was blank, since this should function the same as if undefined
+      if (this.minHeight === undefined || this.minHeight.toString() === "") {
         this.minHeight = 0;
       }
-      if (this.maxHeight === undefined) {
+      // added checking if what was entered by user was blank, since this should function the same as if undefined
+      if (this.maxHeight === undefined || this.maxHeight.toString() === "") {
         this.maxHeight = 20;
       }
 
@@ -507,8 +607,13 @@ export class PlantListComponent implements OnInit {
       } else {
         this.heightActive = true;
       }
-
-      if (plant.min_height >= this.minHeight && plant.max_height <= this.maxHeight) {
+      /*Updated if statement to check if the ranges overlap at all. Originally this was setup to check
+      if the plant min height was greater than the entered min height and the plant max height was less
+      than the entered max height.*/
+      if (plant.min_height >= this.minHeight && plant.max_height <= this.maxHeight
+        || plant.min_height <= this.minHeight && plant.max_height >= this.minHeight && plant.max_height <= this.maxHeight
+        || plant.max_height <= this.maxHeight && plant.min_height >= this.minHeight && plant.min_height <= this.maxHeight
+        || plant.min_height <= this.minHeight && plant.max_height >= this.maxHeight) {
         match = true;
       }
 
@@ -543,7 +648,7 @@ export class PlantListComponent implements OnInit {
     }
 
     for (var property in this.regionFilters) {
-      this.regionFilters[property] = false;
+      this.plantRegion = "";
     }
 
     for (var property in this.colorFilters) {
@@ -551,11 +656,11 @@ export class PlantListComponent implements OnInit {
     }
 
     for (var property in this.typeFilters) {
-      this.typeFilters[property] = false;
+      this.plantType= "";
     }
 
     for (var property in this.soilFilters) {
-      this.soilFilters[property] = false;
+      this.soilStatus = "";
     }
 
     this.minHeight = 0;
