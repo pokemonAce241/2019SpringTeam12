@@ -32,7 +32,6 @@ export class PlantListComponent implements OnInit {
 
   plants: Plant[];
   filteredPlants: Plant[];
-  unsortedPlants: Plant[];
 
   //Updated the season filters to include early/late seasons
   seasonFilters = {
@@ -286,11 +285,6 @@ export class PlantListComponent implements OnInit {
       .subscribe(res => {
         this.plants = res;
         this.plants.forEach(plant => {
-          plant.img = new Image();
-          plant.img.src = plant.side_image_path;
-        });
-        this.unsortedPlants = res;
-        this.unsortedPlants.forEach(plant => {
           plant.img = new Image();
           plant.img.src = plant.side_image_path;
         });

@@ -9,6 +9,7 @@ export class PlantInstance {
   y: number;
   front_image_path: string;
   side_image_path: string;
+  common_name : string;
   plant_id: number;
   garden_id: number;
 }

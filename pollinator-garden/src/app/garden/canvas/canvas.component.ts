@@ -6,6 +6,7 @@ import { CanvasTransitionService } from 'src/app/services/canvas-transition.serv
 import { GardenService } from 'src/app/services/garden.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MyGardensComponent } from '../my-gardens/my-gardens.component';
+import { Plant, PlantService } from 'src/app/services/plant.service';
 
 @Component({
   selector: 'app-canvas',
@@ -27,6 +28,7 @@ export class CanvasComponent implements OnInit {
   private size: any;
   // Plant properties from the API
   plant_instances: PlantInstance[];
+  plants: Plant[];
   // which garden to load
   garden = { "id": 2 };
   gardenId = null;
@@ -40,6 +42,7 @@ export class CanvasComponent implements OnInit {
     private canvasService: CanvasTransitionService,
     private modalService: NgbModal,
     private gardenService: GardenService,
+    private plantService: PlantService,
   ) {
     this.imgDims = [];
     this.canvasPlants = [];
@@ -63,6 +66,7 @@ export class CanvasComponent implements OnInit {
     // have the height and width attributes match the style (1:1)
     canvas.height = canvas.offsetHeight;
     canvas.width = canvas.offsetWidth;
+
     // gets the canvas coordinates (rectangle)
     let rect = canvas.getBoundingClientRect();
     //instantiate a context based on the canvas
@@ -84,6 +88,10 @@ export class CanvasComponent implements OnInit {
       this.context.clearRect(0, 0, canvas.width, canvas.height);
       for (var i = 0; i < this.size; i++) {
         this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
+        if (this.gardenService.isTopDownPerspective()) {
+          var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
+          this.context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + this.imgDims[i].width) - (textWidth) , this.imgDims[i].y + this.imgDims[i].height / 2);
+        }
       }
     });
 
@@ -114,6 +122,10 @@ export class CanvasComponent implements OnInit {
       this.context.clearRect(0, 0, canvas.width, canvas.height);
       for (var i = 0; i < this.size; i++) {
         this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
+        if (this.gardenService.isTopDownPerspective()) {
+          var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
+          this.context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + this.imgDims[i].width) - (textWidth) , this.imgDims[i].y + this.imgDims[i].height / 2);
+        }
       }
 
     });
@@ -145,6 +157,10 @@ export class CanvasComponent implements OnInit {
         }
         for (var i = 0; i < this.size; i++) {
           this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
+          if (this.gardenService.isTopDownPerspective()) {
+            var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
+            this.context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + this.imgDims[i].width) - (textWidth) , this.imgDims[i].y + this.imgDims[i].height / 2);
+          }
         }
         this.canvasService.toggleDragged();
       } else if (this.imgDims[this.index] !== undefined && !this.canvasService.isDragged()) { //otherwise then selecting image at location (index becomes image index)
@@ -159,7 +175,6 @@ export class CanvasComponent implements OnInit {
           }
         }
       } else if ((x < 0 || x > canvas.width || y < 0 || y > canvas.height) && !this.canvasService.isPlantCanvas()) { //if not in garden canvas and toggle display error message
-        console.log("Heree 3");
         this.canvasService.decrementSize();
         this.canvasService.toggleDragged();
       }
@@ -188,7 +203,6 @@ export class CanvasComponent implements OnInit {
         this.context.clearRect(0, 0, canvas.width, canvas.height);
         if (!this.imgDims[this.index].placed) {
           this.createInstance(this.imgDims[this.index]);
-          //this.getPlantInstances();
           this.imgDims[this.index].placed = true;
           //this.index = -1;
         } else {
@@ -197,6 +211,11 @@ export class CanvasComponent implements OnInit {
         // Redraws all plants images on garden canvas
         for (var i = 0; i < this.size; i++) {
           this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
+          //console.log(this.canvasPlants[i].name);
+          if (this.gardenService.isTopDownPerspective()) {
+            var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
+            this.context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + this.imgDims[i].width) - (textWidth) , this.imgDims[i].y + this.imgDims[i].height / 2);
+          }
         }
         this.canvasService.setDraggedToFalse();
       } else if (this.imgDims[this.index] !== undefined && !this.canvasService.isDragged()) { //otherwise then selecting image at location (index becomes image index)
@@ -217,6 +236,7 @@ export class CanvasComponent implements OnInit {
       // if (!this.canvasService.isDragged() && !this.canvasService.isPlantCanvas()) {
       //   this.canvasService.toggleReset();
       // }
+      console.log(this.plant_instances);
       this.canvasService.toggleReset();
 
 
@@ -252,6 +272,7 @@ export class CanvasComponent implements OnInit {
           this.imgDims[this.index].yRel = NaN;
           this.imgDims[this.index].placed = false;
           this.imgDims[this.index].plant_id = this.canvasService.getId();
+          this.canvasPlants[this.index].name = this.plants[this.canvasService.getId() - 1].common_name;
           this.canvasService.toggleInitialize(); //marks it as intialized
         }
 
@@ -283,8 +304,11 @@ export class CanvasComponent implements OnInit {
           }
           this.context.clearRect(0, 0, canvas.width, canvas.height);
           for (var i = 0; i < this.canvasService.getSize(); i++) {
-
             this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
+            if (this.gardenService.isTopDownPerspective()) {
+              var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
+              this.context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + this.imgDims[i].width) - (textWidth) , this.imgDims[i].y + this.imgDims[i].height / 2);
+            }
           }
         } else if (this.imgDims[this.index] === undefined && x < 0 && !this.canvasService.isPlantCanvas()) { // if not set then ignore crossing over boundary
           this.canvasService.toggleCanvas();
@@ -292,14 +316,12 @@ export class CanvasComponent implements OnInit {
           console.log("updating placed plant information");
           this.context.clearRect(0, 0, canvas.width, canvas.height);
           for (var i = 0; i < this.size; i++) {
-            // if (this.gardenService.isTopDownPerspective() && this.plant_instances[i] != undefined) {
-            //   this.canvasPlants[i].img.src = this.plant_instances[i].front_image_path;
-            // }
-            //console.log(this.plant_instances[i]);
             this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
-            //this.context.drawImage(this.plant_instances[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
+            if (this.gardenService.isTopDownPerspective()) {
+              var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
+              this.context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + this.imgDims[i].width) - (textWidth) , this.imgDims[i].y + this.imgDims[i].height / 2);
+            }
           }
-
         }
       });
 
@@ -316,6 +338,10 @@ export class CanvasComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.plantService.getPlants()
+      .subscribe(res => {
+        this.plants = res;
+      });
   }
 
   public goToShoppingList(): void {
@@ -356,6 +382,7 @@ export class CanvasComponent implements OnInit {
           } else {
             this.canvasPlants[this.index].img.src = plant.side_image_path;
           }
+          this.canvasPlants[this.index].name = plant.common_name;
           this.imgDims[this.index] = {};       //sets the plant properties
           this.imgDims[this.index].width = 100;
           this.imgDims[this.index].height = 100;
@@ -377,6 +404,10 @@ export class CanvasComponent implements OnInit {
           plant.img.onload = () => {
             console.log("image loaded");
             this.context.drawImage(plant.img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
+            if (this.gardenService.isTopDownPerspective()) {
+              var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
+              this.context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + this.imgDims[i].width) - (textWidth) , this.imgDims[i].y + this.imgDims[i].height / 2);
+            }
             // this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
             // for (var i = 0; i < this.size; i++) {
             //   this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
@@ -398,6 +429,7 @@ export class CanvasComponent implements OnInit {
 
       img.onload = () => {
         this.context.drawImage(img, instance.x, instance.y, 100, 100);
+        //this.context.fillText(this.canvasPlants[i].name, in.x + this.imgDims[i].width / 3, this.imgDims[i].y + this.imgDims[i].height / 2);
       }
     });
   }
