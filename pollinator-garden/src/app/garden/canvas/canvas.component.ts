@@ -49,7 +49,6 @@ export class CanvasComponent implements OnInit {
         () => {
           console.log('View Change called!');
           this.clearCanvas();
-
           this.plant_instances = [];
           this.getPlantInstances();
         }
@@ -339,10 +338,10 @@ export class CanvasComponent implements OnInit {
       .subscribe(res => {
         console.log(res);
         this.plant_instances = res;
+        this.canvasService.setSize(0);
 
         this.plant_instances.forEach(plant => {
           this.index = this.canvasService.getSize();
-          // console.log(this.index);
           this.canvasPlants[this.index] = {};  // sets the new plant
           this.canvasPlants[this.index].img = new Image();
           if (this.gardenService.isTopDownPerspective()) {
