@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, 
 import { Router } from '@angular/router';
 import { InstanceService, PlantInstance } from 'src/app/services/instance.service';
 import { CanvasTransitionService } from 'src/app/services/canvas-transition.service';
+import { GardenService } from 'src/app/services/garden.service';
 import { Plant, PlantService } from 'src/app/services/plant.service';
 
 @Component({
@@ -31,6 +32,7 @@ export class PlantListComponent implements OnInit {
 
   plants: Plant[];
   filteredPlants: Plant[];
+  unsortedPlants: Plant[];
 
   //Updated the season filters to include early/late seasons
   seasonFilters = {
@@ -99,7 +101,8 @@ export class PlantListComponent implements OnInit {
 
   constructor(private canvasService: CanvasTransitionService,
     private instanceService: InstanceService,
-    private plantService: PlantService
+    private plantService: PlantService,
+    private gardenService: GardenService,
   ) {
     this.imgDims = [];
     this.img = new Image();
@@ -175,9 +178,7 @@ export class PlantListComponent implements OnInit {
             this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
           }
         }
-      console.log("drag start");
-      console.log(this.canvasService.isDragged());
-      console.log(this.imgDims[this.index].img.src);
+
     });
 
     document.addEventListener('mouseup', (ev) => {
@@ -217,7 +218,12 @@ export class PlantListComponent implements OnInit {
           this.context.clearRect(0, 0, canvas.width, canvas.height);
           this.canvasService.toggleInitialize();
           // Takes the image source from the assets file and stores it in the canvas img field
+          //console.log(this.index);
+          if (this.gardenService.isTopDownPerspective()) {
+            this.imgDims[this.index].img.src = this.plants[this.imgDims[this.index].id - 1].front_image_path;
+          }
           this.canvasService.setImg(this.imgDims[this.index].img.src);
+          this.imgDims[this.index].img.src = this.plants[this.imgDims[this.index].id - 1].side_image_path;
           console.log("Image Set");
           // Stores the id of the image
           this.canvasService.setId(this.imgDims[this.index].id);
@@ -240,7 +246,7 @@ export class PlantListComponent implements OnInit {
         } else if (this.canvasService.isDragged()) { // otherwise in canvas still so update and draw
           if (this.canvasService.getImg() === '') {
               // Takes the image source from the assets file and stores it in the canvas img field
-              console.log(this.imgDims);
+              //console.log(this.imgDims);
             this.canvasService.setImg(this.imgDims[this.index].img.src);
             // Stores the id of the image
             this.canvasService.setId(this.imgDims[this.index].id);
@@ -280,6 +286,11 @@ export class PlantListComponent implements OnInit {
       .subscribe(res => {
         this.plants = res;
         this.plants.forEach(plant => {
+          plant.img = new Image();
+          plant.img.src = plant.side_image_path;
+        });
+        this.unsortedPlants = res;
+        this.unsortedPlants.forEach(plant => {
           plant.img = new Image();
           plant.img.src = plant.side_image_path;
         });

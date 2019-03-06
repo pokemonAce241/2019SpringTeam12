@@ -49,7 +49,6 @@ export class CanvasComponent implements OnInit {
         () => {
           console.log('View Change called!');
           this.clearCanvas();
-          this.plant_instances = [];
           this.getPlantInstances();
         }
       );
@@ -189,6 +188,7 @@ export class CanvasComponent implements OnInit {
         this.context.clearRect(0, 0, canvas.width, canvas.height);
         if (!this.imgDims[this.index].placed) {
           this.createInstance(this.imgDims[this.index]);
+          //this.getPlantInstances();
           this.imgDims[this.index].placed = true;
           //this.index = -1;
         } else {
@@ -292,8 +292,14 @@ export class CanvasComponent implements OnInit {
           console.log("updating placed plant information");
           this.context.clearRect(0, 0, canvas.width, canvas.height);
           for (var i = 0; i < this.size; i++) {
+            // if (this.gardenService.isTopDownPerspective() && this.plant_instances[i] != undefined) {
+            //   this.canvasPlants[i].img.src = this.plant_instances[i].front_image_path;
+            // }
+            //console.log(this.plant_instances[i]);
             this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
+            //this.context.drawImage(this.plant_instances[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
           }
+
         }
       });
 
@@ -334,6 +340,7 @@ export class CanvasComponent implements OnInit {
 
   getPlantInstances() {
     console.log("get plant instances called")
+    this.plant_instances = [];
     this.instanceService.getInstances(this.gardenId)
       .subscribe(res => {
         console.log(res);
