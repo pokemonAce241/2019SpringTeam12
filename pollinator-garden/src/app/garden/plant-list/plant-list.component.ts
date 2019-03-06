@@ -281,7 +281,7 @@ export class PlantListComponent implements OnInit {
         this.plants = res;
         this.plants.forEach(plant => {
           plant.img = new Image();
-          plant.img.src = plant.front_image_path;
+          plant.img.src = plant.side_image_path;
         });
         this.plants[this.plants.length - 1].img.onload = () => {this.filterPlants()}
       });

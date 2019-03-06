@@ -1,1 +1,1 @@
-<canvas #canvasEl id="canvas" [ngClass]="gardenService.getPerspective() ? 'top-down' : 'side-view'"></canvas>
+<canvas #canvasEl id="canvas" [ngClass]="gardenService.isTopDownPerspective() ? 'top-down' : 'side-view'"></canvas>

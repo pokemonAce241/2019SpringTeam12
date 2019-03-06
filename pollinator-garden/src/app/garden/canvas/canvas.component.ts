@@ -45,6 +45,15 @@ export class CanvasComponent implements OnInit {
     this.canvasPlants = [];
     this.index = 0;
     this.size = 0;
+    this.gardenService.viewChangeCalled$.subscribe(
+        () => {
+          console.log('View Change called!');
+          this.clearCanvas();
+
+          this.plant_instances = [];
+          this.getPlantInstances();
+        }
+      );
   }
 
   ngAfterViewInit() {
@@ -275,6 +284,7 @@ export class CanvasComponent implements OnInit {
           }
           this.context.clearRect(0, 0, canvas.width, canvas.height);
           for (var i = 0; i < this.canvasService.getSize(); i++) {
+
             this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
           }
         } else if (this.imgDims[this.index] === undefined && x < 0 && !this.canvasService.isPlantCanvas()) { // if not set then ignore crossing over boundary
@@ -288,131 +298,19 @@ export class CanvasComponent implements OnInit {
         }
       });
 
-      // canvas.addEventListener('mouseleave', (ev) => {
-      //   // Redraws all plants images on garden canvas
-      //   for (var i = 0; i < this.size; i++) {
-      //     this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
-      //   }
-      //   //this.canvasService.toggleDragged();
-      // });
     });
 
-    // // one of two click event listeners (performs operations on garden canvas)
-    // document.addEventListener('click', (ev) => {
-    //   // rect is the rectangle boundary of the canvas
-    //   // client is mouse position on the client screen
-    //   // x and y is the location within the canvas
-    //   rect = canvas.getBoundingClientRect();
-    //   var x = ev.clientX - rect.left;
-    //   var y = ev.clientY - rect.top;
-
-    //   // if within the garden canvas and toggled then update the current index image information
-    //   if (this.imgDims !== undefined &&
-    //     (x > 0 && x < canvas.width) &&
-    //     (y > 0 && y < canvas.height) &&
-    //     this.canvasService.isToggled() && !this.canvasService.isPlantCanvas()) {
-    //     this.imgDims[this.index].x = x - this.imgDims[this.index].width * .5;
-    //     this.imgDims[this.index].y = y - this.imgDims[this.index].height * .5;
-    //     this.context.clearRect(0, 0, canvas.width, canvas.height);
-    //     if (!this.imgDims[this.index].placed) {
-    //       this.createInstance(this.imgDims[this.index]);
-    //       this.imgDims[this.index].placed = true;
-    //     } else {
-    //       this.updateInstance(this.imgDims[this.index]);
-    //     }
-    //     for (var i = 0; i < this.size; i++) {
-    //       this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
-    //     }
-    //     this.canvasService.toggleSelected();
-    //   } else if (this.imgDims[this.index] !== undefined && !this.canvasService.isToggled()) { //otherwise then selecting image at location (index becomes image index)
-    //     for (var i = 0; i < this.size; i++) {
-    //       if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
-    //         (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
-    //         !this.canvasService.isPlantCanvas()) {
-    //         this.index = i;
-    //         this.canvasService.toggleSelected();
-    //       }
-    //     }
-    //   } else if ((x < 0 || x > canvas.width || y < 0 || y > canvas.height) && !this.canvasService.isPlantCanvas()) { //if not in garden canvas and toggle display error message
-    //     this.canvasService.decrementSize();
-    //     this.canvasService.toggleSelected();
-    //   }
-
-    //   // unselected send signal back to plantlist canvas to reset itself
-    //   if (!this.canvasService.isToggled() && !this.canvasService.isPlantCanvas()) {
-    //     this.canvasService.toggleReset();
-    //   }
-    // });
     setTimeout(() => this.checkRouteId());
     // this.checkRouteId();
 
     // one of two mousemove event listeners (performs operations on the garden canvas)
     document.addEventListener('mousemove', (ev) => {
-      // rect = canvas.getBoundingClientRect();
-      // let x = ev.clientX - rect.left;
-      // let y = ev.clientY - rect.top;
 
-      // //async method below that gets the size and evaluates whether to instantiate a new plant object
-      // this.addNew().then(() => {
-      //   // if the first time with the increased size then initialized
-      //   if (this.canvasService.isInitialize()) {
-      //     this.index = this.size - 1;          // from async method
-      //     this.canvasPlants[this.index] = {};  // sets the new plant
-      //     this.canvasPlants[this.index].img = new Image();
-      //     this.imgDims[this.index] = {};       //sets the plant properties
-      //     this.imgDims[this.index].width = 100;
-      //     this.imgDims[this.index].height = 100;
-      //     this.imgDims[this.index].xRel = NaN;
-      //     this.imgDims[this.index].yRel = NaN;
-      //     this.imgDims[this.index].placed = false;
-      //     this.imgDims[this.index].plant_id = this.canvasService.getId();
-      //     this.canvasService.toggleInitialize(); //marks it as intialized
-      //   }
-
-      //   // do not change x > 1 weird coincidence where last equals equivalent
-      //   // sets current index to the current position
-      //   if (this.imgDims[this.index] !== undefined && this.canvasService.isToggled() && x > 1) {
-      //     this.imgDims[this.index].x = x - this.imgDims[this.index].width * .5;
-      //     this.imgDims[this.index].y = y - this.imgDims[this.index].height * .5;
-      //   }
-
-      //   // sets the image of the plant if not set
-      //   if (this.canvasPlants[this.index] !== undefined && this.canvasPlants[this.index].img.src === '' && !this.canvasService.isPlantCanvas()) {
-      //     var image = new Image(); //width and height parameter optional
-      //     image.src = this.canvasService.getImg();
-      //     this.canvasPlants[this.index].img = image;
-      //   }
-
-      //   // do not change x < -50 (anomoly)
-      //   // checks to see if the image crosses over the canvas boundary
-      //   if (this.imgDims[this.index] !== undefined && x < -50 && !this.canvasService.isPlantCanvas()) {
-      //     this.canvasService.setImg('');     //reset image
-      //     this.canvasService.toggleCanvas(); //update active canvas
-      //     if (this.canvasService.isToggled() && this.index === this.size - 1) {
-      //       this.canvasPlants[this.index].img = new Image();
-      //       this.canvasService.decrementSize();
-      //     }
-      //     this.context.clearRect(0, 0, canvas.width, canvas.height);
-      //     for (var i = 0; i < this.canvasService.getSize(); i++) {
-      //       this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
-      //     }
-      //   } else if (this.imgDims[this.index] === undefined && x < 0 && !this.canvasService.isPlantCanvas()) { // if not set then ignore crossing over boundary
-      //     this.canvasService.toggleCanvas();
-      //   } else if (this.canvasService.isToggled() && !this.canvasService.isPlantCanvas()) { // update and draw canvas with new coordinates of image
-      //     this.context.clearRect(0, 0, canvas.width, canvas.height);
-      //     for (var i = 0; i < this.size; i++) {
-      //       this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
-      //     }
-      //   }
-      // });
     });
 
   }
 
   ngOnInit() {
-    // this.plant_instances = [];
-    // this.context.clearRect(0, 0, canvas.width, canvas.height);
-    // this.canvasPlants = [];
   }
 
   public goToShoppingList(): void {
@@ -447,7 +345,11 @@ export class CanvasComponent implements OnInit {
           // console.log(this.index);
           this.canvasPlants[this.index] = {};  // sets the new plant
           this.canvasPlants[this.index].img = new Image();
-          this.canvasPlants[this.index].img.src = plant.front_image_path;
+          if (this.gardenService.isTopDownPerspective()) {
+            this.canvasPlants[this.index].img.src = plant.front_image_path;
+          } else {
+            this.canvasPlants[this.index].img.src = plant.side_image_path;
+          }
           this.imgDims[this.index] = {};       //sets the plant properties
           this.imgDims[this.index].width = 100;
           this.imgDims[this.index].height = 100;

@@ -99,6 +99,7 @@ CREATE TABLE `plant` (
   `native` tinyint(4) NOT NULL,
   `min_hardiness` int(11) NOT NULL,
   `max_hardiness` int(11) NOT NULL,
+  `color_id` int(11) NOT NULL,
   `front_image_path` varchar(255) DEFAULT NULL,
   `side_image_path` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -229,7 +230,7 @@ UNLOCK TABLES;
 --
 -- Table structure for table `plant_type`
 --
--- 
+--
 -- DROP TABLE IF EXISTS `plant_type`;
 -- /*!40101 SET @saved_cs_client     = @@character_set_client */;
 --  SET character_set_client = utf8mb4 ;

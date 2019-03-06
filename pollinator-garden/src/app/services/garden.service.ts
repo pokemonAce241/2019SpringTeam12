@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 
@@ -21,12 +21,16 @@ const httpOptions = {
 })
 export class GardenService {
 
-  private changeView: boolean;
+  private isTopDown: boolean;
+  // Observable string sources
+  private viewChangeCallSource = new Subject<any>();
+
+  viewChangeCalled$ = this.viewChangeCallSource.asObservable();
 
   constructor(
     private http: HttpClient
-  ) { 
-    this.changeView = false;
+  ) {
+    this.isTopDown = true;
   }
 
   baseUrl = "http://localhost:3000/";
@@ -51,11 +55,12 @@ export class GardenService {
 
   viewChange() {
     console.log("Pineapple")
-    this.changeView = !this.changeView;
+    this.isTopDown = !this.isTopDown;
+    this.viewChangeCallSource.next();
   }
 
-  getPerspective() {
-    return this.changeView;
+  isTopDownPerspective() {
+    return this.isTopDown;
   }
 
   deleteGarden(gardenId: number): Observable<Garden> {
