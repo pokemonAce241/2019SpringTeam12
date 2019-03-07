@@ -10,6 +10,10 @@ export class PlantInstance {
   front_image_path: string;
   side_image_path: string;
   common_name : string;
+  min_height : number;
+  max_height : number;
+  min_spread : number;
+  max_spread : number;
   plant_id: number;
   garden_id: number;
 }

@@ -2,12 +2,12 @@ var express = require('express');
 var router = express.Router();
 var db = require("../db");
 
-getAllFromGardenQuery = `SELECT pi.id, pi.garden_id, pi.plant_id, plant.common_name, plant.front_image_path, plant.side_image_path, pi.x, pi.y
+getAllFromGardenQuery = `SELECT pi.id, pi.garden_id, pi.plant_id, plant.common_name, plant.min_height, plant.max_height, plant.min_spread, plant.max_spread, plant.front_image_path, plant.side_image_path, pi.x, pi.y
 FROM plant_instance as pi
 INNER JOIN plant ON pi.plant_id = plant.id
 WHERE garden_id = ?`;
 
-getSingleInstanceQuery = `SELECT pi.id, pi.garden_id, pi.plant_id, plant.common_name, plant.front_image_path, plant.side_image_path, pi.x, pi.y
+getSingleInstanceQuery = `SELECT pi.id, pi.garden_id, pi.plant_id, plant.common_name, plant.min_height, plant.max_height, plant.min_spread, plant.max_spread, plant.front_image_path, plant.side_image_path, pi.x, pi.y
 FROM plant_instance as pi
 INNER JOIN plant ON pi.plant_id = plant.id
 WHERE pi.id = ?`;
