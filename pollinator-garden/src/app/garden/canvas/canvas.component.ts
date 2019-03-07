@@ -87,8 +87,14 @@ export class CanvasComponent implements OnInit {
       }
       this.context.clearRect(0, 0, canvas.width, canvas.height);
       for (var i = 0; i < this.size; i++) {
+        if(this.gardenService.isTopDownPerspective()) {
+          this.context.globalAlpha = .75;
+        } else {
+          this.context.globalAlpha = 1;
+        }
         this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
         if (this.gardenService.isTopDownPerspective()) {
+          this.context.globalAlpha = 1;
           var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
           this.context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((100 - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
         }
@@ -121,8 +127,14 @@ export class CanvasComponent implements OnInit {
       // update the garden
       this.context.clearRect(0, 0, canvas.width, canvas.height);
       for (var i = 0; i < this.size; i++) {
+        if(this.gardenService.isTopDownPerspective()) {
+          this.context.globalAlpha = .75;
+        } else {
+          this.context.globalAlpha = 1;
+        }
         this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
         if (this.gardenService.isTopDownPerspective()) {
+          this.context.globalAlpha = 1;
           var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
           this.context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((100 - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
         }
@@ -156,8 +168,14 @@ export class CanvasComponent implements OnInit {
           this.updateInstance(this.imgDims[this.index]);
         }
         for (var i = 0; i < this.size; i++) {
+          if(this.gardenService.isTopDownPerspective()) {
+            this.context.globalAlpha = .75;
+          } else {
+            this.context.globalAlpha = 1;
+          }
           this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
           if (this.gardenService.isTopDownPerspective()) {
+            this.context.globalAlpha = 1;
             var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
           this.context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((100 - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
           }
@@ -210,9 +228,15 @@ export class CanvasComponent implements OnInit {
         }
         // Redraws all plants images on garden canvas
         for (var i = 0; i < this.size; i++) {
+          if(this.gardenService.isTopDownPerspective()) {
+            this.context.globalAlpha = .75;
+          } else {
+            this.context.globalAlpha = 1;
+          }
           this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
           //console.log(this.canvasPlants[i].name);
           if (this.gardenService.isTopDownPerspective()) {
+            this.context.globalAlpha = 1;
             var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
             this.context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((100 - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
           }
@@ -304,8 +328,14 @@ export class CanvasComponent implements OnInit {
           }
           this.context.clearRect(0, 0, canvas.width, canvas.height);
           for (var i = 0; i < this.canvasService.getSize(); i++) {
+            if(this.gardenService.isTopDownPerspective()) {
+              this.context.globalAlpha = .75;
+            } else {
+              this.context.globalAlpha = 1;
+            }
             this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
             if (this.gardenService.isTopDownPerspective()) {
+              this.context.globalAlpha = 1;
               var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
               this.context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((100 - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
             }
@@ -316,8 +346,14 @@ export class CanvasComponent implements OnInit {
           console.log("updating placed plant information");
           this.context.clearRect(0, 0, canvas.width, canvas.height);
           for (var i = 0; i < this.size; i++) {
+            if(this.gardenService.isTopDownPerspective()) {
+              this.context.globalAlpha = .75;
+            } else {
+              this.context.globalAlpha = 1;
+            }
             this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
             if (this.gardenService.isTopDownPerspective()) {
+              this.context.globalAlpha = 1;
               var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
               //if (textWidth) {
                 this.context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((100 - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
@@ -405,8 +441,14 @@ export class CanvasComponent implements OnInit {
         this.canvasPlants.forEach((plant, i) => {
           plant.img.onload = () => {
             console.log("image loaded");
+            if(this.gardenService.isTopDownPerspective()) {
+              this.context.globalAlpha = .75;
+            } else {
+              this.context.globalAlpha = 1;
+            }
             this.context.drawImage(plant.img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
             if (this.gardenService.isTopDownPerspective()) {
+              this.context.globalAlpha = 1;
               var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
               this.context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((100 - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
             }
