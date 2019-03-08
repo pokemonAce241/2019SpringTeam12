@@ -92,7 +92,7 @@ export class CanvasComponent implements OnInit {
           this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
         } else {
           this.context.globalAlpha = 1;
-          this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+          this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, (this.imgDims[i].y/579)*(382) + 217, this.imgDims[i].width, this.imgDims[i].height);
         }
         if (this.gardenService.isTopDownPerspective()) {
           this.context.globalAlpha = 1;
@@ -137,7 +137,7 @@ export class CanvasComponent implements OnInit {
           this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
         } else {
           this.context.globalAlpha = 1;
-          this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+          this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, (this.imgDims[i].y/579)*(382) + 217, this.imgDims[i].width, this.imgDims[i].height);
         }
         if (this.gardenService.isTopDownPerspective()) {
           this.context.globalAlpha = 1;
@@ -183,7 +183,7 @@ export class CanvasComponent implements OnInit {
             this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
           } else {
             this.context.globalAlpha = 1;
-            this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+            this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, (this.imgDims[i].y/579)*(382) + 217, this.imgDims[i].width, this.imgDims[i].height);
           }
           if (this.gardenService.isTopDownPerspective()) {
             this.context.globalAlpha = 1;
@@ -248,7 +248,7 @@ export class CanvasComponent implements OnInit {
             this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
           } else {
             this.context.globalAlpha = 1;
-            this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+            this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, (this.imgDims[i].y/579)*(382) + 217, this.imgDims[i].width, this.imgDims[i].height);
           }
           //console.log(this.canvasPlants[i].name);
           if (this.gardenService.isTopDownPerspective()) {
@@ -364,7 +364,7 @@ export class CanvasComponent implements OnInit {
               this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
             } else {
               this.context.globalAlpha = 1;
-              this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+              this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, (this.imgDims[i].y/579)*(382) + 217, this.imgDims[i].width, this.imgDims[i].height);
             }
             //this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
             if (this.gardenService.isTopDownPerspective()) {
@@ -388,7 +388,7 @@ export class CanvasComponent implements OnInit {
               this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
             } else {
               this.context.globalAlpha = 1;
-              this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+              this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, (this.imgDims[i].y/579)*(382) + 217, this.imgDims[i].width, this.imgDims[i].height);
             }
             if (this.gardenService.isTopDownPerspective()) {
               this.context.globalAlpha = 1;
@@ -500,7 +500,7 @@ export class CanvasComponent implements OnInit {
               this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
             } else {
               this.context.globalAlpha = 1;
-              this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+              this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, (this.imgDims[i].y/579)*(382) + 217, this.imgDims[i].width, this.imgDims[i].height);
             }
             if (this.gardenService.isTopDownPerspective()) {
               this.context.beginPath();
