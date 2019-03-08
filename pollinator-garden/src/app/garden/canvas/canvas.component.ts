@@ -94,8 +94,11 @@ export class CanvasComponent implements OnInit {
         }
         this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
         if (this.gardenService.isTopDownPerspective()) {
-          this.context.drawImage(this.canvasPlants[i].radius_img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].max_width, this.imgDims[i].max_height);
           this.context.globalAlpha = 1;
+          this.context.beginPath();
+          this.context.setLineDash([10,15]);
+          this.context.arc(this.imgDims[i].x + (this.imgDims[i].min_spread/2), this.imgDims[i].y + (this.imgDims[i].min_spread/2), this.imgDims[i].max_spread/2, 0, 2 * Math.PI);
+          this.context.stroke();
           var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
           this.context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
         }
@@ -135,8 +138,11 @@ export class CanvasComponent implements OnInit {
         }
         this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
         if (this.gardenService.isTopDownPerspective()) {
-          this.context.drawImage(this.canvasPlants[i].radius_img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].max_width, this.imgDims[i].max_height);
           this.context.globalAlpha = 1;
+          this.context.beginPath();
+          this.context.setLineDash([10,15]);
+          this.context.arc(this.imgDims[i].x + (this.imgDims[i].min_spread/2), this.imgDims[i].y + (this.imgDims[i].min_spread/2), this.imgDims[i].max_spread/2, 0, 2 * Math.PI);
+          this.context.stroke();
           var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
           this.context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
         }
@@ -177,8 +183,11 @@ export class CanvasComponent implements OnInit {
           }
           this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
           if (this.gardenService.isTopDownPerspective()) {
-            this.context.drawImage(this.canvasPlants[i].radius_img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].max_width, this.imgDims[i].max_height);
             this.context.globalAlpha = 1;
+            this.context.beginPath();
+            this.context.setLineDash([10,15]);
+            this.context.arc(this.imgDims[i].x + (this.imgDims[i].min_spread/2), this.imgDims[i].y + (this.imgDims[i].min_spread/2), this.imgDims[i].max_spread/2, 0, 2 * Math.PI);
+            this.context.stroke();
             var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
             this.context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
           }
@@ -239,8 +248,11 @@ export class CanvasComponent implements OnInit {
           this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
           //console.log(this.canvasPlants[i].name);
           if (this.gardenService.isTopDownPerspective()) {
-            this.context.drawImage(this.canvasPlants[i].radius_img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].max_width, this.imgDims[i].max_height);
             this.context.globalAlpha = 1;
+            this.context.beginPath();
+            this.context.setLineDash([10,15]);
+            this.context.arc(this.imgDims[i].x + (this.imgDims[i].min_spread/2), this.imgDims[i].y + (this.imgDims[i].min_spread/2), this.imgDims[i].max_spread/2, 0, 2 * Math.PI);
+            this.context.stroke();
             var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
             this.context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
           }
@@ -296,10 +308,17 @@ export class CanvasComponent implements OnInit {
           this.imgDims[this.index] = {};       //sets the plant properties
           // this.imgDims[this.index].width = 100;
           // this.imgDims[this.index].height = 100;
+
+          //Again, unsure what these are actually being used for since they say spread but are width and height
           this.imgDims[this.index].width = this.plants[this.canvasService.getId() - 1].min_spread * 40;
           this.imgDims[this.index].height = this.plants[this.canvasService.getId() - 1].min_spread * 40;
           this.imgDims[this.index].max_width = this.plants[this.canvasService.getId() - 1].max_spread * 40;
           this.imgDims[this.index].max_height = this.plants[this.canvasService.getId() - 1].max_spread * 40;
+
+          //Adding variables for spread
+          this.imgDims[this.index].min_spread = this.plants[this.canvasService.getId() - 1].min_spread * 40;
+          this.imgDims[this.index].max_spread = this.plants[this.canvasService.getId() - 1].max_spread * 40;
+
           this.imgDims[this.index].xRel = NaN;
           this.imgDims[this.index].yRel = NaN;
           this.imgDims[this.index].placed = false;
@@ -344,8 +363,11 @@ export class CanvasComponent implements OnInit {
             this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
             //this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
             if (this.gardenService.isTopDownPerspective()) {
-              this.context.drawImage(this.canvasPlants[i].radius_img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].max_width, this.imgDims[i].max_height);
               this.context.globalAlpha = 1;
+              this.context.beginPath();
+              this.context.setLineDash([10,15]);
+              this.context.arc(this.imgDims[i].x + (this.imgDims[i].min_spread/2), this.imgDims[i].y + (this.imgDims[i].min_spread/2), this.imgDims[i].max_spread/2, 0, 2 * Math.PI);
+              this.context.stroke();
               var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
               this.context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
             }
@@ -363,8 +385,12 @@ export class CanvasComponent implements OnInit {
             }
             this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
             if (this.gardenService.isTopDownPerspective()) {
-              this.context.drawImage(this.canvasPlants[i].radius_img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].max_width, this.imgDims[i].max_height);
               this.context.globalAlpha = 1;
+              this.context.beginPath();
+              this.context.setLineDash([10,15]);
+              this.context.arc(this.imgDims[i].x + (this.imgDims[i].min_spread/2), this.imgDims[i].y + (this.imgDims[i].min_spread/2), this.imgDims[i].max_spread/2, 0, 2 * Math.PI);
+              this.context.stroke();
+
               var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
               //if (textWidth) {
                 this.context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
@@ -435,10 +461,17 @@ export class CanvasComponent implements OnInit {
           this.canvasPlants[this.index].radius_img.src = "assets/images/Flower_Max_Radius.png";
           this.canvasPlants[this.index].name = plant.common_name;
           this.imgDims[this.index] = {};       //sets the plant properties
+
+          //What are these? They way height and wirdth but use min/max spread
           this.imgDims[this.index].width = plant.min_spread * 40;
           this.imgDims[this.index].height = plant.min_spread * 40;
           this.imgDims[this.index].max_width = plant.max_spread * 40;
           this.imgDims[this.index].max_height = plant.max_spread * 40;
+
+          //Adding min/max spread values
+          this.imgDims[this.index].min_spread = plant.min_spread * 40;
+          this.imgDims[this.index].max_spread = plant.max_spread * 40;
+
           this.imgDims[this.index].xRel = NaN;
           this.imgDims[this.index].yRel = NaN;
           this.imgDims[this.index].x = plant.x;
@@ -463,7 +496,10 @@ export class CanvasComponent implements OnInit {
             }
             this.context.drawImage(plant.img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
             if (this.gardenService.isTopDownPerspective()) {
-              this.context.drawImage(this.canvasPlants[i].radius_img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].max_width, this.imgDims[i].max_height);
+              this.context.beginPath();
+              this.context.setLineDash([10,15]);
+              this.context.arc(this.imgDims[i].x + (this.imgDims[i].min_spread/2), this.imgDims[i].y + (this.imgDims[i].min_spread/2), this.imgDims[i].max_spread/2, 0, 2 * Math.PI);
+              this.context.stroke();
               this.context.globalAlpha = 1;
               var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
               this.context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
@@ -491,7 +527,10 @@ export class CanvasComponent implements OnInit {
       img.onload = () => {
         this.context.drawImage(img, instance.x, instance.y, instance.min_spread, instance.min_spread);
         if (this.gardenService.isTopDownPerspective()) {
-          this.context.drawImage(radius_img, instance.x, instance.y, instance.max_spread, instance.max_spread);
+          this.context.beginPath();
+          this.context.setLineDash([10,15]);
+          this.context.arc(instance.x + (instance.min_spread/2), instance.y + (instance.min_spread/2), instance.max_spread/2, 0, 2 * Math.PI);
+          this.context.stroke();
         }
         //this.context.fillText(this.canvasPlants[i].name, in.x + this.imgDims[i].width / 3, this.imgDims[i].y + this.imgDims[i].height / 2);
       }
