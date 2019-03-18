@@ -1,5 +1,5 @@
 var mysql = require('mysql');
-
+//
 var connection = mysql.createConnection({
     host: 'sd-vm13.csc.ncsu.edu',
     user: 'admin',
@@ -10,7 +10,7 @@ var connection = mysql.createConnection({
 // var connection = mysql.createConnection({
 //     host: '127.0.0.1',
 //     user: 'root',
-//     password: 'Leinad1!',
+//     password: '',
 //     database: 'garden'
 //  });
 
