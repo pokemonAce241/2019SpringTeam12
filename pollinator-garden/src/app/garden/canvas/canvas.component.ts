@@ -388,8 +388,13 @@ export class CanvasComponent implements OnInit {
               this.context.globalAlpha = .75;
               this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
             } else {
+              var canvCenter = 1440 / 2;
               this.context.globalAlpha = 1;
-              this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, (this.imgDims[i].y/579)*(382) + 217, this.imgDims[i].max_width * 1.15, this.imgDims[i].max_height * 1.15);
+              var yLoc = (this.imgDims[i].y/579)*(382) + 217;
+              var xLoc = this.imgDims[i].x;
+              var ySize = this.imgDims[i].max_height * 1.15 * ((yLoc/579) + 1);
+              var xSize = this.imgDims[i].max_width * 1.15 * ((yLoc/579) + 1);
+              this.context.drawImage(this.canvasPlants[i].img, xLoc, yLoc, xSize, ySize);
             }
             if (this.gardenService.isTopDownPerspective()) {
               this.context.beginPath();
@@ -469,8 +474,22 @@ export class CanvasComponent implements OnInit {
       }
     } else {
       for(var i = 0; i < this.size; i++) {
+        var canvCenter = 1440 / 2;
         context.globalAlpha = 1;
-        context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, (this.imgDims[i].y/579)*(382) + 217, this.imgDims[i].max_width * 1.15, this.imgDims[i].max_height * 1.15);
+        var yLoc = (this.imgDims[i].y/579)*(382) + 217;
+        var xLoc = this.imgDims[i].x;
+        // Try to move the plants close to the center the farther back they are in the garden
+        if (xLoc < canvCenter) {
+          // Plant is to the left of the center
+
+        } else if (xLoc > canvCenter) {
+          // Plant is to the right of the center
+        } else {
+          // Plant is in the center
+        }
+        var ySize = (this.imgDims[i].max_height * 1.15) * (yLoc/579);
+        var xSize = (this.imgDims[i].max_width * 1.15) * (yLoc/579);
+        context.drawImage(this.canvasPlants[i].img, xLoc, yLoc, xSize, ySize);
       }
     }
 
