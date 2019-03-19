@@ -468,8 +468,10 @@ export class CanvasComponent implements OnInit {
           context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
       }
     } else {
-      context.globalAlpha = 1;
-      context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, (this.imgDims[i].y/579)*(382) + 217, this.imgDims[i].max_width * 1.15, this.imgDims[i].max_height * 1.15);
+      for(var i = 0; i < this.size; i++) {
+        context.globalAlpha = 1;
+        context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, (this.imgDims[i].y/579)*(382) + 217, this.imgDims[i].max_width * 1.15, this.imgDims[i].max_height * 1.15);
+      }
     }
 
     // context.clearRect(0, 0, context.canvas.width, context.canvas.height);
