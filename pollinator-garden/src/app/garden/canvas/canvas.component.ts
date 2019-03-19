@@ -389,7 +389,7 @@ export class CanvasComponent implements OnInit {
               this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
             } else {
               this.context.globalAlpha = 1;
-              this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, (this.imgDims[i].y/579)*(382) + 217, this.imgDims[i].width, this.imgDims[i].height);
+              this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, (this.imgDims[i].y/579)*(382) + 217, this.imgDims[i].max_width * 1.15, this.imgDims[i].max_height * 1.15);
             }
             if (this.gardenService.isTopDownPerspective()) {
               this.context.beginPath();
@@ -453,15 +453,10 @@ export class CanvasComponent implements OnInit {
 
   drawPlants(context) {
     context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-    for (var i = 0; i < this.size; i++) {
-      if(this.gardenService.isTopDownPerspective()) {
+    if(this.gardenService.isTopDownPerspective()) {
+      for(var i = 0; i < this.size; i++) {
         context.globalAlpha = .75;
         context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
-      } else {
-        context.globalAlpha = 1;
-        context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, (this.imgDims[i].y/579)*(382) + 217, this.imgDims[i].width, this.imgDims[i].height);
-      }
-      if (this.gardenService.isTopDownPerspective()) {
         context.globalAlpha = 1;
         context.beginPath();
         context.setLineDash([10,15]);
@@ -471,9 +466,34 @@ export class CanvasComponent implements OnInit {
         var textWidth = context.measureText(this.canvasPlants[i].name).width;
         //if (textWidth) {
           context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
-        //}
       }
+    } else {
+      context.globalAlpha = 1;
+      context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, (this.imgDims[i].y/579)*(382) + 217, this.imgDims[i].max_width * 1.15, this.imgDims[i].max_height * 1.15);
     }
+
+    // context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+    // for (var i = 0; i < this.size; i++) {
+    //   if(this.gardenService.isTopDownPerspective()) {
+    //     context.globalAlpha = .75;
+    //     context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+    //   } else {
+    //     context.globalAlpha = 1;
+    //     context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, (this.imgDims[i].y/579)*(382) + 217, this.imgDims[i].width, this.imgDims[i].height);
+    //   }
+    //   if (this.gardenService.isTopDownPerspective()) {
+    //     context.globalAlpha = 1;
+    //     context.beginPath();
+    //     context.setLineDash([10,15]);
+    //     context.arc(this.imgDims[i].x + (this.imgDims[i].min_spread/2), this.imgDims[i].y + (this.imgDims[i].min_spread/2), this.imgDims[i].max_spread/2, 0, 2 * Math.PI);
+    //     context.stroke();
+    //
+    //     var textWidth = context.measureText(this.canvasPlants[i].name).width;
+    //     //if (textWidth) {
+    //       context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
+    //     //}
+    //   }
+    // }
   }
 
   createInstance(imgDims) {

@@ -139,7 +139,7 @@
   </div>
 </div>
 
-<div class="row mx-1">
+<div class="row mx-0">
 
   <div class="col-sm-4 my-1">
     <button [ngStyle]="{'background-color': soilActive ? '#dc3545' : '', 'color': soilActive ? '#ffffff' : ''}" class="btn btn-outline-danger dropdown-toggle" id="soil" data-toggle="dropdown">Soil</button>
@@ -167,7 +167,27 @@
     </div>
   </div>
 
-  <div class="col-sm-8 my-1">
+  <div class="col-sm-4 my-1">
+    <button [ngStyle]="{'background-color': soilActive ? '#dc3545' : '', 'color': soilActive ? '#ffffff' : ''}" class="btn btn-outline-danger dropdown-toggle" id="soil" data-toggle="dropdown">Native</button>
+    <div class="dropdown-menu" (click)="$event.stopPropagation()">
+      <div class="form-group">
+        <div class="radio">
+            <label class="w-100 my-0" style="padding-left:20px">
+                <input type="radio" name="soil" value="moist" [(ngModel)]="soilStatus" (change)="filterPlants()">
+                 Native
+            </label>
+        </div>
+        <div class="radio" style="padding-left:20px">
+            <label class="w-100 my-0">
+                <input type="radio" name="soil" value="wet" [(ngModel)]="soilStatus" (change)="filterPlants()">
+                 Non-native
+            </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-4 my-1">
     <button [ngStyle]="{'background-color': heightActive ? '#dc3545' : '', 'color': heightActive ? '#ffffff' : ''}" class="btn btn-outline-danger dropdown-toggle" id="height" data-toggle="dropdown">Height</button>
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
       <div class="dropdown-item">
