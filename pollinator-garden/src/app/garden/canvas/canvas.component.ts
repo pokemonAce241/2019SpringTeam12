@@ -390,7 +390,7 @@ export class CanvasComponent implements OnInit {
             } else {
               var canvCenter = 1440 / 2;
               this.context.globalAlpha = 1;
-              var yLoc = (this.imgDims[i].y/579)*(382) + 217;
+              var yLoc = (this.imgDims[i].y/579)*(382) + 217 - this.imgDims[i].max_height;
               var xLoc = this.imgDims[i].x;
               var ySize = this.imgDims[i].max_height * 1.15 * ((yLoc/579) + 1);
               var xSize = this.imgDims[i].max_width * 1.15 * ((yLoc/579) + 1);
@@ -476,19 +476,21 @@ export class CanvasComponent implements OnInit {
       for(var i = 0; i < this.size; i++) {
         var canvCenter = 1440 / 2;
         context.globalAlpha = 1;
-        var yLoc = (this.imgDims[i].y/579)*(382) + 217;
+        var yLoc = (this.imgDims[i].y/579)*(382) + 217 - this.imgDims[i].max_height;
         var xLoc = this.imgDims[i].x;
         // Try to move the plants close to the center the farther back they are in the garden
         if (xLoc < canvCenter) {
           // Plant is to the left of the center
-
+          
         } else if (xLoc > canvCenter) {
           // Plant is to the right of the center
+
         } else {
           // Plant is in the center
+          
         }
-        var ySize = (this.imgDims[i].max_height * 1.15) * (yLoc/579);
-        var xSize = (this.imgDims[i].max_width * 1.15) * (yLoc/579);
+        var ySize = this.imgDims[i].max_height * 1.15 * ((yLoc/579) + 1);
+        var xSize = this.imgDims[i].max_width * 1.15 * ((yLoc/579) + 1);
         context.drawImage(this.canvasPlants[i].img, xLoc, yLoc, xSize, ySize);
       }
     }
