@@ -7,6 +7,7 @@ export class PlantInstance {
   id: number;
   x: number;
   y: number;
+  collision: boolean;
   front_image_path: string;
   side_image_path: string;
   common_name : string;

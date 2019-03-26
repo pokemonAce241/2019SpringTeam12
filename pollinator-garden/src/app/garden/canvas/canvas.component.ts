@@ -481,13 +481,13 @@ export class CanvasComponent implements OnInit {
         // Try to move the plants close to the center the farther back they are in the garden
         if (xLoc < canvCenter) {
           // Plant is to the left of the center
-          
+
         } else if (xLoc > canvCenter) {
           // Plant is to the right of the center
 
         } else {
           // Plant is in the center
-          
+
         }
         var ySize = this.imgDims[i].max_height * 1.15 * ((yLoc/579) + 1);
         var xSize = this.imgDims[i].max_width * 1.15 * ((yLoc/579) + 1);
@@ -525,6 +525,7 @@ export class CanvasComponent implements OnInit {
     newInstance.x = imgDims.x;
     newInstance.y = imgDims.y;
     newInstance.garden_id = this.gardenId;
+    newInstance.collision = false;
 
     this.instanceService.createInstance(newInstance)
       .subscribe(res => {
@@ -538,6 +539,7 @@ export class CanvasComponent implements OnInit {
     updateInstance.id = imgDims.id;
     updateInstance.x = imgDims.x;
     updateInstance.y = imgDims.y;
+    updateInstance.collision = false;
 
     this.instanceService.updateInstance(updateInstance)
       .subscribe(res => {
