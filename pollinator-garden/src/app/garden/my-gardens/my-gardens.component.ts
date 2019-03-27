@@ -47,9 +47,9 @@ export class MyGardensComponent implements OnInit {
     this.modal.dismissAll();
     // This is the page used for testing. Reloading the page forces the tests to run idefinitely
     // so this is a temporary fix
-    if (id !== 1) {
+    //if (id !== 1) {
       window.location.reload();
-    }
+    //}
   }
 
   public createNewGarden(gardenName : string) {

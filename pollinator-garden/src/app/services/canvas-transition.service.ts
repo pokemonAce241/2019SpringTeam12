@@ -104,4 +104,8 @@ export class CanvasTransitionService {
   getSize() {
     return this.size;
   }
+
+  setSize(size : number) {
+    this.size = size;
+  }
 }
