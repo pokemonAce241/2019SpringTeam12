@@ -33,7 +33,7 @@ router.get('/:id(\\d+)', function(req, res, next) {
     });
 });
 
-createInstanceQuery = `INSERT INTO plant_instance(garden_id, plant_id, x, y) VALUES (?, ?, ?, ?)`;
+createInstanceQuery = `INSERT INTO plant_instance(garden_id, plant_id, x, y, collision) VALUES (?, ?, ?, ?, ?)`;
 
 router.post('/', function(req, res, next) {
     console.log(req.body);
@@ -57,17 +57,17 @@ router.post('/', function(req, res, next) {
 });
 
 updateInstanceQuery = `UPDATE plant_instance
-SET x = ?, y = ?
+SET x = ?, y = ?, collision = ?
 WHERE id = ?`;
 
 router.put('/:id(\\d+)', function(req, res, next) {
 
     if (req.body.x === undefined ||
-        req.body.y === undefined) {
+        req.body.y === undefined ||
+        req.body.collision === undefined) {
         return res.status(400).send("Bad request");
     }
-
-    db.query(updateInstanceQuery, [req.body.x, req.body.y, req.params.id], function(err, result, fields) {
+    db.query(updateInstanceQuery, [req.body.x, req.body.y, req.body.collision, req.params.id], function(err, result, fields) {
         if (err) throw err;
 
         console.log(result);

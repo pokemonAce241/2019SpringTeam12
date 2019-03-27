@@ -143,7 +143,7 @@ export class PlantListComponent implements OnInit {
         this.imgDims[i].x = this.imgDims[i].xRel * canvas.width;
         this.imgDims[i].y = this.imgDims[i].yRel * canvas.height;
         this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
-        console.log("oxRel " + this.imgDims[i].oxRel);
+        //console.log("oxRel " + this.imgDims[i].oxRel);
         this.context.fillText(this.imgDims[i].name, canvas.width * this.imgDims[i].oxRel, this.imgDims[i].oy + this.imgDims[i].height + 10);
         this.imgDims[i].oxRel = (canvas.width * this.imgDims[i].oxRel) / canvas.width;
       }
@@ -324,8 +324,6 @@ export class PlantListComponent implements OnInit {
     this.imgDims = [];
     this.size = 0;
 
-    console.log(this.filteredPlants);
-
 
     this.filteredPlants.forEach(plant => {
       // if the image is mod 0 then begin pic on line
@@ -406,7 +404,6 @@ export class PlantListComponent implements OnInit {
 
   public filterPlants() {
     this.filteredPlants = this.plants;
-    console.log(this.filteredPlants);
 
     // SEASONS
     this.filteredPlants = this.filteredPlants.filter(plant => {
@@ -645,8 +642,6 @@ export class PlantListComponent implements OnInit {
       }
       return 0;
     })
-
-    console.log(this.filteredPlants);
 
     this.loadPlants();
   }

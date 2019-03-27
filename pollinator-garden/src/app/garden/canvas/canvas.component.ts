@@ -355,6 +355,7 @@ export class CanvasComponent implements OnInit {
           this.canvasPlants[this.index].radius_img = new Image();
           this.canvasPlants[this.index].radius_img.src = "assets/images/Flower_Max_Radius.png";
           this.canvasPlants[this.index].name = plant.common_name;
+          //this.canvasPlants[this.index].collision = plant.collision;
           this.imgDims[this.index] = {};       //sets the plant properties
 
           //What are these? They way height and wirdth but use min/max spread
@@ -376,11 +377,12 @@ export class CanvasComponent implements OnInit {
           this.imgDims[this.index].plant_id = plant.plant_id;
           this.imgDims[this.index].id = plant.id;
           this.imgDims[this.index].placed = true;
+          this.imgDims[this.index].collision = plant.collision;
           this.canvasService.incrementSize();
 
           // this.context.drawImage(this.canvasPlants[this.index].img, this.imgDims[this.index].x, this.imgDims[this.index].y, 100, 100);
         })
-
+        this.checkForCollisions();
         this.canvasPlants.forEach((plant, i) => {
           plant.img.onload = () => {
             console.log("image loaded");
@@ -397,9 +399,25 @@ export class CanvasComponent implements OnInit {
               this.context.drawImage(this.canvasPlants[i].img, xLoc, yLoc, xSize, ySize);
             }
             if (this.gardenService.isTopDownPerspective()) {
+              this.context.globalAlpha = 1;
+              if (this.imgDims[i].collision) {
+                // Drawing red circle
+                this.context.beginPath();
+                this.context.setLineDash([0,0]);
+                this.context.strokeStyle = "#FF0000";
+                this.context.lineWidth = 5;
+                this.context.arc(this.imgDims[i].x + (this.imgDims[i].min_spread/2), this.imgDims[i].y + (this.imgDims[i].min_spread/2), this.imgDims[i].min_spread/2, 0, 2 * Math.PI);
+                this.context.stroke();
+                this.context.fillRect(0,0, 160, 30);
+                this.context.fillStyle ="#FFFFFF";
+                this.context.fillText("Two or more plants are colliding", 5, 16);
+              }
+              this.context.fillStyle ="#000000";
               this.context.beginPath();
               this.context.setLineDash([10,15]);
               this.context.arc(this.imgDims[i].x + (this.imgDims[i].min_spread/2), this.imgDims[i].y + (this.imgDims[i].min_spread/2), this.imgDims[i].max_spread/2, 0, 2 * Math.PI);
+              this.context.strokeStyle = "#000000";
+              this.context.lineWidth = 1;
               this.context.stroke();
               this.context.globalAlpha = 1;
               var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
@@ -430,6 +448,8 @@ export class CanvasComponent implements OnInit {
         if (this.gardenService.isTopDownPerspective()) {
           this.context.beginPath();
           this.context.setLineDash([10,15]);
+          this.context.strokeStyle = "#000000";
+          this.context.lineWidth = 1;
           this.context.arc(instance.x + (instance.min_spread/2), instance.y + (instance.min_spread/2), instance.max_spread/2, 0, 2 * Math.PI);
           this.context.stroke();
         }
@@ -463,14 +483,30 @@ export class CanvasComponent implements OnInit {
         context.globalAlpha = .75;
         context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
         context.globalAlpha = 1;
+        if (this.imgDims[i].collision) {
+          // Drawing red circle
+          context.beginPath();
+          context.setLineDash([0,0]);
+          context.strokeStyle = "#FF0000";
+          context.lineWidth = 5;
+          context.arc(this.imgDims[i].x + (this.imgDims[i].min_spread/2), this.imgDims[i].y + (this.imgDims[i].min_spread/2), this.imgDims[i].min_spread/2, 0, 2 * Math.PI);
+          context.stroke();
+          context.fillRect(0,0, 160, 30);
+          context.fillStyle ="#FFFFFF";
+          context.fillText("Two or more plants are colliding", 5, 16);
+        }
+        // Drawing dashed circle
+        context.fillStyle ="#000000";
         context.beginPath();
         context.setLineDash([10,15]);
+        context.strokeStyle = "#000000";
+        context.lineWidth = 1;
         context.arc(this.imgDims[i].x + (this.imgDims[i].min_spread/2), this.imgDims[i].y + (this.imgDims[i].min_spread/2), this.imgDims[i].max_spread/2, 0, 2 * Math.PI);
         context.stroke();
 
         var textWidth = context.measureText(this.canvasPlants[i].name).width;
         //if (textWidth) {
-          context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
+        context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
       }
     } else {
       for(var i = 0; i < this.size; i++) {
@@ -495,28 +531,6 @@ export class CanvasComponent implements OnInit {
       }
     }
 
-    // context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-    // for (var i = 0; i < this.size; i++) {
-    //   if(this.gardenService.isTopDownPerspective()) {
-    //     context.globalAlpha = .75;
-    //     context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
-    //   } else {
-    //     context.globalAlpha = 1;
-    //     context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, (this.imgDims[i].y/579)*(382) + 217, this.imgDims[i].width, this.imgDims[i].height);
-    //   }
-    //   if (this.gardenService.isTopDownPerspective()) {
-    //     context.globalAlpha = 1;
-    //     context.beginPath();
-    //     context.setLineDash([10,15]);
-    //     context.arc(this.imgDims[i].x + (this.imgDims[i].min_spread/2), this.imgDims[i].y + (this.imgDims[i].min_spread/2), this.imgDims[i].max_spread/2, 0, 2 * Math.PI);
-    //     context.stroke();
-    //
-    //     var textWidth = context.measureText(this.canvasPlants[i].name).width;
-    //     //if (textWidth) {
-    //       context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
-    //     //}
-    //   }
-    // }
   }
 
   createInstance(imgDims) {
@@ -531,20 +545,52 @@ export class CanvasComponent implements OnInit {
       .subscribe(res => {
         console.log(res);
         imgDims.id = res.id;
+        //this.index = this.canvasService.getSize();
+        //this.plant_instances[this.index] = res;
       })
+    this.checkForCollisions();
   }
 
-  updateInstance(imgDims) {
+  checkForCollisions() {
+    for (var i = 0; i < this.imgDims.length; i++) {
+      this.imgDims[i].collision = false;
+    }
+    for (var i = 0; i < this.imgDims.length; i++) {
+      var currentPlant1 = this.imgDims[i];
+      var xStart1 = currentPlant1.x;
+      var yStart1 = currentPlant1.y;
+      var radius1 = currentPlant1.min_spread / 2;
+      for (var j = 0; j < this.imgDims.length; j++) {
+        var currentPlant2 = this.imgDims[j];
+        var xStart2 = currentPlant2.x;
+        var yStart2 = currentPlant2.y;
+        var radius2 = currentPlant2.min_spread / 2;
+        if (j !== i) {
+          var d = Math.hypot(Math.abs((xStart2+radius2)-(xStart1+radius1)), Math.abs((yStart2+radius2)-(yStart1+radius1)));
+          if (d < (radius1 + radius2)) {
+            // They are overlapping
+            this.imgDims[i].collision = true;
+            this.imgDims[j].collision = true;
+          }
+        }
+      }
+    }
+  }
+
+  updateInstance(updateImgDims) {
     var updateInstance = new PlantInstance();
-    updateInstance.id = imgDims.id;
-    updateInstance.x = imgDims.x;
-    updateInstance.y = imgDims.y;
+    updateInstance.id = updateImgDims.id;
+    updateInstance.x = updateImgDims.x;
+    updateInstance.y = updateImgDims.y;
     updateInstance.collision = false;
 
     this.instanceService.updateInstance(updateInstance)
       .subscribe(res => {
         console.log(res);
       });
+
+    this.checkForCollisions();
+
   }
 
   deleteInstance(imgDims) {
@@ -553,5 +599,6 @@ export class CanvasComponent implements OnInit {
       .subscribe(res => {
         console.log(res);
       })
+    this.checkForCollisions();
   }
 }
