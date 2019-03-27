@@ -168,18 +168,18 @@
   </div>
 
   <div class="col-sm-4 my-1">
-    <button [ngStyle]="{'background-color': soilActive ? '#dc3545' : '', 'color': soilActive ? '#ffffff' : ''}" class="btn btn-outline-danger dropdown-toggle" id="soil" data-toggle="dropdown">Native</button>
+    <button [ngStyle]="{'background-color': nativeActive ? '#dc3545' : '', 'color': nativeActive ? '#ffffff' : ''}" class="btn btn-outline-danger dropdown-toggle" id="isnative" data-toggle="dropdown">Native</button>
     <div class="dropdown-menu" (click)="$event.stopPropagation()">
       <div class="form-group">
         <div class="radio">
             <label class="w-100 my-0" style="padding-left:20px">
-                <input type="radio" name="soil" value="moist" [(ngModel)]="soilStatus" (change)="filterPlants()">
+                <input type="radio" name="nativeness" value="native" [(ngModel)]="plantNativeness" (change)="filterPlants()">
                  Native
             </label>
         </div>
         <div class="radio" style="padding-left:20px">
             <label class="w-100 my-0">
-                <input type="radio" name="soil" value="wet" [(ngModel)]="soilStatus" (change)="filterPlants()">
+                <input type="radio" name="nativeness" value="nonnative" [(ngModel)]="plantNativeness" (change)="filterPlants()">
                  Non-native
             </label>
         </div>

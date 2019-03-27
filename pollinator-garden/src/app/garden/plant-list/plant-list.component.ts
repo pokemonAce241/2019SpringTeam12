@@ -46,6 +46,15 @@ export class PlantListComponent implements OnInit {
 
   seasonActive = false;
 
+  nativeFilters = {
+    "native": false,
+    "nonnative": false
+  }
+
+  plantNativeness: string;
+
+  nativeActive = false;
+
   regionFilters = {
     "mountain": false,
     "piedmont": false,
@@ -515,6 +524,27 @@ export class PlantListComponent implements OnInit {
       return match;
     });
 
+    // NATIVE
+    this.filteredPlants = this.filteredPlants.filter(plant => {
+      var match = false;
+
+      if (this.plantNativeness === "native" && plant.native) {
+        match = true;
+      }
+      if (this.plantNativeness === "nonnative" && !plant.native) {
+        match = true;
+      }
+
+      if (this.plantNativeness != "native" &&
+          this.plantNativeness != "nonnative") {
+        this.nativeActive = false;
+        return true;
+      }
+
+      this.nativeActive = true;
+      return match;
+    });
+
     // TYPES
     this.filteredPlants = this.filteredPlants.filter(plant => {
       var match = false;
@@ -640,6 +670,10 @@ export class PlantListComponent implements OnInit {
 
     for (var property in this.soilFilters) {
       this.soilStatus = "";
+    }
+
+    for (var property in this.nativeFilters) {
+      this.plantNativeness = "";
     }
 
     this.minHeight = 0;
