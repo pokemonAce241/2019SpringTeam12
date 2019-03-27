@@ -479,6 +479,7 @@ export class CanvasComponent implements OnInit {
   drawPlants(context) {
     context.clearRect(0, 0, context.canvas.width, context.canvas.height);
     if(this.gardenService.isTopDownPerspective()) {
+      this.checkForCollisions();
       for(var i = 0; i < this.size; i++) {
         context.globalAlpha = .75;
         context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
