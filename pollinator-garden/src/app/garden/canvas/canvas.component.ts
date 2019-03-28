@@ -89,32 +89,28 @@ export class CanvasComponent implements OnInit {
     });
 
     // for deleting a plant from the canvas
-    canvas.addEventListener('dblclick', (ev) => {
-      console.log("Double click");
-      rect = canvas.getBoundingClientRect();
-      var x = ev.clientX - rect.left;
-      var y = ev.clientY - rect.top;
-
-      // similar to selecting a plant but no toggle flag
-      for (var i = 0; i < this.size; i++) {
-        if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
-          (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
-          !this.canvasService.isPlantCanvas()) {
-          this.index = i;
-          break;
-        }
-      }
-
-      //This is where we locally reset the plant and can do the same from the api to the database
-      this.deleteInstance(this.imgDims[this.index]);
-      this.imgDims[this.index] = {};
-      this.canvasPlants[this.index] = {};
-      this.canvasPlants[this.index].img = new Image();
-
-      // update the garden
-      this.drawPlants(this.context);
-
-    });
+    // canvas.addEventListener('dblclick', (ev) => {
+    //   console.log("Double click");
+    //   rect = canvas.getBoundingClientRect();
+    //   var x = ev.clientX - rect.left;
+    //   var y = ev.clientY - rect.top;
+    //
+    //   // similar to selecting a plant but no toggle flag
+    //   for (var i = 0; i < this.size; i++) {
+    //     if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
+    //       (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
+    //       !this.canvasService.isPlantCanvas()) {
+    //       this.index = i;
+    //       break;
+    //     }
+    //   }
+    //
+    //   this.deletePlants();
+    //
+    //   // update the garden
+    //   this.drawPlants(this.context);
+    //
+    // });
 
     canvas.addEventListener('mousedown', (ev) => {
       // rect is the rectangle boundary of the canvas
@@ -180,6 +176,7 @@ export class CanvasComponent implements OnInit {
         this.canvasService.isDragged() && !this.canvasService.isPlantCanvas()) {
         this.imgDims[this.index].x = x - this.imgDims[this.index].width * .5;
         this.imgDims[this.index].y = y - this.imgDims[this.index].height * .5;
+        this.imgDims[this.index].selected = true;
         this.context.clearRect(0, 0, canvas.width, canvas.height);
         if (!this.imgDims[this.index].placed) {
           this.createInstance(this.imgDims[this.index]);
@@ -301,8 +298,67 @@ export class CanvasComponent implements OnInit {
     // this.checkRouteId();
 
     // one of two mousemove event listeners (performs operations on the garden canvas)
-    document.addEventListener('mousemove', (ev) => {
+    document.addEventListener('click', (ev) => {
+      // rect is the rectangle boundary of the canvas
+      // client is mouse position on the client screen
+      // x and y is the location within the canvas
+      rect = canvas.getBoundingClientRect();
+      var x = ev.clientX - rect.left;
+      var y = ev.clientY - rect.top;
 
+      if (this.imgDims !== undefined &&
+        (x > 0 && x < canvas.width) &&
+        (y > 0 && y < canvas.height) && !this.canvasService.isPlantCanvas()) {
+          for (var i = 0; i < this.size; i++) {
+            this.imgDims[i].selected = false;
+          }
+          for (var i = 0; i < this.size; i++) {
+            if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
+              (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
+              !this.canvasService.isPlantCanvas()) {
+              this.index = i;
+              this.imgDims[this.index].selected = true;
+            }
+          }
+          //this.imgDims[this.index].x = x - this.imgDims[this.index].width * .5;
+          //this.imgDims[this.index].y = y - this.imgDims[this.index].height * .5;
+          this.context.clearRect(0, 0, canvas.width, canvas.height);
+          // Redraws all plants images on garden canvas
+          this.drawPlants(this.context);
+      } else if ((x < 0 || x > canvas.width || y < 0 || y > canvas.height) && !this.canvasService.isPlantCanvas()) { //if not in garden canvas and toggle display error message
+        console.log("Not in garden canvas");
+      }
+    });
+
+    document.addEventListener('keydown', (ev) => {
+      if (ev.keyCode == 8) {
+          console.log('BACKSPACE was pressed');
+          for (var i = 0; i < this.imgDims.length; i++) {
+            if (this.imgDims[i].selected) {
+              this.index = i;
+              this.deletePlants();
+              // update the garden
+              this.drawPlants(this.context);
+            }
+          }
+          // Call event.preventDefault() to stop the character before the cursor
+          // from being deleted. Remove this line if you don't want to do that.
+          ev.preventDefault();
+      }
+      if (ev.keyCode == 46) {
+          console.log('DELETE was pressed');
+          for (var i = 0; i < this.imgDims.length; i++) {
+            if (this.imgDims[i].selected) {
+              this.index = i;
+              this.deletePlants();
+              // update the garden
+              this.drawPlants(this.context);
+            }
+          }
+          // Call event.preventDefault() to stop the character after the cursor
+          // from being deleted. Remove this line if you don't want to do that.
+          ev.preventDefault();
+      }
     });
 
   }
@@ -378,6 +434,7 @@ export class CanvasComponent implements OnInit {
           this.imgDims[this.index].id = plant.id;
           this.imgDims[this.index].placed = true;
           this.imgDims[this.index].collision = plant.collision;
+          this.imgDims[this.index].selected = false;
           this.canvasService.incrementSize();
 
           // this.context.drawImage(this.canvasPlants[this.index].img, this.imgDims[this.index].x, this.imgDims[this.index].y, 100, 100);
@@ -496,6 +553,15 @@ export class CanvasComponent implements OnInit {
           context.fillStyle ="#FFFFFF";
           context.fillText("Two or more plants are colliding", 5, 16);
         }
+        if (this.imgDims[i].selected) {
+          // Drawing blue circle
+          context.beginPath();
+          context.setLineDash([0,0]);
+          context.strokeStyle = "#0000FF";
+          context.lineWidth = 5;
+          context.arc(this.imgDims[i].x + (this.imgDims[i].min_spread/2), this.imgDims[i].y + (this.imgDims[i].min_spread/2), this.imgDims[i].min_spread/2, 0, 2 * Math.PI);
+          context.stroke();
+        }
         // Drawing dashed circle
         context.fillStyle ="#000000";
         context.beginPath();
@@ -552,6 +618,14 @@ export class CanvasComponent implements OnInit {
     this.checkForCollisions();
   }
 
+  deletePlants() {
+    //This is where we locally reset the plant and can do the same from the api to the database
+    this.deleteInstance(this.imgDims[this.index].id);
+    this.imgDims[this.index] = {};
+    this.canvasPlants[this.index] = {};
+    this.canvasPlants[this.index].img = new Image();
+  }
+
   checkForCollisions() {
     for (var i = 0; i < this.imgDims.length; i++) {
       this.imgDims[i].collision = false;
@@ -594,9 +668,9 @@ export class CanvasComponent implements OnInit {
 
   }
 
-  deleteInstance(imgDims) {
-    console.log(imgDims.id);
-    this.instanceService.deleteInstance(imgDims.id)
+  deleteInstance(index) {
+    console.log(index);
+    this.instanceService.deleteInstance(index)
       .subscribe(res => {
         console.log(res);
       })
