@@ -128,6 +128,7 @@ export class CanvasComponent implements OnInit {
         (x > 0 && x < canvas.width) &&
         (y > 0 && y < canvas.height) &&
         this.canvasService.isDragged() && !this.canvasService.isPlantCanvas()) {
+
         this.imgDims[this.index].x = x - this.imgDims[this.index].width * .5;
         this.imgDims[this.index].y = y - this.imgDims[this.index].height * .5;
         this.context.clearRect(0, 0, canvas.width, canvas.height);
@@ -139,15 +140,24 @@ export class CanvasComponent implements OnInit {
         }
         this.drawPlants(this.context);
         this.canvasService.toggleDragged();
+
+        // Clicked on an image
       } else if (this.imgDims[this.index] !== undefined && !this.canvasService.isDragged()) { //otherwise then selecting image at location (index becomes image index)
+        // Added so 2 circles aren't selected at once
+        // May need to change when we incorporate multi select tools
+        var hasSelected = false;
         for (var i = this.size-1; i >= 0; i--) {
           if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
             (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
-            !this.canvasService.isPlantCanvas()) {
+            !this.canvasService.isPlantCanvas() && !hasSelected) {
             console.log("Selected plant in canvas");
+            this.imgDims[i].selected = true;
+            hasSelected = true;
             this.index = i;
             this.canvasService.toggleDragged();
-            break; //breaking after finding plant so it stops searching through plant list
+            //break; //breaking after finding plant so it stops searching through plant list
+          } else {
+            this.imgDims[i].selected = false;
           }
         }
       } else if ((x < 0 || x > canvas.width || y < 0 || y > canvas.height) && !this.canvasService.isPlantCanvas()) { //if not in garden canvas and toggle display error message
@@ -312,10 +322,14 @@ export class CanvasComponent implements OnInit {
           for (var i = 0; i < this.size; i++) {
             this.imgDims[i].selected = false;
           }
+          // Added so 2 circles aren't selected at once
+          // May need to change when we incorporate multi select tools
+          var hasSelected = false;
           for (var i = 0; i < this.size; i++) {
             if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
               (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
-              !this.canvasService.isPlantCanvas()) {
+              !this.canvasService.isPlantCanvas() && !hasSelected) {
+              hasSelected = true;
               this.index = i;
               this.imgDims[this.index].selected = true;
             }
@@ -581,17 +595,7 @@ export class CanvasComponent implements OnInit {
         context.globalAlpha = 1;
         var yLoc = (this.imgDims[i].y/579)*(382) + 217 - this.imgDims[i].max_height;
         var xLoc = this.imgDims[i].x;
-        // Try to move the plants close to the center the farther back they are in the garden
-        if (xLoc < canvCenter) {
-          // Plant is to the left of the center
-
-        } else if (xLoc > canvCenter) {
-          // Plant is to the right of the center
-
-        } else {
-          // Plant is in the center
-
-        }
+        
         var ySize = this.imgDims[i].max_height * 1.15 * ((yLoc/579) + 1);
         var xSize = this.imgDims[i].max_width * 1.15 * ((yLoc/579) + 1);
         context.drawImage(this.canvasPlants[i].img, xLoc, yLoc, xSize, ySize);
