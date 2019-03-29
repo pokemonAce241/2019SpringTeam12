@@ -454,6 +454,16 @@ export class CanvasComponent implements OnInit {
           // this.context.drawImage(this.canvasPlants[this.index].img, this.imgDims[this.index].x, this.imgDims[this.index].y, 100, 100);
         })
         this.checkForCollisions();
+
+         // Creates a new sorted array to determine which plant to draw first
+        var newImgDims: any;
+        newImgDims = this.imgDims.slice(0);
+        for(var i = 0; i < this.size; i++) {
+          //newImgDims[i] = this.imgDims[i];
+          newImgDims[i].image = this.canvasPlants[i];
+        }
+
+        newImgDims.sort(function(a, b){return parseInt(a.y) - parseInt(b.y)});
         this.canvasPlants.forEach((plant, i) => {
           plant.img.onload = () => {
             console.log("image loaded");
@@ -461,13 +471,15 @@ export class CanvasComponent implements OnInit {
               this.context.globalAlpha = .75;
               this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
             } else {
+              // Draw Side View
+              
               var canvCenter = 1440 / 2;
               this.context.globalAlpha = 1;
-              var yLoc = (this.imgDims[i].y/579)*(382) + 217 - this.imgDims[i].max_height;
-              var xLoc = this.imgDims[i].x;
-              var ySize = this.imgDims[i].max_height * 1.15 * ((yLoc/579) + 1);
-              var xSize = this.imgDims[i].max_width * 1.15 * ((yLoc/579) + 1);
-              this.context.drawImage(this.canvasPlants[i].img, xLoc, yLoc, xSize, ySize);
+              var yLoc = (newImgDims[i].y/579)*(382) + 217 - newImgDims[i].max_height;
+              var xLoc = newImgDims[i].x;
+              var ySize = newImgDims[i].max_height * 1.15 * ((yLoc/579) + 1);
+              var xSize = newImgDims[i].max_width * 1.15 * ((yLoc/579) + 1);
+              this.context.drawImage(newImgDims[i].image.img, xLoc, yLoc, xSize, ySize);
             }
             if (this.gardenService.isTopDownPerspective()) {
               this.context.globalAlpha = 1;
@@ -590,15 +602,24 @@ export class CanvasComponent implements OnInit {
         context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
       }
     } else {
+      // Draw Side View
+      var newImgDims: any;
+      // Creates a new sorted array to determine which plant to draw first
+      newImgDims = this.imgDims.slice(0);
+      for(var i = 0; i < this.size; i++) {
+        newImgDims[i].image = this.canvasPlants[i];
+      }
+      newImgDims.sort(function(a, b){return parseInt(a.y) - parseInt(b.y)});
+
       for(var i = 0; i < this.size; i++) {
         var canvCenter = 1440 / 2;
         context.globalAlpha = 1;
-        var yLoc = (this.imgDims[i].y/579)*(382) + 217 - this.imgDims[i].max_height;
-        var xLoc = this.imgDims[i].x;
+        var yLoc = (newImgDims[i].y/579)*(382) + 217 - newImgDims[i].max_height;
+        var xLoc = newImgDims[i].x;
         
-        var ySize = this.imgDims[i].max_height * 1.15 * ((yLoc/579) + 1);
-        var xSize = this.imgDims[i].max_width * 1.15 * ((yLoc/579) + 1);
-        context.drawImage(this.canvasPlants[i].img, xLoc, yLoc, xSize, ySize);
+        var ySize = newImgDims[i].max_height * 1.15 * ((yLoc/579) + 1);
+        var xSize = newImgDims[i].max_width * 1.15 * ((yLoc/579) + 1);
+        context.drawImage(newImgDims[i].image.img, xLoc, yLoc, xSize, ySize);
       }
     }
 
