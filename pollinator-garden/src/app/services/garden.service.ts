@@ -22,6 +22,7 @@ const httpOptions = {
 export class GardenService {
 
   private isTopDown: boolean;
+  private canvas_img : any;
   // Observable string sources
   private viewChangeCallSource = new Subject<any>();
 
@@ -31,6 +32,7 @@ export class GardenService {
     private http: HttpClient
   ) {
     this.isTopDown = true;
+    this.canvas_img = "src\\assets\\site-images\\image_placeholder.png";
   }
 
   baseUrl = "http://localhost:3000/";
@@ -54,13 +56,21 @@ export class GardenService {
   }
 
   viewChange() {
-    console.log("Pineapple")
     this.isTopDown = !this.isTopDown;
     this.viewChangeCallSource.next();
   }
 
   isTopDownPerspective() {
     return this.isTopDown;
+  }
+
+  setCanvasImage(image : any) {
+    this.canvas_img = image;
+  }
+
+  getCanvasImage() {
+    console.log(this.canvas_img);
+    return this.canvas_img;
   }
 
   deleteGarden(gardenId: number): Observable<Garden> {

@@ -57,9 +57,20 @@ export class CanvasComponent implements OnInit {
       );
   }
 
+  ngOnInit() {
+    this.plantService.getPlants()
+      .subscribe(res => {
+        this.plants = res;
+      });
+    //var canvas = document.getElementById('canvas') as HTMLCanvasElement;
+
+    //this.gardenService.setCanvasImage(canvas_image);
+  }
+
   ngAfterViewInit() {
     //get the canvas
     let canvas = document.getElementById('canvas') as HTMLCanvasElement;
+    //document.write("<img src='"+canvas.toDataURL("image/png")+"' alt='from canvas'/>");
     // size the canvas to fill the div
     canvas.style.width = '100%';
     canvas.style.height = '100%';
@@ -361,13 +372,6 @@ export class CanvasComponent implements OnInit {
       }
     });
 
-  }
-
-  ngOnInit() {
-    this.plantService.getPlants()
-      .subscribe(res => {
-        this.plants = res;
-      });
   }
 
   public goToShoppingList(): void {
