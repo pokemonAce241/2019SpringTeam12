@@ -145,19 +145,45 @@ export class CanvasComponent implements OnInit {
       // Sets current canvas to garden canvas
       this.canvasService.setGardenCanvas();
 
+      // if within the garden canvas and toggled then update the current index image information
       // Selecting image at location (index becomes image index)
       // isDragged is true if a plant is currently being dragged
       // isPlantCanvas will be false when mouse is in garden canvas and true if mouse is in plant list canvas
-      if (this.imgDims[this.index] !== undefined && !this.canvasService.isDragged()) {
-        // Searches through the plant list for the plant that was selected
+      if (this.imgDims !== undefined &&
+        (x > 0 && x < canvas.width) &&
+        (y > 0 && y < canvas.height) &&
+        this.canvasService.isDragged() && !this.canvasService.isPlantCanvas()) {
+
+        this.imgDims[this.index].x = x - this.imgDims[this.index].width * .5;
+        this.imgDims[this.index].y = y - this.imgDims[this.index].height * .5;
+        this.context.clearRect(0, 0, canvas.width, canvas.height);
+        if (!this.imgDims[this.index].placed) {
+          this.createInstance(this.imgDims[this.index]);
+          this.imgDims[this.index].placed = true;
+        } else {
+          this.updateInstance(this.imgDims[this.index]);
+        }
+        this.drawPlants(this.context);
+        this.canvasService.toggleDragged();
+
+        // Clicked on an image
+      } else if (this.imgDims[this.index] !== undefined && !this.canvasService.isDragged()) { //otherwise then selecting image at location (index becomes image index)
+        // Added so 2 circles aren't selected at once
+        // May need to change when we incorporate multi select tools
+        var hasSelected = false;
+        
         for (var i = this.size-1; i >= 0; i--) {
           if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
             (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
-            !this.canvasService.isPlantCanvas()) {
+            !this.canvasService.isPlantCanvas() && !hasSelected) {
             console.log("Selected plant in canvas");
+            this.imgDims[i].selected = true;
+            hasSelected = true;
             this.index = i;
             this.canvasService.toggleDragged();
-            break; //breaking after finding plant so it stops searching through plant list
+            //break; //breaking after finding plant so it stops searching through plant list
+          } else {
+            this.imgDims[i].selected = false;
           }
         }
       }
@@ -300,10 +326,14 @@ export class CanvasComponent implements OnInit {
           for (var i = 0; i < this.size; i++) {
             this.imgDims[i].selected = false;
           }
+          // Added so 2 circles aren't selected at once
+          // May need to change when we incorporate multi select tools
+          var hasSelected = false;
           for (var i = 0; i < this.size; i++) {
             if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
               (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
-              !this.canvasService.isPlantCanvas()) {
+              !this.canvasService.isPlantCanvas() && !hasSelected) {
+              hasSelected = true;
               this.index = i;
               this.imgDims[this.index].selected = true;
             }
@@ -417,6 +447,16 @@ export class CanvasComponent implements OnInit {
           // this.context.drawImage(this.canvasPlants[this.index].img, this.imgDims[this.index].x, this.imgDims[this.index].y, 100, 100);
         })
         this.checkForCollisions();
+
+         // Creates a new sorted array to determine which plant to draw first
+        var newImgDims: any;
+        newImgDims = this.imgDims.slice(0);
+        for(var i = 0; i < this.size; i++) {
+          //newImgDims[i] = this.imgDims[i];
+          newImgDims[i].image = this.canvasPlants[i];
+        }
+
+        newImgDims.sort(function(a, b){return parseInt(a.y) - parseInt(b.y)});
         this.canvasPlants.forEach((plant, i) => {
           plant.img.onload = () => {
             console.log("image loaded");
@@ -424,13 +464,15 @@ export class CanvasComponent implements OnInit {
               this.context.globalAlpha = .75;
               this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
             } else {
+              // Draw Side View
+              
               var canvCenter = 1440 / 2;
               this.context.globalAlpha = 1;
-              var yLoc = (this.imgDims[i].y/579)*(382) + 217 - this.imgDims[i].max_height;
-              var xLoc = this.imgDims[i].x;
-              var ySize = this.imgDims[i].max_height * 1.15 * ((yLoc/579) + 1);
-              var xSize = this.imgDims[i].max_width * 1.15 * ((yLoc/579) + 1);
-              this.context.drawImage(this.canvasPlants[i].img, xLoc, yLoc, xSize, ySize);
+              var yLoc = (newImgDims[i].y/579)*(382) + 217 - newImgDims[i].max_height;
+              var xLoc = newImgDims[i].x;
+              var ySize = newImgDims[i].max_height * 1.15 * ((yLoc/579) + 1);
+              var xSize = newImgDims[i].max_width * 1.15 * ((yLoc/579) + 1);
+              this.context.drawImage(newImgDims[i].image.img, xLoc, yLoc, xSize, ySize);
             }
             if (this.gardenService.isTopDownPerspective()) {
               this.context.globalAlpha = 1;
@@ -553,25 +595,24 @@ export class CanvasComponent implements OnInit {
         context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
       }
     } else {
+      // Draw Side View
+      var newImgDims: any;
+      // Creates a new sorted array to determine which plant to draw first
+      newImgDims = this.imgDims.slice(0);
+      for(var i = 0; i < this.size; i++) {
+        newImgDims[i].image = this.canvasPlants[i];
+      }
+      newImgDims.sort(function(a, b){return parseInt(a.y) - parseInt(b.y)});
+
       for(var i = 0; i < this.size; i++) {
         var canvCenter = 1440 / 2;
         context.globalAlpha = 1;
-        var yLoc = (this.imgDims[i].y/579)*(382) + 217 - this.imgDims[i].max_height;
-        var xLoc = this.imgDims[i].x;
-        // Try to move the plants close to the center the farther back they are in the garden
-        if (xLoc < canvCenter) {
-          // Plant is to the left of the center
-
-        } else if (xLoc > canvCenter) {
-          // Plant is to the right of the center
-
-        } else {
-          // Plant is in the center
-
-        }
-        var ySize = this.imgDims[i].max_height * 1.15 * ((yLoc/579) + 1);
-        var xSize = this.imgDims[i].max_width * 1.15 * ((yLoc/579) + 1);
-        context.drawImage(this.canvasPlants[i].img, xLoc, yLoc, xSize, ySize);
+        var yLoc = (newImgDims[i].y/579)*(382) + 217 - newImgDims[i].max_height;
+        var xLoc = newImgDims[i].x;
+        
+        var ySize = newImgDims[i].max_height * 1.15 * ((yLoc/579) + 1);
+        var xSize = newImgDims[i].max_width * 1.15 * ((yLoc/579) + 1);
+        context.drawImage(newImgDims[i].image.img, xLoc, yLoc, xSize, ySize);
       }
     }
 
