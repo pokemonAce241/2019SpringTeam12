@@ -26,8 +26,9 @@ export class CanvasComponent implements OnInit {
   private index: any;
   // amount of plants that should be on the canvas
   private size: any;
-  // Plant properties from the API
+  // Plant properties from the API (This is updated when new plants are placed and when plant images are moved in canvas)
   plant_instances: PlantInstance[];
+  // list of plants from plant table in database
   plants: Plant[];
   // which garden to load
   garden = { "id": 2 };
@@ -44,10 +45,12 @@ export class CanvasComponent implements OnInit {
     private gardenService: GardenService,
     private plantService: PlantService,
   ) {
+    // Sets most fields to empty/0
     this.imgDims = [];
     this.canvasPlants = [];
     this.index = 0;
     this.size = 0;
+    // Listens for when perspective change button is pressed then calls methods inside
     this.gardenService.viewChangeCalled$.subscribe(
         () => {
           console.log('View Change called!');
@@ -57,22 +60,39 @@ export class CanvasComponent implements OnInit {
       );
   }
 
+  // Gets the list of generic plants from the database when page is first initialized
+  ngOnInit() {
+    this.plantService.getPlants()
+      .subscribe(res => {
+        this.plants = res;
+      });
+    //var canvas = document.getElementById('canvas') as HTMLCanvasElement;
+
+    //this.gardenService.setCanvasImage(canvas_image);
+  }
+
+  // Called after canvas has loaded
+  // Defines user interaction with canvas through EventListeners
   ngAfterViewInit() {
-    //get the canvas
+    // Get the canvas
     let canvas = document.getElementById('canvas') as HTMLCanvasElement;
-    // size the canvas to fill the div
+    //document.write("<img src='"+canvas.toDataURL("image/png")+"' alt='from canvas'/>");
+
+    // Size the canvas to fill the div
     canvas.style.width = '100%';
     canvas.style.height = '100%';
-    // have the height and width attributes match the style (1:1)
+
+    // Have the height and width attributes match the style (1:1)
     canvas.height = canvas.offsetHeight;
     canvas.width = canvas.offsetWidth;
 
-    // gets the canvas coordinates (rectangle)
+    // Gets the canvas coordinates (rectangle)
     let rect = canvas.getBoundingClientRect();
-    //instantiate a context based on the canvas
+
+    //Instantiate a context based on the canvas
     this.context = (this.canvasEl.nativeElement as HTMLCanvasElement).getContext('2d');
 
-    // if window is adjusted then adjust images on screen
+    // If window is adjusted then adjust images on screen
     window.addEventListener("resize", (ev) => {
       canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
@@ -112,6 +132,8 @@ export class CanvasComponent implements OnInit {
     //
     // });
 
+    // First of three steps for drag/drop functionality
+    // Called when mouse is initially pressed
     canvas.addEventListener('mousedown', (ev) => {
       // rect is the rectangle boundary of the canvas
       // client is mouse position on the client screen
@@ -124,6 +146,9 @@ export class CanvasComponent implements OnInit {
       this.canvasService.setGardenCanvas();
 
       // if within the garden canvas and toggled then update the current index image information
+      // Selecting image at location (index becomes image index)
+      // isDragged is true if a plant is currently being dragged
+      // isPlantCanvas will be false when mouse is in garden canvas and true if mouse is in plant list canvas
       if (this.imgDims !== undefined &&
         (x > 0 && x < canvas.width) &&
         (y > 0 && y < canvas.height) &&
@@ -146,6 +171,7 @@ export class CanvasComponent implements OnInit {
         // Added so 2 circles aren't selected at once
         // May need to change when we incorporate multi select tools
         var hasSelected = false;
+        
         for (var i = this.size-1; i >= 0; i--) {
           if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
             (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
@@ -160,80 +186,15 @@ export class CanvasComponent implements OnInit {
             this.imgDims[i].selected = false;
           }
         }
-      } else if ((x < 0 || x > canvas.width || y < 0 || y > canvas.height) && !this.canvasService.isPlantCanvas()) { //if not in garden canvas and toggle display error message
-        this.canvasService.decrementSize();
-        this.canvasService.toggleDragged();
-      }
-
-      // unselected send signal back to plantlist canvas to reset itself
-      if (!this.canvasService.isDragged() && !this.canvasService.isPlantCanvas()) {
-        this.canvasService.toggleReset();
       }
     });
 
-    canvas.addEventListener('mouseup', (ev) => {
+    // Second of three steps for drag/drop functionality
+    // Called when mouse is moved (whether normally or while dragging)
+    document.addEventListener('mousemove', (ev) => {
       // rect is the rectangle boundary of the canvas
       // client is mouse position on the client screen
       // x and y is the location within the canvas
-      rect = canvas.getBoundingClientRect();
-      var x = ev.clientX - rect.left;
-      var y = ev.clientY - rect.top;
-
-      // if within the garden canvas and toggled then update the current index image information
-      if (this.imgDims !== undefined &&
-        (x > 0 && x < canvas.width) &&
-        (y > 0 && y < canvas.height) &&
-        this.canvasService.isDragged() && !this.canvasService.isPlantCanvas()) {
-        this.imgDims[this.index].x = x - this.imgDims[this.index].width * .5;
-        this.imgDims[this.index].y = y - this.imgDims[this.index].height * .5;
-        this.imgDims[this.index].selected = true;
-        this.context.clearRect(0, 0, canvas.width, canvas.height);
-        if (!this.imgDims[this.index].placed) {
-          this.createInstance(this.imgDims[this.index]);
-          this.imgDims[this.index].placed = true;
-          //this.index = -1;
-        } else {
-          this.updateInstance(this.imgDims[this.index]);
-        }
-        // Redraws all plants images on garden canvas
-        this.drawPlants(this.context);
-        this.canvasService.setDraggedToFalse();
-      } else if (this.imgDims[this.index] !== undefined && !this.canvasService.isDragged()) { //otherwise then selecting image at location (index becomes image index)
-        for (var i = 0; i < this.size; i++) {
-          if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
-            (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
-            !this.canvasService.isPlantCanvas()) {
-            this.index = i;
-            this.canvasService.setDraggedToFalse();
-          }
-        }
-      } else if ((x < 0 || x > canvas.width || y < 0 || y > canvas.height) && !this.canvasService.isPlantCanvas()) { //if not in garden canvas and toggle display error message
-        this.canvasService.decrementSize();
-        this.canvasService.setDraggedToFalse();
-      }
-
-      // unselected send signal back to plantlist canvas to reset itself
-      // if (!this.canvasService.isDragged() && !this.canvasService.isPlantCanvas()) {
-      //   this.canvasService.toggleReset();
-      // }
-      console.log(this.plant_instances);
-      this.canvasService.toggleReset();
-
-
-    });
-
-    document.addEventListener('paste', (ev) => {
-      console.log("Clearing");
-      for (var i = 0; i < this.size; i++) {
-        this.deleteInstance(this.imgDims[this.index]);
-        this.imgDims[this.index] = {};
-        this.canvasPlants[this.index] = {};
-        this.canvasPlants[this.index].img = new Image();
-      }
-      this.context.clearRect(0, 0, canvas.width, canvas.height);
-    });
-
-    document.addEventListener('mousemove', (ev) => {
       rect = canvas.getBoundingClientRect();
       let x = ev.clientX - rect.left;
       let y = ev.clientY - rect.top;
@@ -246,8 +207,6 @@ export class CanvasComponent implements OnInit {
           this.canvasPlants[this.index] = {};  // sets the new plant
           this.canvasPlants[this.index].img = new Image();
           this.imgDims[this.index] = {};       //sets the plant properties
-          // this.imgDims[this.index].width = 100;
-          // this.imgDims[this.index].height = 100;
 
           //Again, unsure what these are actually being used for since they say spread but are width and height
           this.imgDims[this.index].width = this.plants[this.canvasService.getId() - 1].min_spread * 40;
@@ -281,22 +240,24 @@ export class CanvasComponent implements OnInit {
           this.canvasPlants[this.index].img = image;
         }
 
-        // do not change x < -50 (anomoly)
-        // checks to see if the image crosses over the canvas boundary
+        // do not change x < -50 (anomaly)
+        // checks to see if the image crosses over the canvas boundary (From garden canvas --> plant list canvas)
         if (this.imgDims[this.index] !== undefined && x < -50 && !this.canvasService.isPlantCanvas()) {
           console.log("Mouse is over plant list");
-          this.canvasService.setDraggedToFalse(); //testing
-          console.log("set drag to false");
+          // Plant image should not be able to be dragged from garden canvas to plant list canvas
+          this.canvasService.setDraggedToFalse();
           this.canvasService.setImg('');     //reset image
           this.canvasService.toggleCanvas(); //update active canvas
           if (this.canvasService.isDragged() && this.index === this.size - 1) {
             this.canvasPlants[this.index].img = new Image();
             this.canvasService.decrementSize();
           }
+          // Redraw plants on canvas
           this.drawPlants(this.context);
-        } else if (this.imgDims[this.index] === undefined && x < 0 && !this.canvasService.isPlantCanvas()) { // if not set then ignore crossing over boundary
-          this.canvasService.toggleCanvas();
-        } else if (this.canvasService.isDragged() && !this.canvasService.isPlantCanvas()) { // update and draw canvas with new coordinates of image
+
+        // Update and draw canvas with new coordinates of image
+        // Makes it so plant image will look like it's being dragged while it is dragged
+        } else if (this.canvasService.isDragged() && !this.canvasService.isPlantCanvas()) {
           console.log("updating placed plant information");
           this.drawPlants(this.context);
         }
@@ -304,10 +265,53 @@ export class CanvasComponent implements OnInit {
 
     });
 
-    setTimeout(() => this.checkRouteId());
-    // this.checkRouteId();
+    // Third of three steps for drag/drop functionality
+    // Called after mouse click ends
+    canvas.addEventListener('mouseup', (ev) => {
+      // rect is the rectangle boundary of the canvas
+      // client is mouse position on the client screen
+      // x and y is the location within the canvas
+      rect = canvas.getBoundingClientRect();
+      var x = ev.clientX - rect.left;
+      var y = ev.clientY - rect.top;
 
-    // one of two mousemove event listeners (performs operations on the garden canvas)
+      // if within the garden canvas and toggled then update the current index image information
+      if (this.imgDims !== undefined &&
+        (x > 0 && x < canvas.width) &&
+        (y > 0 && y < canvas.height) &&
+        this.canvasService.isDragged() && !this.canvasService.isPlantCanvas()) {
+
+        // Sets the x and y values to the center of the image
+        this.imgDims[this.index].x = x - this.imgDims[this.index].width * .5;
+        this.imgDims[this.index].y = y - this.imgDims[this.index].height * .5;
+        this.imgDims[this.index].selected = true;
+
+        // Clears the canvas
+        this.context.clearRect(0, 0, canvas.width, canvas.height);
+
+        // If image has not been placed on the canvas before / if it is a new image
+        if (!this.imgDims[this.index].placed) {
+          this.createInstance(this.imgDims[this.index]);
+          this.imgDims[this.index].placed = true;
+        // If the image has been placed before / if it is an old image that is being moved in the canvas
+        } else {
+          // The position of the plant instance is updated
+          this.updateInstance(this.imgDims[this.index]);
+        }
+
+        // Redraws all plants instances on garden canvas
+        this.drawPlants(this.context);
+        // The plant is no longer being dragged so the field is reset
+        this.canvasService.setDraggedToFalse();
+
+      }
+
+    });
+
+    setTimeout(() => this.checkRouteId());
+
+    //Event listener for when mouse is clicked
+    // This is used for selecting a plant, so it is a little different than the other mouse event listeners
     document.addEventListener('click', (ev) => {
       // rect is the rectangle boundary of the canvas
       // client is mouse position on the client screen
@@ -334,19 +338,16 @@ export class CanvasComponent implements OnInit {
               this.imgDims[this.index].selected = true;
             }
           }
-          //this.imgDims[this.index].x = x - this.imgDims[this.index].width * .5;
-          //this.imgDims[this.index].y = y - this.imgDims[this.index].height * .5;
           this.context.clearRect(0, 0, canvas.width, canvas.height);
           // Redraws all plants images on garden canvas
           this.drawPlants(this.context);
-      } else if ((x < 0 || x > canvas.width || y < 0 || y > canvas.height) && !this.canvasService.isPlantCanvas()) { //if not in garden canvas and toggle display error message
-        console.log("Not in garden canvas");
       }
     });
 
+    // Used for deleting plants when selected
+    // Registers delete and backspace button press
     document.addEventListener('keydown', (ev) => {
       if (ev.keyCode == 8) {
-          console.log('BACKSPACE was pressed');
           for (var i = 0; i < this.imgDims.length; i++) {
             if (this.imgDims[i].selected) {
               this.index = i;
@@ -360,7 +361,6 @@ export class CanvasComponent implements OnInit {
           ev.preventDefault();
       }
       if (ev.keyCode == 46) {
-          console.log('DELETE was pressed');
           for (var i = 0; i < this.imgDims.length; i++) {
             if (this.imgDims[i].selected) {
               this.index = i;
@@ -375,13 +375,6 @@ export class CanvasComponent implements OnInit {
       }
     });
 
-  }
-
-  ngOnInit() {
-    this.plantService.getPlants()
-      .subscribe(res => {
-        this.plants = res;
-      });
   }
 
   public goToShoppingList(): void {
