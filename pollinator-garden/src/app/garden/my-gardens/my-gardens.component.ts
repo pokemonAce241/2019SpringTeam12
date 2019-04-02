@@ -18,6 +18,8 @@ export class MyGardensComponent implements OnInit {
   // Name of garden entered by user
   textValue: string = ""
 
+  canvas_image : any
+
   // For now
   user_id = 1;
 
@@ -28,10 +30,14 @@ export class MyGardensComponent implements OnInit {
     private router: Router,
     private gardenService: GardenService,
     public modal: NgbModal
-  ) { }
+  ) {
+    this.canvas_image = this.gardenService.getCanvasImage();
+    console.log(this.canvas_image);
+  }
 
   ngOnInit() {
     this.getGardens()
+
   }
 
   getGardens() {
@@ -101,5 +107,9 @@ export class MyGardensComponent implements OnInit {
     this.lengthError = false;
     this.uniqueNameError = false;
     console.log(this.lengthError, this.uniqueNameError);
+  }
+
+  public getCanvasImagePath() {
+    return this.canvas_image;
   }
 }

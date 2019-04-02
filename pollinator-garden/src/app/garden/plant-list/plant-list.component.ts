@@ -149,14 +149,13 @@ export class PlantListComponent implements OnInit {
       }
     });
 
+    // First of three steps for drag/drop functionality
+    // Called when mouse is initially pressed
     canvas.addEventListener('mousedown', (ev) => {
-      var test = ev.target as HTMLElement;
-      console.log(test.tagName);
-      if (test.tagName !== "CANVAS") {
-        return;
-      }
 
-
+        // rect is the rectangle boundary of the canvas
+        // client is mouse position on the client screen
+        // x and y is the location within the canvas
         rect = canvas.getBoundingClientRect();
         var x = ev.clientX - rect.left;
         var y = ev.clientY - rect.top;
@@ -173,60 +172,31 @@ export class PlantListComponent implements OnInit {
           }
         }
 
-        // Checks if image selected toggle has been turned on
-        if (this.canvasService.isDragged() && this.canvasService.isPlantCanvas()) {
-          this.canvasService.toggleDragged();
-          this.imgDims[this.index].x = this.imgDims[this.index].ox;
-          this.imgDims[this.index].y = this.imgDims[this.index].oy;
-          this.context.clearRect(0, 0, canvas.width, canvas.height);
-
-          // this part might be redundant
-          for(var i = 0; i < this.size; i++) {
-            this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
-            this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
-          }
-        }
-
     });
 
-    document.addEventListener('mouseup', (ev) => {
-
-      console.log("Watermelon");
-      //console.log("Moist: " + this.soilFilters.moist);
-      //console.log("Wet: " + this.soilFilters.wet);
-      //console.log("Dry: " + this.soilFilters.dry);
-      this.canvasService.setDraggedToFalse();
-      if (this.index !== undefined) {
-        this.imgDims[this.index].x = this.imgDims[this.index].ox;
-        this.imgDims[this.index].y = this.imgDims[this.index].oy;
-        this.context.clearRect(0, 0, canvas.width, canvas.height);
-      }
-
-      this.context.clearRect(0, 0, canvas.width, canvas.height);
-      for(var i = 0; i < this.size; i++) {
-        this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
-        this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
-      }
-
-    });
-
+    // Second of three steps for drag/drop functionality
+    // Called when mouse is moved (whether normally or while dragging)
     document.addEventListener('mousemove', (ev) => {
 
+      // rect is the rectangle boundary of the canvas
+      // client is mouse position on the client screen
+      // x and y is the location within the canvas
       rect = canvas.getBoundingClientRect();
-      // Get mouse location
       var x = ev.clientX - rect.left;
       var y = ev.clientY - rect.top;
 
+      // Checks if mouse is currently in the plant list canvas
       if (this.canvasService.isPlantCanvas()) {
           // image selected and crossing boundary pass information
         if (this.canvasService.isDragged() && x > canvas.width && y > 0 && y < canvas.height) {
           this.canvasService.incrementSize();
           // Resets plant toggle to false (so it is no longer selected in the plant window)
           this.canvasService.toggleCanvas();
+          // Clears the canvas
           this.context.clearRect(0, 0, canvas.width, canvas.height);
+          // Sets the initialize toggle for the other canvas (lets the other canvas know a new plant will be placed)
           this.canvasService.toggleInitialize();
-          // Takes the image source from the assets file and stores it in the canvas img field
-          //console.log(this.index);
+          // Sets the image path to top-down image, if in top-down perspective
           if (this.gardenService.isTopDownPerspective()) {
             this.imgDims[this.index].img.src = this.plants[this.imgDims[this.index].id - 1].front_image_path;
           }
@@ -241,20 +211,20 @@ export class PlantListComponent implements OnInit {
           this.context.clearRect(0, 0, canvas.width, canvas.height);
           // This makes sure all plants in plant list stay visible when mouse switches canvases
           for (var i = 0; i < this.size; i++) {
-            //if(i !== this.index) {
             this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
             this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
-            //}
           }
 
           this.context.fillText(this.imgDims[this.index].name, this.imgDims[this.index].ox, this.imgDims[this.index].oy + this.imgDims[this.index].height + 10);
 
-        } else if (this.canvasService.getImg() === '' && x > canvas.width && y > 0 && y < canvas.height) { // if no image then still signal change of canvas
+        // If no image then still signal change of canvas
+        } else if (this.canvasService.getImg() === '' && x > canvas.width && y > 0 && y < canvas.height) {
           this.canvasService.toggleCanvas();
-        } else if (this.canvasService.isDragged()) { // otherwise in canvas still so update and draw
+
+        // If still in plant canvas and plant is being dragged
+        } else if (this.canvasService.isDragged()) {
           if (this.canvasService.getImg() === '') {
               // Takes the image source from the assets file and stores it in the canvas img field
-              //console.log(this.imgDims);
             this.canvasService.setImg(this.imgDims[this.index].img.src);
             // Stores the id of the image
             this.canvasService.setId(this.imgDims[this.index].id);
@@ -274,16 +244,40 @@ export class PlantListComponent implements OnInit {
           this.context.clearRect(0, 0, canvas.width, canvas.height);
           // This makes sure all plants in plant list stay visible when mouse switches canvases
           for (var i = 0; i < this.size; i++) {
-            //if(i !== this.index) {
             this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
             this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
-            //}
           }
 
           this.context.fillText(this.imgDims[this.index].name, this.imgDims[this.index].ox, this.imgDims[this.index].oy + this.imgDims[this.index].height + 10);
         }
       }
 
+
+    });
+
+    // Third of three steps for drag/drop functionality
+    // Called after mouse click ends
+    document.addEventListener('mouseup', (ev) => {
+
+      console.log("Watermelon");
+
+      // Drag boolean will always get set to false on mouseup event
+      this.canvasService.setDraggedToFalse();
+
+      // Resets image dimensions to original values
+      if (this.index !== undefined) {
+        this.imgDims[this.index].x = this.imgDims[this.index].ox;
+        this.imgDims[this.index].y = this.imgDims[this.index].oy;
+      }
+
+      // Clears the canvas
+      this.context.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Redraws the pictures on the plant list canvas
+      for(var i = 0; i < this.size; i++) {
+        this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+        this.context.fillText(this.imgDims[i].name, this.imgDims[i].ox, this.imgDims[i].oy + this.imgDims[i].height + 10);
+      }
 
     });
 
@@ -300,7 +294,6 @@ export class PlantListComponent implements OnInit {
         this.plants[this.plants.length - 1].img.onload = () => {this.filterPlants()}
       });
 
-      // Plants();
   }
 
   loadPlants() {
