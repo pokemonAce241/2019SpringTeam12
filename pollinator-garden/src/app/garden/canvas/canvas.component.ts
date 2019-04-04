@@ -171,7 +171,7 @@ export class CanvasComponent implements OnInit {
         // Added so 2 circles aren't selected at once
         // May need to change when we incorporate multi select tools
         var hasSelected = false;
-        
+
         for (var i = this.size-1; i >= 0; i--) {
           if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
             (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
@@ -465,7 +465,7 @@ export class CanvasComponent implements OnInit {
               this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
             } else {
               // Draw Side View
-              
+
               var canvCenter = 1440 / 2;
               this.context.globalAlpha = 1;
               var yLoc = (newImgDims[i].y/579)*(382) + 217 - newImgDims[i].max_height;
@@ -609,9 +609,26 @@ export class CanvasComponent implements OnInit {
         context.globalAlpha = 1;
         var yLoc = (newImgDims[i].y/579)*(382) + 217 - newImgDims[i].max_height;
         var xLoc = newImgDims[i].x;
-        
+
         var ySize = newImgDims[i].max_height * 1.15 * ((yLoc/579) + 1);
         var xSize = newImgDims[i].max_width * 1.15 * ((yLoc/579) + 1);
+
+        if (this.imgDims[i].collision) {
+          var color1 = "#F2EEB3",color2="#FF4C65";
+          var numberOfStripes = 100;
+          for (var i = 0 ; i < numberOfStripes*2 ; i++){
+            var thickness = 300 / numberOfStripes;
+            context.beginPath();
+            context.strokeStyle = i % 2?color1:color2;
+            context.lineWidth = thickness;
+            context.lineCap = 'round';
+            var temp = i*thickness + (thickness/2) - 300
+            context.moveTo(temp, 0);
+            context.lineTo(0 + i*thickness+thickness/2, 300);
+            context.stroke();
+          }
+        }
+
         context.drawImage(newImgDims[i].image.img, xLoc, yLoc, xSize, ySize);
       }
     }
@@ -639,9 +656,12 @@ export class CanvasComponent implements OnInit {
   deletePlants() {
     //This is where we locally reset the plant and can do the same from the api to the database
     this.deleteInstance(this.imgDims[this.index].id);
-    this.imgDims[this.index] = {};
-    this.canvasPlants[this.index] = {};
-    this.canvasPlants[this.index].img = new Image();
+    //this.imgDims[this.index] = {};
+    this.imgDims.splice(this.index, 1);
+    // this.canvasPlants[this.index] = {};
+    // this.canvasPlants[this.index].img = new Image();
+    this.canvasPlants.splice(this.index, 1);
+    this.checkForCollisions();
   }
 
   checkForCollisions() {
@@ -692,6 +712,5 @@ export class CanvasComponent implements OnInit {
       .subscribe(res => {
         console.log(res);
       })
-    this.checkForCollisions();
   }
 }
