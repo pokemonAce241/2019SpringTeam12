@@ -23,15 +23,17 @@ export class GardenService {
 
   private isTopDown: boolean;
   private canvas_img : any;
-  // Observable string sources
+  // Observable for changing perspectives
   private viewChangeCallSource = new Subject<any>();
-
   viewChangeCalled$ = this.viewChangeCallSource.asObservable();
+
+  private curvedLineOn: boolean;
 
   constructor(
     private http: HttpClient
   ) {
     this.isTopDown = true;
+    this.curvedLineOn = false;
     this.canvas_img = "src\\assets\\site-images\\image_placeholder.png";
   }
 
@@ -58,6 +60,14 @@ export class GardenService {
   viewChange() {
     this.isTopDown = !this.isTopDown;
     this.viewChangeCallSource.next();
+  }
+
+  toggleCurvedLine() {
+    this.curvedLineOn = !this.curvedLineOn;
+  }
+
+  isCurvedLine() {
+    return this.curvedLineOn;
   }
 
   isTopDownPerspective() {
