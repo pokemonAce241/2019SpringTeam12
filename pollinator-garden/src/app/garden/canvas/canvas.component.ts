@@ -20,8 +20,6 @@ export class CanvasComponent implements OnInit {
   @ViewChild('canvasEl') canvasEl: ElementRef;
   // image dimensions
   private imgDims: any;
-  // plant images
-  private canvasPlants: any;
   // current index of the plant that is selected
   private index: any;
   // amount of plants that should be on the canvas
@@ -47,7 +45,6 @@ export class CanvasComponent implements OnInit {
   ) {
     // Sets most fields to empty/0
     this.imgDims = [];
-    this.canvasPlants = [];
     this.index = 0;
     this.size = 0;
     // Listens for when perspective change button is pressed then calls methods inside
@@ -204,9 +201,8 @@ export class CanvasComponent implements OnInit {
         // if the first time with the increased size then initialized
         if (this.canvasService.isInitialize()) {
           this.index = this.size - 1;          // from async method
-          this.canvasPlants[this.index] = {};  // sets the new plant
-          this.canvasPlants[this.index].img = new Image();
-          this.imgDims[this.index] = {};       //sets the plant properties
+          this.imgDims[this.index] = {};  // sets the new plant
+          this.imgDims[this.index].img = new Image();
 
           //Again, unsure what these are actually being used for since they say spread but are width and height
           this.imgDims[this.index].width = this.plants[this.canvasService.getId() - 1].min_spread * 40;
@@ -222,7 +218,7 @@ export class CanvasComponent implements OnInit {
           this.imgDims[this.index].yRel = NaN;
           this.imgDims[this.index].placed = false;
           this.imgDims[this.index].plant_id = this.canvasService.getId();
-          this.canvasPlants[this.index].name = this.plants[this.canvasService.getId() - 1].common_name;
+          this.imgDims[this.index].name = this.plants[this.canvasService.getId() - 1].common_name;
           this.canvasService.toggleInitialize(); //marks it as intialized
         }
 
@@ -234,10 +230,10 @@ export class CanvasComponent implements OnInit {
         }
 
         // sets the image of the plant if not set
-        if (this.canvasPlants[this.index] !== undefined && this.canvasPlants[this.index].img.src === '' && !this.canvasService.isPlantCanvas()) {
+        if (this.imgDims[this.index] !== undefined && this.imgDims[this.index].img.src === '' && !this.canvasService.isPlantCanvas()) {
           var image = new Image(); //width and height parameter optional
           image.src = this.canvasService.getImg();
-          this.canvasPlants[this.index].img = image;
+          this.imgDims[this.index].img = image;
         }
 
         // do not change x < -50 (anomaly)
@@ -249,7 +245,7 @@ export class CanvasComponent implements OnInit {
           this.canvasService.setImg('');     //reset image
           this.canvasService.toggleCanvas(); //update active canvas
           if (this.canvasService.isDragged() && this.index === this.size - 1) {
-            this.canvasPlants[this.index].img = new Image();
+            this.imgDims[this.index].img = new Image();
             this.canvasService.decrementSize();
           }
           // Redraw plants on canvas
@@ -408,17 +404,8 @@ export class CanvasComponent implements OnInit {
 
         this.plant_instances.forEach(plant => {
           this.index = this.canvasService.getSize();
-          this.canvasPlants[this.index] = {};  // sets the new plant
-          this.canvasPlants[this.index].img = new Image();
-          if (this.gardenService.isTopDownPerspective()) {
-            this.canvasPlants[this.index].img.src = plant.front_image_path;
-          } else {
-            this.canvasPlants[this.index].img.src = plant.side_image_path;
-          }
-          this.canvasPlants[this.index].radius_img = new Image();
-          this.canvasPlants[this.index].radius_img.src = "assets/images/Flower_Max_Radius.png";
-          this.canvasPlants[this.index].name = plant.common_name;
-          //this.canvasPlants[this.index].collision = plant.collision;
+
+          //this.imgDims[this.index].collision = plant.collision;
           this.imgDims[this.index] = {};       //sets the plant properties
 
           //What are these? They way height and wirdth but use min/max spread
@@ -442,39 +429,41 @@ export class CanvasComponent implements OnInit {
           this.imgDims[this.index].placed = true;
           this.imgDims[this.index].collision = plant.collision;
           this.imgDims[this.index].selected = false;
+
+          //Temp adding image path to newImgDims
+          this.imgDims[this.index].img = new Image();
+          if (this.gardenService.isTopDownPerspective()) {
+            this.imgDims[this.index].img.src = plant.front_image_path;
+          } else {
+            this.imgDims[this.index].img.src = plant.side_image_path;
+          }
+          this.imgDims[this.index].radius_img = new Image();
+          this.imgDims[this.index].radius_img.src = "assets/images/Flower_Max_Radius.png";
+          this.imgDims[this.index].name = plant.common_name;
+
           this.canvasService.incrementSize();
 
-          // this.context.drawImage(this.canvasPlants[this.index].img, this.imgDims[this.index].x, this.imgDims[this.index].y, 100, 100);
+          // this.context.drawImage(this.imgDims[this.index].img, this.imgDims[this.index].x, this.imgDims[this.index].y, 100, 100);
         })
         this.checkForCollisions();
 
          // Creates a new sorted array to determine which plant to draw first
         var newImgDims: any;
         newImgDims = this.imgDims.slice(0);
-        for(var i = 0; i < this.size; i++) {
-          //newImgDims[i] = this.imgDims[i];
-          newImgDims[i].image = this.canvasPlants[i];
-        }
+        // for(var i = 0; i < this.size; i++) {
+        //   //newImgDims[i] = this.imgDims[i];
+        //   newImgDims[i].image = this.imgDims[i];
+        // }
 
         newImgDims.sort(function(a, b){return parseInt(a.y) - parseInt(b.y)});
-        this.canvasPlants.forEach((plant, i) => {
+        this.imgDims.forEach((plant, i) => {
           plant.img.onload = () => {
             console.log("image loaded");
             if(this.gardenService.isTopDownPerspective()) {
               this.context.globalAlpha = .75;
-              this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
-            } else {
-              // Draw Side View
+              this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
 
-              var canvCenter = 1440 / 2;
-              this.context.globalAlpha = 1;
-              var yLoc = (newImgDims[i].y/579)*(382) + 217 - newImgDims[i].max_height;
-              var xLoc = newImgDims[i].x;
-              var ySize = newImgDims[i].max_height * 1.15 * ((yLoc/579) + 1);
-              var xSize = newImgDims[i].max_width * 1.15 * ((yLoc/579) + 1);
-              this.context.drawImage(newImgDims[i].image.img, xLoc, yLoc, xSize, ySize);
-            }
-            if (this.gardenService.isTopDownPerspective()) {
+
               this.context.globalAlpha = 1;
               if (this.imgDims[i].collision) {
                 // Drawing red circle
@@ -484,9 +473,10 @@ export class CanvasComponent implements OnInit {
                 this.context.lineWidth = 5;
                 this.context.arc(this.imgDims[i].x + (this.imgDims[i].min_spread/2), this.imgDims[i].y + (this.imgDims[i].min_spread/2), this.imgDims[i].min_spread/2, 0, 2 * Math.PI);
                 this.context.stroke();
-                this.context.fillRect(0,0, 160, 30);
-                this.context.fillStyle ="#FFFFFF";
-                this.context.fillText("Two or more plants are colliding", 5, 16);
+                this.context.fillStyle ="#ffae42";
+                this.context.fillRect(1,1, 239, 39);
+                this.context.fillStyle ="#000000";
+                this.context.fillText("⚠ TWO OR MORE PLANTS ARE COLLIDING", 10, 23);
               }
               this.context.fillStyle ="#000000";
               this.context.beginPath();
@@ -496,17 +486,32 @@ export class CanvasComponent implements OnInit {
               this.context.lineWidth = 1;
               this.context.stroke();
               this.context.globalAlpha = 1;
-              var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
-              this.context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
+              var textWidth = this.context.measureText(this.imgDims[i].name).width;
+              this.context.fillText(this.imgDims[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
+            } else {
+              // Draw Side View
+              var canvCenter = 1440 / 2;
+              this.context.globalAlpha = 1;
+              var yLoc = (newImgDims[i].y/579)*(382) + 217 - newImgDims[i].max_height;
+              var xLoc = newImgDims[i].x;
+              var ySize = newImgDims[i].max_height * 1.15 * ((yLoc/579) + 1);
+              var xSize = newImgDims[i].max_width * 1.15 * ((yLoc/579) + 1);
+              if (newImgDims[i].collision) {
+                this.context.fillStyle ="#ffae42";
+                this.context.fillRect(0,0, 239, 39);
+                this.context.fillStyle ="#000000";
+                this.context.fillText("⚠ TWO OR MORE PLANTS ARE COLLIDING", 10, 23);
+                this.context.shadowColor = "#ff0000";
+                this.context.shadowBlur = 50;
+              }
+              this.context.drawImage(newImgDims[i].img, xLoc, yLoc, xSize, ySize);
+              this.context.shadowBlur = 0;
+
             }
-            // this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
-            // for (var i = 0; i < this.size; i++) {
-            //   this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
-            // }
+
           }
         })
 
-        // this.draw();
       });
 
     console.log(this.imgDims);
@@ -529,7 +534,7 @@ export class CanvasComponent implements OnInit {
           this.context.arc(instance.x + (instance.min_spread/2), instance.y + (instance.min_spread/2), instance.max_spread/2, 0, 2 * Math.PI);
           this.context.stroke();
         }
-        //this.context.fillText(this.canvasPlants[i].name, in.x + this.imgDims[i].width / 3, this.imgDims[i].y + this.imgDims[i].height / 2);
+        //this.context.fillText(this.imgDims[i].name, in.x + this.imgDims[i].width / 3, this.imgDims[i].y + this.imgDims[i].height / 2);
       }
     });
   }
@@ -554,11 +559,11 @@ export class CanvasComponent implements OnInit {
 
   drawPlants(context) {
     context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+    this.checkForCollisions();
     if(this.gardenService.isTopDownPerspective()) {
-      this.checkForCollisions();
       for(var i = 0; i < this.size; i++) {
         context.globalAlpha = .75;
-        context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+        context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
         context.globalAlpha = 1;
         if (this.imgDims[i].collision) {
           // Drawing red circle
@@ -568,9 +573,10 @@ export class CanvasComponent implements OnInit {
           context.lineWidth = 5;
           context.arc(this.imgDims[i].x + (this.imgDims[i].min_spread/2), this.imgDims[i].y + (this.imgDims[i].min_spread/2), this.imgDims[i].min_spread/2, 0, 2 * Math.PI);
           context.stroke();
-          context.fillRect(0,0, 160, 30);
-          context.fillStyle ="#FFFFFF";
-          context.fillText("Two or more plants are colliding", 5, 16);
+          this.context.fillStyle ="#ffae42";
+          this.context.fillRect(1,1, 239, 39);
+          this.context.fillStyle ="#000000";
+          this.context.fillText("⚠ TWO OR MORE PLANTS ARE COLLIDING", 10, 23);
         }
         if (this.imgDims[i].selected) {
           // Drawing blue circle
@@ -590,9 +596,9 @@ export class CanvasComponent implements OnInit {
         context.arc(this.imgDims[i].x + (this.imgDims[i].min_spread/2), this.imgDims[i].y + (this.imgDims[i].min_spread/2), this.imgDims[i].max_spread/2, 0, 2 * Math.PI);
         context.stroke();
 
-        var textWidth = context.measureText(this.canvasPlants[i].name).width;
+        var textWidth = context.measureText(this.imgDims[i].name).width;
         //if (textWidth) {
-        context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
+        context.fillText(this.imgDims[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
       }
     } else {
       // Draw Side View
@@ -600,7 +606,7 @@ export class CanvasComponent implements OnInit {
       // Creates a new sorted array to determine which plant to draw first
       newImgDims = this.imgDims.slice(0);
       for(var i = 0; i < this.size; i++) {
-        newImgDims[i].image = this.canvasPlants[i];
+        newImgDims[i].image = this.imgDims[i];
       }
       newImgDims.sort(function(a, b){return parseInt(a.y) - parseInt(b.y)});
 
@@ -613,23 +619,18 @@ export class CanvasComponent implements OnInit {
         var ySize = newImgDims[i].max_height * 1.15 * ((yLoc/579) + 1);
         var xSize = newImgDims[i].max_width * 1.15 * ((yLoc/579) + 1);
 
-        if (this.imgDims[i].collision) {
-          var color1 = "#F2EEB3",color2="#FF4C65";
-          var numberOfStripes = 100;
-          for (var i = 0 ; i < numberOfStripes*2 ; i++){
-            var thickness = 300 / numberOfStripes;
-            context.beginPath();
-            context.strokeStyle = i % 2?color1:color2;
-            context.lineWidth = thickness;
-            context.lineCap = 'round';
-            var temp = i*thickness + (thickness/2) - 300
-            context.moveTo(temp, 0);
-            context.lineTo(0 + i*thickness+thickness/2, 300);
-            context.stroke();
-          }
+        if (newImgDims[i].collision) {
+          this.context.fillStyle ="#ffae42";
+          this.context.fillRect(0,0, 239, 39);
+          this.context.fillStyle ="#000000";
+          this.context.fillText("⚠ TWO OR MORE PLANTS ARE COLLIDING", 10, 23);
+          this.context.shadowColor = "#ff0000";
+          this.context.shadowBlur = 50;
         }
 
         context.drawImage(newImgDims[i].image.img, xLoc, yLoc, xSize, ySize);
+        this.context.shadowBlur = 0;
+
       }
     }
 
@@ -656,11 +657,9 @@ export class CanvasComponent implements OnInit {
   deletePlants() {
     //This is where we locally reset the plant and can do the same from the api to the database
     this.deleteInstance(this.imgDims[this.index].id);
-    //this.imgDims[this.index] = {};
     this.imgDims.splice(this.index, 1);
-    // this.canvasPlants[this.index] = {};
-    // this.canvasPlants[this.index].img = new Image();
-    this.canvasPlants.splice(this.index, 1);
+    this.canvasService.decrementSize();
+    this.size--;
     this.checkForCollisions();
   }
 
