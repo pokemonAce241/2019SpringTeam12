@@ -518,6 +518,10 @@ export class PlantListComponent implements OnInit {
     this.filteredPlants = this.filteredPlants.filter(plant => {
       var match = false;
 
+      if (this.plantNativeness === "none") {
+        match = true;
+        this.nativeActive = false;
+      }
       if (this.plantNativeness === "native" && plant.native) {
         match = true;
       }

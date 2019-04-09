@@ -183,6 +183,12 @@
                  Non-native
             </label>
         </div>
+        <div class="radio" style="padding-left:20px">
+            <label class="w-100 my-0">
+                <input type="radio" name="nativeness" value="none" [(ngModel)]="plantNativeness" (change)="filterPlants()">
+                 No Filter
+            </label>
+        </div>
       </div>
     </div>
   </div>
