@@ -518,10 +518,6 @@ export class PlantListComponent implements OnInit {
     this.filteredPlants = this.filteredPlants.filter(plant => {
       var match = false;
 
-      if (this.plantNativeness === "none") {
-        match = true;
-        this.nativeActive = false;
-      }
       if (this.plantNativeness === "native" && plant.native) {
         match = true;
       }
@@ -671,6 +667,34 @@ export class PlantListComponent implements OnInit {
     this.minHeight = 0;
     this.maxHeight = 20;
 
+    this.filterPlants();
+  }
+
+  clearNativeFilter() {
+    for (var property in this.nativeFilters) {
+      this.plantNativeness = "";
+    }
+    this.filterPlants();
+  }
+
+  clearSoilFilter() {
+    for (var property in this.nativeFilters) {
+      this.soilStatus = "";
+    }
+    this.filterPlants();
+  }
+
+  clearTypeFilter() {
+    for (var property in this.nativeFilters) {
+      this.plantType = "";
+    }
+    this.filterPlants();
+  }
+
+  clearRegionFilter() {
+    for (var property in this.nativeFilters) {
+      this.plantRegion = "";
+    }
     this.filterPlants();
   }
 
