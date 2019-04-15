@@ -49,13 +49,14 @@ export class MyGardensComponent implements OnInit {
   }
 
   public goToGarden(id: number) {
-    this.router.navigate(['/garden', id]);
+    //this.router.navigate(['/garden', id]);
     this.modal.dismissAll();
     // This is the page used for testing. Reloading the page forces the tests to run idefinitely
     // so this is a temporary fix
-    //if (id !== 1) {
-      window.location.reload();
-    //}
+    // if (id !== 1) {
+    //   window.location.reload();
+    // }
+    window.location.href='/garden/'+ id
   }
 
   public createNewGarden(gardenName : string) {

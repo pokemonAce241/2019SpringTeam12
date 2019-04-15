@@ -26,6 +26,14 @@ export class CanvasComponent implements OnInit {
   private index: any;
   // amount of plants that should be on the canvas
   private size: any;
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // Old mouse position for selecting multiple plants
+  oldMouseLoc = { "x": 0, "y": 0};
+  // Final mouse position for selecting multiple plants
+  finalMouseLoc = { "x": 0, "y": 0};
+  // To tell whether you are trying to select multiple plants
+  private multiSelect = false;
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // Plant properties from the API (This is updated when new plants are placed and when plant images are moved in canvas)
   plant_instances: PlantInstance[];
   // list of plants from plant table in database
@@ -186,7 +194,18 @@ export class CanvasComponent implements OnInit {
             this.imgDims[i].selected = false;
           }
         }
+      } 
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      //plant is not selected but clicked on plant canvas
+      console.log("multi down: " + this.multiSelect);
+      if (!this.canvasService.isPlantCanvas() && !this.canvasService.isDragged()) {
+        this.oldMouseLoc.x = x;
+        this.oldMouseLoc.y = y;
+        this.multiSelect = true;
+        console.log("x: " + this.oldMouseLoc.x);
+        console.log("y: " + this.oldMouseLoc.y);
       }
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     });
 
     // Second of three steps for drag/drop functionality
@@ -198,6 +217,11 @@ export class CanvasComponent implements OnInit {
       rect = canvas.getBoundingClientRect();
       let x = ev.clientX - rect.left;
       let y = ev.clientY - rect.top;
+
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      this.finalMouseLoc.x = x;
+      this.finalMouseLoc.y = y;
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
       //async method below that gets the size and evaluates whether to instantiate a new plant object
       this.addNew().then(() => {
@@ -257,8 +281,10 @@ export class CanvasComponent implements OnInit {
 
         // Update and draw canvas with new coordinates of image
         // Makes it so plant image will look like it's being dragged while it is dragged
-        } else if (this.canvasService.isDragged() && !this.canvasService.isPlantCanvas()) {
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        } else if (this.canvasService.isDragged() && !this.canvasService.isPlantCanvas() || this.multiSelect) {
           console.log("updating placed plant information");
+          // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
           this.drawPlants(this.context);
         }
       });
@@ -274,6 +300,34 @@ export class CanvasComponent implements OnInit {
       rect = canvas.getBoundingClientRect();
       var x = ev.clientX - rect.left;
       var y = ev.clientY - rect.top;
+
+      // Set the final mouse location for the multi select square after the mouseup event
+      // Iterate through the array of plants and find if the center of the plant is within the multiSelect box
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      this.finalMouseLoc.x = x;
+      this.finalMouseLoc.y = y;
+      if (this.multiSelect) { // If MultiSelect is active
+        
+        for (var i = this.size-1; i >= 0; i--) {
+          // These should point to the center of each plant
+          var xx = this.imgDims[this.index].x + this.imgDims[this.index].width * .5;
+          var yy = this.imgDims[this.index].y = y + this.imgDims[this.index].height * .5;
+
+          if ((xx > this.oldMouseLoc.x && xx < this.finalMouseLoc.x) &&
+            (yy > this.oldMouseLoc.y && yy < this.finalMouseLoc.y) &&
+            !this.canvasService.isPlantCanvas()) {
+            console.log("Selected plant in canvas");
+            this.imgDims[i].selected = true;
+          } else {
+            this.imgDims[i].selected = false;
+          }
+        }
+      } 
+      this.multiSelect = false;
+      // console.log("multi up: " + this.multiSelect);
+      // console.log("x final: " + this.finalMouseLoc.x);
+      // console.log("y final: " + this.finalMouseLoc.y);
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
       // if within the garden canvas and toggled then update the current index image information
       if (this.imgDims !== undefined &&
@@ -319,6 +373,15 @@ export class CanvasComponent implements OnInit {
       rect = canvas.getBoundingClientRect();
       var x = ev.clientX - rect.left;
       var y = ev.clientY - rect.top;
+
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      // this.oldMouseLoc.x = 0;
+      // this.oldMouseLoc.y = 0;
+      // this.finalMouseLoc.x = 0;
+      // this.finalMouseLoc.y = 0;
+      //this.multiSelect = false;
+      console.log("multi click: " + this.multiSelect);
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
       if (this.imgDims !== undefined &&
         (x > 0 && x < canvas.width) &&
@@ -398,7 +461,9 @@ export class CanvasComponent implements OnInit {
   }
 
   getPlantInstances() {
-    console.log("get plant instances called")
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    console.log("get plant instances called");
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     this.plant_instances = [];
     this.instanceService.getInstances(this.gardenId)
       .subscribe(res => {
@@ -594,6 +659,20 @@ export class CanvasComponent implements OnInit {
         //if (textWidth) {
         context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
       }
+
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      // Draw the multiSelect square in top view if it's enabled
+      console.log("multi print: " + this.multiSelect);
+      if (this.multiSelect == true) {
+        console.log("HERERERRE");
+        context.save();
+        context.setLineDash([5, 3]);
+        context.rect(this.oldMouseLoc.x, this.oldMouseLoc.y, (this.finalMouseLoc.x-this.oldMouseLoc.x), (this.finalMouseLoc.y-this.oldMouseLoc.y));
+        context.stroke();
+        context.restore();
+      }
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     } else {
       // Draw Side View
       var newImgDims: any;
