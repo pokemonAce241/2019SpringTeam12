@@ -168,7 +168,7 @@ export class CanvasComponent implements OnInit {
         // Added so 2 circles aren't selected at once
         // May need to change when we incorporate multi select tools
         var hasSelected = false;
-
+        
         for (var i = this.size-1; i >= 0; i--) {
           if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
             (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
@@ -463,7 +463,6 @@ export class CanvasComponent implements OnInit {
               this.context.globalAlpha = .75;
               this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
 
-
               this.context.globalAlpha = 1;
               if (this.imgDims[i].collision) {
                 // Drawing red circle
@@ -615,19 +614,9 @@ export class CanvasComponent implements OnInit {
         context.globalAlpha = 1;
         var yLoc = (newImgDims[i].y/579)*(382) + 217 - newImgDims[i].max_height;
         var xLoc = newImgDims[i].x;
-
+        
         var ySize = newImgDims[i].max_height * 1.15 * ((yLoc/579) + 1);
         var xSize = newImgDims[i].max_width * 1.15 * ((yLoc/579) + 1);
-
-        if (newImgDims[i].collision) {
-          this.context.fillStyle ="#ffae42";
-          this.context.fillRect(0,0, 239, 39);
-          this.context.fillStyle ="#000000";
-          this.context.fillText("⚠ TWO OR MORE PLANTS ARE COLLIDING", 10, 23);
-          this.context.shadowColor = "#ff0000";
-          this.context.shadowBlur = 50;
-        }
-
         context.drawImage(newImgDims[i].image.img, xLoc, yLoc, xSize, ySize);
         this.context.shadowBlur = 0;
 
@@ -711,5 +700,6 @@ export class CanvasComponent implements OnInit {
       .subscribe(res => {
         console.log(res);
       })
+    this.checkForCollisions();
   }
 }
