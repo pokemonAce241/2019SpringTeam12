@@ -488,7 +488,6 @@ export class CanvasComponent implements OnInit {
               this.context.globalAlpha = .75;
               this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
 
-
               this.context.globalAlpha = 1;
               if (this.imgDims[i].collision) {
                 // Drawing red circle
@@ -741,6 +740,7 @@ export class CanvasComponent implements OnInit {
       .subscribe(res => {
         console.log(res);
       })
+    this.checkForCollisions();
   }
 
   // Code for drawing curves

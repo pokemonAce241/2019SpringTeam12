@@ -670,6 +670,34 @@ export class PlantListComponent implements OnInit {
     this.filterPlants();
   }
 
+  clearNativeFilter() {
+    for (var property in this.nativeFilters) {
+      this.plantNativeness = "";
+    }
+    this.filterPlants();
+  }
+
+  clearSoilFilter() {
+    for (var property in this.nativeFilters) {
+      this.soilStatus = "";
+    }
+    this.filterPlants();
+  }
+
+  clearTypeFilter() {
+    for (var property in this.nativeFilters) {
+      this.plantType = "";
+    }
+    this.filterPlants();
+  }
+
+  clearRegionFilter() {
+    for (var property in this.nativeFilters) {
+      this.plantRegion = "";
+    }
+    this.filterPlants();
+  }
+
   // promise that gets size from the service and updates variable in the plantlist canvas (wait 50 microsec)
   private getReset(): Promise<boolean> {
     return new Promise(resolve => {
