@@ -121,7 +121,7 @@ export class CanvasComponent implements OnInit {
       // Selecting image at location (index becomes image index)
       // isDragged is true if a plant is currently being dragged
       // isPlantCanvas will be false when mouse is in garden canvas and true if mouse is in plant list canvas
-      
+
         if (this.imgDims !== undefined &&
           (x > 0 && x < canvas.width) &&
           (y > 0 && y < canvas.height) &&
@@ -145,20 +145,53 @@ export class CanvasComponent implements OnInit {
           // May need to change when we incorporate multi select tools
           var hasSelected = false;
 
-          for (var i = this.size-1; i >= 0; i--) {
-            if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
-              (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
-              !this.canvasService.isPlantCanvas() && !hasSelected) {
-              console.log("Selected plant in canvas");
-              this.imgDims[i].selected = true;
-              hasSelected = true;
-              this.index = i;
-              this.canvasService.toggleDragged();
-              //break; //breaking after finding plant so it stops searching through plant list
-            } else {
-              this.imgDims[i].selected = false;
+          if(this.gardenService.isTopDownPerspective()) {
+            for (var i = this.size-1; i >= 0; i--) {
+              if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
+                (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
+                !this.canvasService.isPlantCanvas() && !hasSelected) {
+                console.log("Selected plant in canvas");
+                this.imgDims[i].selected = true;
+                hasSelected = true;
+                this.index = i;
+                this.canvasService.toggleDragged();
+                //break; //breaking after finding plant so it stops searching through plant list
+              } else {
+                this.imgDims[i].selected = false;
+              }
+            }
+          } else {
+            for (var i = this.size-1; i >= 0; i--) {
+
+              var yLoc = (this.newImgDims[i].y/579)*(382) + 217 - this.newImgDims[i].max_height;
+              //this.newImgDims[i].y = yLoc;
+              var xLoc = this.newImgDims[i].x;
+
+              var ySize = this.newImgDims[i].max_height * 1.15 * ((yLoc/579) + 1);
+              var xSize = this.newImgDims[i].max_width * 1.15 * ((yLoc/579) + 1);
+
+              var bigX = this.imgDims[i].x + xSize;
+              var bigY = this.imgDims[i].y + ySize;
+              console.log("X: " + this.imgDims[i].x + "->" + x + "->" + bigX);
+              console.log("Y: " + this.imgDims[i].y + "->" + y + "->" + bigY + "\n");
+              console.log("Plant Canvas: " + !this.canvasService.isPlantCanvas());
+              console.log("hasSelected: " + !hasSelected);
+
+              if ((x >= xLoc && x <= bigX) &&
+                (y >= yLoc && y <= bigY) &&
+                !this.canvasService.isPlantCanvas() && !hasSelected) {
+                console.log("Selected plant in canvas");
+                this.imgDims[i].selected = true;
+                hasSelected = true;
+                this.index = i;
+                this.canvasService.toggleDragged();
+                //break; //breaking after finding plant so it stops searching through plant list
+              } else {
+                this.imgDims[i].selected = false;
+              }
             }
           }
+
       }
 
     });
