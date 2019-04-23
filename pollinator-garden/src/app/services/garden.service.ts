@@ -28,12 +28,16 @@ export class GardenService {
   viewChangeCalled$ = this.viewChangeCallSource.asObservable();
 
   private curvedLineOn: boolean;
+  private circleToolOn: boolean;
+  private squareToolOn: boolean;
 
   constructor(
     private http: HttpClient
   ) {
     this.isTopDown = true;
     this.curvedLineOn = false;
+    this.circleToolOn = false;
+    this.squareToolOn = false;
     this.canvas_img = "src\\assets\\site-images\\image_placeholder.png";
   }
 
@@ -64,10 +68,35 @@ export class GardenService {
 
   toggleCurvedLine() {
     this.curvedLineOn = !this.curvedLineOn;
+    this.circleToolOn = false;
+    this.squareToolOn = false;
+    console.log("Curved Line On: " + this.curvedLineOn);
   }
 
   isCurvedLine() {
     return this.curvedLineOn;
+  }
+
+  toggleCircleTool() {
+    this.circleToolOn = !this.circleToolOn;
+    this.squareToolOn = false;
+    this.curvedLineOn = false;
+    console.log("Circle Tool On: " + this.circleToolOn);
+  }
+
+  isCircleTool() {
+    return this.circleToolOn;
+  }
+
+  toggleSquareTool() {
+    this.squareToolOn = !this.squareToolOn;
+    this.circleToolOn = false;
+    this.curvedLineOn = false;
+    console.log("Square Tool On: " + this.squareToolOn);
+  }
+
+  isSquareTool() {
+    return this.squareToolOn;
   }
 
   isTopDownPerspective() {

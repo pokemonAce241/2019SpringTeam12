@@ -22,4 +22,12 @@ export class ToolbarComponent implements OnInit {
   public toggleCurvedLine() {
     this.gardenService.toggleCurvedLine();
   }
+
+  public toggleSquareTool() {
+    this.gardenService.toggleSquareTool();
+  }
+
+  public toggleCircleTool() {
+    this.gardenService.toggleCircleTool();
+  }
 }

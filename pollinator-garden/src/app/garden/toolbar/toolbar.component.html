@@ -1,8 +1,8 @@
 <label class="mr-1"> Garden Options</label>
 <div class="mr-5" style="display: inline;">
-  <button type="button" class="btn mdi mdi-circle-outline filterButton"></button>
-  <button type="button" class="btn mdi mdi-square-outline filterButton"></button>
-  <button type="button" class="btn mdi mdi-vector-radius filterButton" (click)="toggleCurvedLine()"></button>
+  <button type="button" [ngClass]="gardenService.isCircleTool() ? 'btn mdi mdi-circle-outline filterButton selected' : 'btn mdi mdi-circle-outline filterButton'" (click)="toggleCircleTool()"></button>
+  <button type="button" [ngClass]="gardenService.isSquareTool() ? 'btn mdi mdi-square-outline filterButton selected' : 'btn mdi mdi-square-outline filterButton'" (click)="toggleSquareTool()"></button>
+  <button type="button" [ngClass]="gardenService.isCurvedLine() ? 'btn mdi mdi-vector-radius filterButton selected' : 'btn mdi mdi-vector-radius filterButton'" (click)="toggleCurvedLine()"></button>
   <button type="button" class="btn mdi mdi-brush filterButton"></button>
   <button type="button" class="btn mdi mdi-palette filterButton" style="color: brown;"></button>
   <button type="button" class="btn mdi mdi-eraser filterButton mr-5" style="color: pink"></button>
