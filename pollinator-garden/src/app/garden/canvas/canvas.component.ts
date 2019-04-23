@@ -183,21 +183,29 @@ export class CanvasComponent implements OnInit {
         // Added so 2 circles aren't selected at once
         // May need to change when we incorporate multi select tools
         var hasSelected = false;
+        // Searches to see if there are already selected plants in the canvas that you are trying to click on
         for (var i = this.size-1; i >= 0; i--) {
+          console.log("Plant " + i + " selected: " + this.imgDims[i].selected);
           if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
-            (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
-            !this.canvasService.isPlantCanvas() && !hasSelected) {
-            console.log("Selected plant in canvas");
-            this.imgDims[i].selected = true;
+          (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
+          !this.canvasService.isPlantCanvas() && this.imgDims[i].selected) {
+            console.log("Selected plant in canvas 1");
             hasSelected = true;
             this.index = i;
             this.canvasService.toggleDragged();
-            //this.multiSelect = false;
-            //break; //breaking after finding plant so it stops searching through plant list
-          } else {
-            if (!this.multiSelect) {
-              // this.imgDims[i].selected = false;
-            }
+          }
+        }
+        // If not already selected plants then check if you clicked on an an unselected plant
+        for (var i = this.size-1; i >=0; i--) {
+          if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
+            (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
+            !this.canvasService.isPlantCanvas() && !hasSelected) {
+            console.log("Selected plant in canvas 2");
+            this.imgDims[i].selected = true;
+            this.index = i;
+            this.canvasService.toggleDragged();
+          } else if (!hasSelected) {
+            this.imgDims[i].selected = false;
           }
         }
         if (this.canvasService.isDragged()) {
@@ -340,8 +348,8 @@ export class CanvasComponent implements OnInit {
           this.canvasService.isDragged() && !this.canvasService.isPlantCanvas()) {
 
           // Sets the x and y values to the center of the image
-          this.imgDims[this.index].x += this.newDragX - this.oldDragX;
-          this.imgDims[this.index].y += this.newDragY - this.oldDragY;
+          // this.imgDims[this.index].x += this.newDragX - this.oldDragX;
+          // this.imgDims[this.index].y += this.newDragY - this.oldDragY;
           this.imgDims[this.index].selected = true;
 
           // Clears the canvas
@@ -426,7 +434,7 @@ export class CanvasComponent implements OnInit {
           if ((xx > oldMouseX && xx < newMouseX) &&
             (yy > oldMouseY && yy < newMouseY) &&
             !this.canvasService.isPlantCanvas() && this.multiSelect) {
-            console.log("Selected plant in canvas");
+            console.log("MultiSelected plant in canvas");
             this.imgDims[i].selected = true;
           } else {
             this.imgDims[i].selected = false;
@@ -653,7 +661,6 @@ export class CanvasComponent implements OnInit {
 
       // Draw the multiSelect square in top view if it's enabled
       if (this.multiSelect == true) {
-        console.log("HERERERRE");
         context.save();
         context.setLineDash([5, 3]);
         context.rect(this.oldMouseLoc.x, this.oldMouseLoc.y, (this.finalMouseLoc.x-this.oldMouseLoc.x), (this.finalMouseLoc.y-this.oldMouseLoc.y));
