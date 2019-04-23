@@ -26,7 +26,6 @@ export class CanvasComponent implements OnInit {
   private index: any;
   // amount of plants that should be on the canvas
   private size: any;
-  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   oldDragX;
   oldDragY;
   newDragX;
@@ -37,7 +36,14 @@ export class CanvasComponent implements OnInit {
   finalMouseLoc = { "x": 0, "y": 0};
   // To tell whether you are trying to select multiple plants
   private multiSelect = false;
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // For creating a square garden space
+  private squareGardenToggle = false;
+  // List of square garden spaces
+  square_Garden_Spaces: any;
+  // For creating a circle garden spaces
+  private circleGardenToggle = false;
+  // List of circle garden spaces
+  circle_Garden_Spaces: any;
   // Plant properties from the API (This is updated when new plants are placed and when plant images are moved in canvas)
   plant_instances: PlantInstance[];
   // list of plants from plant table in database
@@ -60,6 +66,8 @@ export class CanvasComponent implements OnInit {
     // Sets most fields to empty/0
     this.imgDims = [];
     this.canvasPlants = [];
+    this.square_Garden_Spaces = [];
+    this.circle_Garden_Spaces = [];
     this.index = 0;
     this.size = 0;
     // Listens for when perspective change button is pressed then calls methods inside
@@ -190,7 +198,7 @@ export class CanvasComponent implements OnInit {
           if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
           (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
           !this.canvasService.isPlantCanvas() && this.imgDims[i].selected) {
-            console.log("Selected plant in canvas 1");
+            console.log("Selected old plant in canvas");
             hasSelected = true;
             this.index = i;
             this.canvasService.toggleDragged();
@@ -201,7 +209,7 @@ export class CanvasComponent implements OnInit {
           if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
             (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
             !this.canvasService.isPlantCanvas() && !hasSelected && !newSelected) {
-            console.log("Selected plant in canvas 2");
+            console.log("Selected new plant in canvas");
             this.imgDims[i].selected = true;
             this.index = i;
             newSelected = true;
@@ -216,10 +224,17 @@ export class CanvasComponent implements OnInit {
       }
       //plant is not selected but clicked on plant canvas
       // console.log("multi down: " + this.multiSelect);
+      this.oldMouseLoc.x = x;
+      this.oldMouseLoc.y = y;
       if (!this.canvasService.isPlantCanvas() && !this.canvasService.isDragged()) {
-        this.oldMouseLoc.x = x;
-        this.oldMouseLoc.y = y;
-        this.multiSelect = true;
+        console.log("Yoink: " + !this.gardenService.isSquareGarden())
+        if (!this.gardenService.isSquareGarden() && !this.gardenService.isCircleGarden()) {
+          this.multiSelect = true;
+        } else if ( this.gardenService.isSquareGarden() ) {
+          this.squareGardenToggle = true;
+        } else if ( this.gardenService.isCircleGarden() ) {
+          this.circleGardenToggle = true;
+        }
       }
       this.oldDragX = x;
       this.oldDragY = y;
@@ -334,13 +349,30 @@ export class CanvasComponent implements OnInit {
       this.finalMouseLoc.x = x;
       this.finalMouseLoc.y = y;
       if (this.multiSelect) { // If MultiSelect is active
-
         // Searches through the list of plants and sets each one within the multi select box to isSelected
         this.multiSelectPlants();
-        
-        this.context.clearRect(0, 0, canvas.width, canvas.height);
         this.multiSelect = false;
-        this.drawPlants(this.context);
+
+      } else if (this.squareGardenToggle) { // Creates square garden on mouse up event
+        // Finishes creating one square
+        this.squareGardenToggle = false;
+        var k = this.square_Garden_Spaces.length;
+        this.square_Garden_Spaces.startX = this.oldMouseLoc.x;
+        this.square_Garden_Spaces.startY = this.oldMouseLoc.y;
+        this.square_Garden_Spaces.endX = this.finalMouseLoc.x;
+        this.square_Garden_Spaces.endY = this.finalMouseLoc.y;
+      } else if (this.circleGardenToggle) {
+        // Finishes creating one circle
+        this.circleGardenToggle = false;
+        var k = this.square_Garden_Spaces.length;
+        this.circle_Garden_Spaces.startX = this.oldMouseLoc.x;
+        this.circle_Garden_Spaces.startY = this.oldMouseLoc.y;
+        this.circle_Garden_Spaces.endX = this.finalMouseLoc.x;
+        this.circle_Garden_Spaces.endY = this.finalMouseLoc.y;
+        var aSquared = (this.finalMouseLoc.x-this.oldMouseLoc.x)*(this.finalMouseLoc.x-this.oldMouseLoc.x);
+        var bSquared = (this.finalMouseLoc.y-this.oldMouseLoc.y)*(this.finalMouseLoc.y-this.oldMouseLoc.y);
+        var aPlusb = aSquared+bSquared;
+        this.circle_Garden_Spaces.radius = Math.sqrt(aPlusb);
       } else {
 
         // if within the garden canvas and toggled then update the current index image information
@@ -366,14 +398,16 @@ export class CanvasComponent implements OnInit {
             // The position of the plant instance is updated
             this.updateInstance(this.imgDims[this.index]);
           }
-
-          // Redraws all plants instances on garden canvas
-          this.drawPlants(this.context);
+          
           // The plant is no longer being dragged so the field is reset
           this.canvasService.setDraggedToFalse();
 
         }
+
       }
+      // Redraws all plants instances on garden canvas  
+      this.context.clearRect(0, 0, canvas.width, canvas.height);
+      this.drawPlants(this.context);
 
     });
     
@@ -619,9 +653,56 @@ export class CanvasComponent implements OnInit {
   }
 
   drawPlants(context) {
+    var color = this.gardenService.changeColor();
+    console.log(color);
     context.clearRect(0, 0, context.canvas.width, context.canvas.height);
     if(this.gardenService.isTopDownPerspective()) {
       this.checkForCollisions();
+      // Draw new square garden space
+      // context.globalAlpha = .5;
+      // context.fillStyle=color;
+      // context.fill();
+      if (this.squareGardenToggle) {
+        context.beginPath();
+        context.setLineDash([]);
+        context.lineWidth = 6;
+        context.fillStyle=color;
+        context.fill();
+        context.rect(this.oldMouseLoc.x, this.oldMouseLoc.y, (this.finalMouseLoc.x-this.oldMouseLoc.x), (this.finalMouseLoc.y-this.oldMouseLoc.y));
+        context.stroke();
+      }
+      // Draw existing garden spaces
+      for (var i = 0; i < 1; i++ ) {
+        context.beginPath();
+        context.setLineDash([]);
+        context.lineWidth = 6;
+        context.fillStyle=color;
+        context.fill();
+        context.rect(this.square_Garden_Spaces.startX, this.square_Garden_Spaces.startY, (this.square_Garden_Spaces.endX-this.square_Garden_Spaces.startX), (this.square_Garden_Spaces.endY-this.square_Garden_Spaces.startY));
+        context.stroke();
+      }
+        
+      // Draw new circle garden space
+      if (this.circleGardenToggle) {
+        context.beginPath();
+        context.setLineDash([]);
+        context.lineWidth = 6;
+        var aSquared = (this.finalMouseLoc.x-this.oldMouseLoc.x)*(this.finalMouseLoc.x-this.oldMouseLoc.x);
+        var bSquared = (this.finalMouseLoc.y-this.oldMouseLoc.y)*(this.finalMouseLoc.y-this.oldMouseLoc.y);
+        var aPlusb = aSquared+bSquared;
+        context.arc(this.oldMouseLoc.x, this.oldMouseLoc.y, Math.sqrt(aPlusb), 0, 2 * Math.PI);
+        context.stroke();
+      }
+      // Draw existing garden spaces
+      for (var i = 0; i < 1; i++ ) {
+        context.beginPath();
+        context.setLineDash([]);
+        context.lineWidth = 6;
+        context.arc(this.circle_Garden_Spaces.startX, this.circle_Garden_Spaces.startY, this.circle_Garden_Spaces.radius, 0, 2 * Math.PI);
+        context.stroke();
+      }
+      // context.globalAlpha = 1;
+      // Draw plant things
       for(var i = 0; i < this.imgDims.length; i++) {
         context.globalAlpha = .75;
         context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
@@ -663,6 +744,7 @@ export class CanvasComponent implements OnInit {
 
       // Draw the multiSelect square in top view if it's enabled
       if (this.multiSelect == true) {
+        context.beginPath();
         context.save();
         context.setLineDash([5, 3]);
         context.rect(this.oldMouseLoc.x, this.oldMouseLoc.y, (this.finalMouseLoc.x-this.oldMouseLoc.x), (this.finalMouseLoc.y-this.oldMouseLoc.y));

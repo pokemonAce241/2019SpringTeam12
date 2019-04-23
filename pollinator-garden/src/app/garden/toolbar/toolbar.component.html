@@ -1,9 +1,10 @@
 <label class="mr-1"> Garden Options</label>
 <div class="mr-5" style="display: inline;">
-  <button type="button" class="btn mdi mdi-circle-outline filterButton"></button>
-  <button type="button" class="btn mdi mdi-square-outline filterButton"></button>
+  <button type="button" class="btn mdi mdi-circle-outline filterButton" style="background: transparent" id="circleButton" (click)="toggleCircleGarden()"></button>
+  <button type="button" class="btn mdi mdi-square-outline filterButton" style="background: transparent" id="squareButton" (click)="toggleSquareGarden()"></button>
   <button type="button" class="btn mdi mdi-brush filterButton"></button>
-  <button type="button" class="btn mdi mdi-palette filterButton mr-5" style="color: brown;"></button>
+  <button type="button" class="btn mdi mdi-palette filterButton mr-5" style="color: brown;" id="paletteButton" (click)="togglePaletteButton()"></button>
+  <input name="Color Picker" type="color" id="colorPicker" value="green" (change)="colorChanger()"/>
   <!-- <button type="button" class="btn mdi mdi-border-none-variant filterButton mr-5"></button>
   <button type="button" class="btn mdi mdi-cursor-default-outline filterButton mr-5"></button> -->
 </div>
