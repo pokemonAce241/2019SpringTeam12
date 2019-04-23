@@ -183,6 +183,7 @@ export class CanvasComponent implements OnInit {
         // Added so 2 circles aren't selected at once
         // May need to change when we incorporate multi select tools
         var hasSelected = false;
+        var newSelected = false;
         // Searches to see if there are already selected plants in the canvas that you are trying to click on
         for (var i = this.size-1; i >= 0; i--) {
           console.log("Plant " + i + " selected: " + this.imgDims[i].selected);
@@ -199,10 +200,11 @@ export class CanvasComponent implements OnInit {
         for (var i = this.size-1; i >=0; i--) {
           if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
             (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
-            !this.canvasService.isPlantCanvas() && !hasSelected) {
+            !this.canvasService.isPlantCanvas() && !hasSelected && !newSelected) {
             console.log("Selected plant in canvas 2");
             this.imgDims[i].selected = true;
             this.index = i;
+            newSelected = true;
             this.canvasService.toggleDragged();
           } else if (!hasSelected) {
             this.imgDims[i].selected = false;
