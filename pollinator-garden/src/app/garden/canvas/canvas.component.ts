@@ -73,7 +73,6 @@ export class CanvasComponent implements OnInit {
     // Listens for when perspective change button is pressed then calls methods inside
     this.gardenService.viewChangeCalled$.subscribe(
         () => {
-          console.log('View Change called!');
           this.clearCanvas();
           this.getPlantInstances();
         }
@@ -155,6 +154,7 @@ export class CanvasComponent implements OnInit {
     // First of three steps for drag/drop functionality
     // Called when mouse is initially pressed
     canvas.addEventListener('mousedown', (ev) => {
+
       // rect is the rectangle boundary of the canvas
       // client is mouse position on the client screen
       // x and y is the location within the canvas
@@ -194,11 +194,9 @@ export class CanvasComponent implements OnInit {
         var newSelected = false;
         // Searches to see if there are already selected plants in the canvas that you are trying to click on
         for (var i = this.size-1; i >= 0; i--) {
-          console.log("Plant " + i + " selected: " + this.imgDims[i].selected);
           if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
           (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
           !this.canvasService.isPlantCanvas() && this.imgDims[i].selected) {
-            console.log("Selected old plant in canvas");
             hasSelected = true;
             this.index = i;
             this.canvasService.toggleDragged();
@@ -209,7 +207,6 @@ export class CanvasComponent implements OnInit {
           if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
             (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
             !this.canvasService.isPlantCanvas() && !hasSelected && !newSelected) {
-            console.log("Selected new plant in canvas");
             this.imgDims[i].selected = true;
             this.index = i;
             newSelected = true;
@@ -242,6 +239,13 @@ export class CanvasComponent implements OnInit {
     // Second of three steps for drag/drop functionality
     // Called when mouse is moved (whether normally or while dragging)
     document.addEventListener('mousemove', (ev) => {
+
+      if (this.canvasService.isPlantCanvas()) {
+        for (var i = 0; i < this.imgDims.length; i++) {
+          this.imgDims[i].selected = false;
+        }
+        this.drawPlants(this.context);
+      }
       // rect is the rectangle boundary of the canvas
       // client is mouse position on the client screen
       // x and y is the location within the canvas
@@ -271,8 +275,9 @@ export class CanvasComponent implements OnInit {
           this.imgDims[this.index].min_spread = this.plants[this.canvasService.getId() - 1].min_spread * 40;
           this.imgDims[this.index].max_spread = this.plants[this.canvasService.getId() - 1].max_spread * 40;
 
-          this.imgDims[this.index].xRel = NaN;
-          this.imgDims[this.index].yRel = NaN;
+          this.imgDims[this.index].x = x - this.imgDims[this.index].min_spread / 2;
+          this.imgDims[this.index].y = y - this.imgDims[this.index].min_spread / 2;
+          this.imgDims[this.index].selected = true;
           this.imgDims[this.index].placed = false;
           this.imgDims[this.index].plant_id = this.canvasService.getId();
           this.canvasPlants[this.index].name = this.plants[this.canvasService.getId() - 1].common_name;
@@ -281,7 +286,7 @@ export class CanvasComponent implements OnInit {
 
         this.newDragX = x;
         this.newDragY = y;
-        
+
         // Updates selected plants position
         if (this.canvasService.isDragged() && x > 1) {
           for ( var i = 0; i < this.imgDims.length; i++ ){
@@ -305,7 +310,6 @@ export class CanvasComponent implements OnInit {
         // do not change x < -50 (anomaly)
         // checks to see if the image crosses over the canvas boundary (From garden canvas --> plant list canvas)
         if (this.imgDims[this.index] !== undefined && x < -50 && !this.canvasService.isPlantCanvas()) {
-          console.log("Mouse is over plant list???"+this.canvasService.isPlantCanvas());
           // Plant image should not be able to be dragged from garden canvas to plant list canvas
           this.canvasService.setDraggedToFalse();
           this.canvasService.setImg('');     //reset image
@@ -319,7 +323,7 @@ export class CanvasComponent implements OnInit {
 
         // Update and draw canvas with new coordinates of image
         // Makes it so plant image will look like it's being dragged while it is dragged
-        } 
+        }
         if ((this.canvasService.isDragged() && !this.canvasService.isPlantCanvas())) {
             this.drawPlants(this.context);
         }
@@ -398,19 +402,19 @@ export class CanvasComponent implements OnInit {
             // The position of the plant instance is updated
             this.updateInstance(this.imgDims[this.index]);
           }
-          
+
           // The plant is no longer being dragged so the field is reset
           this.canvasService.setDraggedToFalse();
 
         }
 
       }
-      // Redraws all plants instances on garden canvas  
+      // Redraws all plants instances on garden canvas
       this.context.clearRect(0, 0, canvas.width, canvas.height);
       this.drawPlants(this.context);
 
     });
-    
+
 
     setTimeout(() => this.checkRouteId());
 
@@ -470,7 +474,6 @@ export class CanvasComponent implements OnInit {
           if ((xx > oldMouseX && xx < newMouseX) &&
             (yy > oldMouseY && yy < newMouseY) &&
             !this.canvasService.isPlantCanvas() && this.multiSelect) {
-            console.log("MultiSelected plant in canvas");
             this.imgDims[i].selected = true;
           } else {
             this.imgDims[i].selected = false;
@@ -499,7 +502,6 @@ export class CanvasComponent implements OnInit {
   }
 
   getPlantInstances() {
-    console.log("get plant instances called");
     this.plant_instances = [];
     this.instanceService.getInstances(this.gardenId)
       .subscribe(res => {
@@ -560,7 +562,6 @@ export class CanvasComponent implements OnInit {
         newImgDims.sort(function(a, b){return parseInt(a.y) - parseInt(b.y)});
         this.canvasPlants.forEach((plant, i) => {
           plant.img.onload = () => {
-            console.log("image loaded");
             if(this.gardenService.isTopDownPerspective()) {
               this.context.globalAlpha = .75;
               this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
@@ -609,7 +610,6 @@ export class CanvasComponent implements OnInit {
         // this.draw();
       });
 
-    console.log(this.imgDims);
   }
 
   draw() {
@@ -639,7 +639,6 @@ export class CanvasComponent implements OnInit {
       this.gardenId = +params['id'];
       if (!this.gardenId) {
         // open modal
-        console.log("open modal");
         var modalRef = this.modalService.open(MyGardensComponent, { windowClass: 'dialog-modal content-modal' });
         modalRef.componentInstance.name = 'World';
       } else {
@@ -654,7 +653,6 @@ export class CanvasComponent implements OnInit {
 
   drawPlants(context) {
     var color = this.gardenService.changeColor();
-    console.log(color);
     context.clearRect(0, 0, context.canvas.width, context.canvas.height);
     if(this.gardenService.isTopDownPerspective()) {
       this.checkForCollisions();
@@ -681,7 +679,7 @@ export class CanvasComponent implements OnInit {
         context.rect(this.square_Garden_Spaces.startX, this.square_Garden_Spaces.startY, (this.square_Garden_Spaces.endX-this.square_Garden_Spaces.startX), (this.square_Garden_Spaces.endY-this.square_Garden_Spaces.startY));
         context.stroke();
       }
-        
+
       // Draw new circle garden space
       if (this.circleGardenToggle) {
         context.beginPath();
@@ -845,7 +843,6 @@ export class CanvasComponent implements OnInit {
   }
 
   deleteInstance(index) {
-    console.log(index);
     this.instanceService.deleteInstance(index)
       .subscribe(res => {
         console.log(res);
