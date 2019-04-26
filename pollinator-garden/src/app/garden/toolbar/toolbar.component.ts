@@ -8,8 +8,8 @@ import { GardenService } from 'src/app/services/garden.service';
 })
 export class ToolbarComponent implements OnInit {
 
-  constructor(private gardenService: GardenService) { 
-    
+  constructor(private gardenService: GardenService) {
+
   }
 
   ngOnInit() {
@@ -33,5 +33,10 @@ export class ToolbarComponent implements OnInit {
 
   public colorChanger() {
     this.gardenService.changeColor();
+  }
+
+  public toggleCurvedLine() {
+    this.gardenService.toggleCurvedLine();
+
   }
 }

@@ -60,6 +60,9 @@
                      Coast
                 </label>
             </div>
+            <div>
+              <button name="region" title="Clear Filter" (click)="clearRegionFilter()">Reset</button>
+            </div>
           </div>
     </div>
   </div>
@@ -134,6 +137,9 @@
                    Annual
               </label>
           </div>
+          <div>
+            <button name="pType" title="Clear Filter" (click)="clearTypeFilter()">Reset</button>
+          </div>
         </div>
     </div>
   </div>
@@ -163,6 +169,9 @@
                  Dry
             </label>
         </div>
+        <div>
+          <button name="soil" title="Clear Filter" (click)="clearSoilFilter()">Reset</button>
+        </div>
       </div>
     </div>
   </div>
@@ -182,6 +191,9 @@
                 <input type="radio" name="nativeness" value="nonnative" [(ngModel)]="plantNativeness" (change)="filterPlants()">
                  Non-native
             </label>
+        </div>
+        <div>
+          <button name="nativeness" title="Clear Filter" (click)="clearNativeFilter()">Reset</button>
         </div>
       </div>
     </div>

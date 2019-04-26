@@ -20,8 +20,8 @@ export class CanvasComponent implements OnInit {
   @ViewChild('canvasEl') canvasEl: ElementRef;
   // image dimensions
   private imgDims: any;
-  // plant images
-  private canvasPlants: any;
+  // side-view image dimensions
+  private newImgDims : any;
   // current index of the plant that is selected
   private index: any;
   // amount of plants that should be on the canvas
@@ -85,9 +85,6 @@ export class CanvasComponent implements OnInit {
       .subscribe(res => {
         this.plants = res;
       });
-    //var canvas = document.getElementById('canvas') as HTMLCanvasElement;
-
-    //this.gardenService.setCanvasImage(canvas_image);
   }
 
   // Called after canvas has loaded
@@ -127,30 +124,6 @@ export class CanvasComponent implements OnInit {
       this.drawPlants(this.context);
     });
 
-    // for deleting a plant from the canvas
-    // canvas.addEventListener('dblclick', (ev) => {
-    //   console.log("Double click");
-    //   rect = canvas.getBoundingClientRect();
-    //   var x = ev.clientX - rect.left;
-    //   var y = ev.clientY - rect.top;
-    //
-    //   // similar to selecting a plant but no toggle flag
-    //   for (var i = 0; i < this.size; i++) {
-    //     if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
-    //       (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
-    //       !this.canvasService.isPlantCanvas()) {
-    //       this.index = i;
-    //       break;
-    //     }
-    //   }
-    //
-    //   this.deletePlants();
-    //
-    //   // update the garden
-    //   this.drawPlants(this.context);
-    //
-    // });
-
     // First of three steps for drag/drop functionality
     // Called when mouse is initially pressed
     canvas.addEventListener('mousedown', (ev) => {
@@ -169,24 +142,25 @@ export class CanvasComponent implements OnInit {
       // Selecting image at location (index becomes image index)
       // isDragged is true if a plant is currently being dragged
       // isPlantCanvas will be false when mouse is in garden canvas and true if mouse is in plant list canvas
-      if (this.imgDims !== undefined &&
-        (x > 0 && x < canvas.width) &&
-        (y > 0 && y < canvas.height) &&
-        this.canvasService.isDragged() && !this.canvasService.isPlantCanvas()) {
 
-        this.imgDims[this.index].x = x - this.imgDims[this.index].width * .5;
-        this.imgDims[this.index].y = y - this.imgDims[this.index].height * .5;
-        this.context.clearRect(0, 0, canvas.width, canvas.height);
-        if (!this.imgDims[this.index].placed) {
-          this.createInstance(this.imgDims[this.index]);
-          this.imgDims[this.index].placed = true;
-        } else {
-          this.updateInstance(this.imgDims[this.index]);
-        }
-        this.drawPlants(this.context);
-        this.canvasService.toggleDragged();
+        if (this.imgDims !== undefined &&
+          (x > 0 && x < canvas.width) &&
+          (y > 0 && y < canvas.height) &&
+          this.canvasService.isDragged() && !this.canvasService.isPlantCanvas()) {
 
-        // Clicked on an image
+          this.imgDims[this.index].x = x - this.imgDims[this.index].width * .5;
+          this.imgDims[this.index].y = y - this.imgDims[this.index].height * .5;
+          this.context.clearRect(0, 0, canvas.width, canvas.height);
+          if (!this.imgDims[this.index].placed) {
+            this.createInstance(this.imgDims[this.index]);
+            this.imgDims[this.index].placed = true;
+          } else {
+            this.updateInstance(this.imgDims[this.index]);
+          }
+          this.drawPlants(this.context);
+          this.canvasService.toggleDragged();
+
+          // Clicked on an image
       } else if (this.imgDims[this.index] !== undefined && !this.canvasService.isDragged()) { //otherwise then selecting image at location (index becomes image index)
         // Added so 2 circles aren't selected at once
         // May need to change when we incorporate multi select tools
@@ -234,6 +208,56 @@ export class CanvasComponent implements OnInit {
       }
       this.oldDragX = x;
       this.oldDragY = y;
+      
+      // Added so 2 circles aren't selected at once
+      // May need to change when we incorporate multi select tools
+      var hasSelected = false;
+
+      if(this.gardenService.isTopDownPerspective()) {
+        for (var i = this.size-1; i >= 0; i--) {
+          if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
+            (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
+            !this.canvasService.isPlantCanvas() && !hasSelected) {
+            console.log("Selected plant in canvas");
+            this.imgDims[i].selected = true;
+            hasSelected = true;
+            this.index = i;
+            this.canvasService.toggleDragged();
+            //break; //breaking after finding plant so it stops searching through plant list
+          } else {
+            this.imgDims[i].selected = false;
+          }
+        }
+      } else {
+        for (var i = this.size-1; i >= 0; i--) {
+
+          var yLoc = (this.newImgDims[i].y/579)*(382) + 217 - this.newImgDims[i].max_height;
+          //this.newImgDims[i].y = yLoc;
+          var xLoc = this.newImgDims[i].x;
+
+          var ySize = this.newImgDims[i].max_height * 1.15 * ((yLoc/579) + 1);
+          var xSize = this.newImgDims[i].max_width * 1.15 * ((yLoc/579) + 1);
+
+          var bigX = this.imgDims[i].x + xSize;
+          var bigY = this.imgDims[i].y + ySize;
+
+          if ((x >= xLoc && x <= bigX) &&
+            (y >= yLoc && y <= bigY) &&
+            !this.canvasService.isPlantCanvas() && !hasSelected) {
+            console.log("Selected plant in canvas");
+            this.imgDims[i].selected = true;
+            hasSelected = true;
+            this.index = i;
+            this.canvasService.toggleDragged();
+            //break; //breaking after finding plant so it stops searching through plant list
+          } else {
+            this.imgDims[i].selected = false;
+          }
+        }
+      }
+
+      }
+
     });
 
     // Second of three steps for drag/drop functionality
@@ -261,8 +285,8 @@ export class CanvasComponent implements OnInit {
         // if the first time with the increased size then initialized
         if (this.canvasService.isInitialize()) {
           this.index = this.size - 1;          // from async method
-          this.canvasPlants[this.index] = {};  // sets the new plant
-          this.canvasPlants[this.index].img = new Image();
+          this.imgDims[this.index] = {};  // sets the new plant
+          this.imgDims[this.index].img = new Image();
           this.imgDims[this.index] = {};       //sets the plant properties
 
           //Again, unsure what these are actually being used for since they say spread but are width and height
@@ -280,7 +304,7 @@ export class CanvasComponent implements OnInit {
           this.imgDims[this.index].selected = true;
           this.imgDims[this.index].placed = false;
           this.imgDims[this.index].plant_id = this.canvasService.getId();
-          this.canvasPlants[this.index].name = this.plants[this.canvasService.getId() - 1].common_name;
+          this.imgDims[this.index].name = this.plants[this.canvasService.getId() - 1].common_name;
           this.canvasService.toggleInitialize(); //marks it as intialized
         }
 
@@ -300,12 +324,12 @@ export class CanvasComponent implements OnInit {
         this.oldDragX = x;
         this.oldDragY = y;
 
-        // sets the image of the plant if not set
-        if (this.canvasPlants[this.index] !== undefined && this.canvasPlants[this.index].img.src === '' && !this.canvasService.isPlantCanvas()) {
-          var image = new Image(); //width and height parameter optional
-          image.src = this.canvasService.getImg();
-          this.canvasPlants[this.index].img = image;
-        }
+          // do not change x > 1 weird coincidence where last equals equivalent
+          // sets current index to the current position
+          if (this.imgDims[this.index] !== undefined && this.canvasService.isDragged() && x > 1) {
+            this.imgDims[this.index].x = x - this.imgDims[this.index].width * .5;
+            this.imgDims[this.index].y = y - this.imgDims[this.index].height * .5;
+          }
 
         // do not change x < -50 (anomaly)
         // checks to see if the image crosses over the canvas boundary (From garden canvas --> plant list canvas)
@@ -315,15 +339,13 @@ export class CanvasComponent implements OnInit {
           this.canvasService.setImg('');     //reset image
           this.canvasService.toggleCanvas(); //update active canvas
           if (this.canvasService.isDragged() && this.index === this.size - 1) {
-            this.canvasPlants[this.index].img = new Image();
+            this.imgDims[this.index].img = new Image();
             this.canvasService.decrementSize();
           }
-          // Redraw plants on canvas
-          this.drawPlants(this.context);
-
+        }
         // Update and draw canvas with new coordinates of image
         // Makes it so plant image will look like it's being dragged while it is dragged
-        }
+        
         if ((this.canvasService.isDragged() && !this.canvasService.isPlantCanvas())) {
             this.drawPlants(this.context);
         }
@@ -414,10 +436,7 @@ export class CanvasComponent implements OnInit {
       this.drawPlants(this.context);
 
     });
-
-
     setTimeout(() => this.checkRouteId());
-
 
     // Used for deleting plants when selected
     // Registers delete and backspace button press
@@ -511,17 +530,8 @@ export class CanvasComponent implements OnInit {
 
         this.plant_instances.forEach(plant => {
           this.index = this.canvasService.getSize();
-          this.canvasPlants[this.index] = {};  // sets the new plant
-          this.canvasPlants[this.index].img = new Image();
-          if (this.gardenService.isTopDownPerspective()) {
-            this.canvasPlants[this.index].img.src = plant.front_image_path;
-          } else {
-            this.canvasPlants[this.index].img.src = plant.side_image_path;
-          }
-          this.canvasPlants[this.index].radius_img = new Image();
-          this.canvasPlants[this.index].radius_img.src = "assets/images/Flower_Max_Radius.png";
-          this.canvasPlants[this.index].name = plant.common_name;
-          //this.canvasPlants[this.index].collision = plant.collision;
+
+          //this.imgDims[this.index].collision = plant.collision;
           this.imgDims[this.index] = {};       //sets the plant properties
 
           //What are these? They way height and wirdth but use min/max spread
@@ -545,22 +555,30 @@ export class CanvasComponent implements OnInit {
           this.imgDims[this.index].placed = true;
           this.imgDims[this.index].collision = plant.collision;
           this.imgDims[this.index].selected = false;
+
+          //Temp adding image path to newImgDims
+          this.imgDims[this.index].img = new Image();
+          if (this.gardenService.isTopDownPerspective()) {
+            this.imgDims[this.index].img.src = plant.front_image_path;
+          } else {
+            this.imgDims[this.index].img.src = plant.side_image_path;
+          }
+          this.imgDims[this.index].radius_img = new Image();
+          this.imgDims[this.index].radius_img.src = "assets/images/Flower_Max_Radius.png";
+          this.imgDims[this.index].name = plant.common_name;
+
           this.canvasService.incrementSize();
 
-          // this.context.drawImage(this.canvasPlants[this.index].img, this.imgDims[this.index].x, this.imgDims[this.index].y, 100, 100);
+          // this.context.drawImage(this.imgDims[this.index].img, this.imgDims[this.index].x, this.imgDims[this.index].y, 100, 100);
         })
         this.checkForCollisions();
 
          // Creates a new sorted array to determine which plant to draw first
-        var newImgDims: any;
-        newImgDims = this.imgDims.slice(0);
-        for(var i = 0; i < this.size; i++) {
-          //newImgDims[i] = this.imgDims[i];
-          newImgDims[i].image = this.canvasPlants[i];
-        }
+        //var newImgDims: any;
+        this.newImgDims = this.imgDims.slice(0);
 
-        newImgDims.sort(function(a, b){return parseInt(a.y) - parseInt(b.y)});
-        this.canvasPlants.forEach((plant, i) => {
+        this.newImgDims.sort(function(a, b){return parseInt(a.y) - parseInt(b.y)});
+        this.imgDims.forEach((plant, i) => {
           plant.img.onload = () => {
             if(this.gardenService.isTopDownPerspective()) {
               this.context.globalAlpha = .75;
@@ -585,9 +603,10 @@ export class CanvasComponent implements OnInit {
                 this.context.lineWidth = 5;
                 this.context.arc(this.imgDims[i].x + (this.imgDims[i].min_spread/2), this.imgDims[i].y + (this.imgDims[i].min_spread/2), this.imgDims[i].min_spread/2, 0, 2 * Math.PI);
                 this.context.stroke();
-                this.context.fillRect(0,0, 160, 30);
-                this.context.fillStyle ="#FFFFFF";
-                this.context.fillText("Two or more plants are colliding", 5, 16);
+                this.context.fillStyle ="#ffae42";
+                this.context.fillRect(1,1, 239, 39);
+                this.context.fillStyle ="#000000";
+                this.context.fillText("⚠ TWO OR MORE PLANTS ARE COLLIDING", 10, 23);
               }
               this.context.fillStyle ="#000000";
               this.context.beginPath();
@@ -597,17 +616,35 @@ export class CanvasComponent implements OnInit {
               this.context.lineWidth = 1;
               this.context.stroke();
               this.context.globalAlpha = 1;
-              var textWidth = this.context.measureText(this.canvasPlants[i].name).width;
-              this.context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
+              var textWidth = this.context.measureText(this.imgDims[i].name).width;
+              this.context.fillText(this.imgDims[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
+            } else {
+              // Draw Side View
+              var canvCenter = 1440 / 2;
+              this.context.globalAlpha = 1;
+              var yLoc = (this.newImgDims[i].y/579)*(382) + 217 - this.newImgDims[i].max_height;
+              //this.newImgDims[i].y = yLoc;
+              var xLoc = this.newImgDims[i].x;
+              var ySize = this.newImgDims[i].max_height * 1.15 * ((yLoc/579) + 1);
+              var xSize = this.newImgDims[i].max_width * 1.15 * ((yLoc/579) + 1);
+              //this.newImgDims[i].height= ySize;
+              //this.newImgDims[i].width = xSize;
+              if (this.newImgDims[i].collision) {
+                this.context.fillStyle ="#ffae42";
+                this.context.fillRect(0,0, 239, 39);
+                this.context.fillStyle ="#000000";
+                this.context.fillText("⚠ TWO OR MORE PLANTS ARE COLLIDING", 10, 23);
+                this.context.shadowColor = "#ff0000";
+                this.context.shadowBlur = 50;
+              }
+              this.context.drawImage(this.newImgDims[i].img, xLoc, yLoc, xSize, ySize);
+              this.context.shadowBlur = 0;
+
             }
-            // this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
-            // for (var i = 0; i < this.size; i++) {
-            //   this.context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, 100, 100);
-            // }
+
           }
         })
 
-        // this.draw();
       });
 
   }
@@ -629,7 +666,7 @@ export class CanvasComponent implements OnInit {
           this.context.arc(instance.x + (instance.min_spread/2), instance.y + (instance.min_spread/2), instance.max_spread/2, 0, 2 * Math.PI);
           this.context.stroke();
         }
-        //this.context.fillText(this.canvasPlants[i].name, in.x + this.imgDims[i].width / 3, this.imgDims[i].y + this.imgDims[i].height / 2);
+        //this.context.fillText(this.imgDims[i].name, in.x + this.imgDims[i].width / 3, this.imgDims[i].y + this.imgDims[i].height / 2);
       }
     });
   }
@@ -654,6 +691,7 @@ export class CanvasComponent implements OnInit {
   drawPlants(context) {
     var color = this.gardenService.changeColor();
     context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+    this.checkForCollisions();
     if(this.gardenService.isTopDownPerspective()) {
       this.checkForCollisions();
       // Draw new square garden space
@@ -703,7 +741,7 @@ export class CanvasComponent implements OnInit {
       // Draw plant things
       for(var i = 0; i < this.imgDims.length; i++) {
         context.globalAlpha = .75;
-        context.drawImage(this.canvasPlants[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
+        context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
         context.globalAlpha = 1;
         if (this.imgDims[i].collision) {
           // Drawing red circle
@@ -713,9 +751,10 @@ export class CanvasComponent implements OnInit {
           context.lineWidth = 5;
           context.arc(this.imgDims[i].x + (this.imgDims[i].min_spread/2), this.imgDims[i].y + (this.imgDims[i].min_spread/2), this.imgDims[i].min_spread/2, 0, 2 * Math.PI);
           context.stroke();
-          context.fillRect(0,0, 160, 30);
-          context.fillStyle ="#FFFFFF";
-          context.fillText("Two or more plants are colliding", 5, 16);
+          this.context.fillStyle ="#ffae42";
+          this.context.fillRect(1,1, 239, 39);
+          this.context.fillStyle ="#000000";
+          this.context.fillText("⚠ TWO OR MORE PLANTS ARE COLLIDING", 10, 23);
         }
         if (this.imgDims[i].selected) {
           // Drawing blue circle
@@ -735,9 +774,9 @@ export class CanvasComponent implements OnInit {
         context.arc(this.imgDims[i].x + (this.imgDims[i].min_spread/2), this.imgDims[i].y + (this.imgDims[i].min_spread/2), this.imgDims[i].max_spread/2, 0, 2 * Math.PI);
         context.stroke();
 
-        var textWidth = context.measureText(this.canvasPlants[i].name).width;
+        var textWidth = context.measureText(this.imgDims[i].name).width;
         //if (textWidth) {
-        context.fillText(this.canvasPlants[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
+        context.fillText(this.imgDims[i].name, (this.imgDims[i].x + ((this.imgDims[i].width - textWidth) / 2)) , this.imgDims[i].y + this.imgDims[i].height / 2);
       }
 
       // Draw the multiSelect square in top view if it's enabled
@@ -752,23 +791,36 @@ export class CanvasComponent implements OnInit {
 
     } else {
       // Draw Side View
-      var newImgDims: any;
       // Creates a new sorted array to determine which plant to draw first
-      newImgDims = this.imgDims.slice(0);
+      this.newImgDims = this.imgDims.slice(0);
       for(var i = 0; i < this.size; i++) {
-        newImgDims[i].image = this.canvasPlants[i];
+        this.newImgDims[i].image = this.imgDims[i];
       }
-      newImgDims.sort(function(a, b){return parseInt(a.y) - parseInt(b.y)});
+      this.newImgDims.sort(function(a, b){return parseInt(a.y) - parseInt(b.y)});
 
       for(var i = 0; i < this.size; i++) {
         var canvCenter = 1440 / 2;
         context.globalAlpha = 1;
-        var yLoc = (newImgDims[i].y/579)*(382) + 217 - newImgDims[i].max_height;
-        var xLoc = newImgDims[i].x;
+        var yLoc = (this.newImgDims[i].y/579)*(382) + 217 - this.newImgDims[i].max_height;
+        //this.newImgDims[i].y = yLoc;
+        var xLoc = this.newImgDims[i].x;
 
-        var ySize = newImgDims[i].max_height * 1.15 * ((yLoc/579) + 1);
-        var xSize = newImgDims[i].max_width * 1.15 * ((yLoc/579) + 1);
-        context.drawImage(newImgDims[i].image.img, xLoc, yLoc, xSize, ySize);
+        var ySize = this.newImgDims[i].max_height * 1.15 * ((yLoc/579) + 1);
+        var xSize = this.newImgDims[i].max_width * 1.15 * ((yLoc/579) + 1);
+        //this.newImgDims[i].height= ySize;
+        //this.newImgDims[i].width = xSize;
+
+        if (this.newImgDims[i].collision) {
+          this.context.fillStyle ="#ffae42";
+          this.context.fillRect(0,0, 239, 39);
+          this.context.fillStyle ="#000000";
+          this.context.fillText("⚠ TWO OR MORE PLANTS ARE COLLIDING", 10, 23);
+          this.context.shadowColor = "#ff0000";
+          this.context.shadowBlur = 50;
+        }
+
+        context.drawImage(this.newImgDims[i].image.img, xLoc, yLoc, xSize, ySize);
+        this.context.shadowBlur = 0;
       }
     }
 
@@ -795,9 +847,10 @@ export class CanvasComponent implements OnInit {
   deletePlants() {
     //This is where we locally reset the plant and can do the same from the api to the database
     this.deleteInstance(this.imgDims[this.index].id);
-    this.imgDims[this.index] = {};
-    this.canvasPlants[this.index] = {};
-    this.canvasPlants[this.index].img = new Image();
+    this.imgDims.splice(this.index, 1);
+    this.canvasService.decrementSize();
+    this.size--;
+    this.checkForCollisions();
   }
 
   checkForCollisions() {
@@ -848,5 +901,35 @@ export class CanvasComponent implements OnInit {
         console.log(res);
       })
     this.checkForCollisions();
+  }
+
+  // Code for drawing curves
+  // Adopted from https://stackoverflow.com/questions/7054272/how-to-draw-smooth-curve-through-n-points-using-javascript-html5-canvas
+  smooth(points){
+    this.context.strokeStyle = "#000000";
+    if(points == undefined || points.length == 0)
+    {
+        return true;
+    }
+    if(points.length == 1)
+    {
+        this.context.moveTo(points[0].x, points[0].y);
+        this.context.lineTo(points[0].x, points[0].y);
+        return true;
+    }
+    if(points.length == 2)
+    {
+        this.context.moveTo(points[0].x, points[0].y);
+        this.context.lineTo(points[1].x, points[1].y);
+        return true;
+    }
+    this.context.moveTo(points[0].x, points[0].y);
+    for (var i = 1; i < points.length - 2; i ++)
+    {
+        var xc = (points[i].x + points[i + 1].x) / 2;
+        var yc = (points[i].y + points[i + 1].y) / 2;
+        this.context.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+    }
+    this.context.quadraticCurveTo(points[i].x, points[i].y, points[i+1].x, points[i+1].y);
   }
 }

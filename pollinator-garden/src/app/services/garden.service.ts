@@ -25,10 +25,11 @@ export class GardenService {
   private isCreateSquareGarden: boolean;
   private isCreateCircleGarden: boolean;
   private canvas_img : any;
-  // Observable string sources
+  // Observable for changing perspectives
   private viewChangeCallSource = new Subject<any>();
-
   viewChangeCalled$ = this.viewChangeCallSource.asObservable();
+
+  private curvedLineOn: boolean;
 
   constructor(
     private http: HttpClient
@@ -36,6 +37,7 @@ export class GardenService {
     this.isTopDown = true;
     this.isCreateSquareGarden = false;
     this.isCreateCircleGarden = false;
+    this.curvedLineOn = false;
     this.canvas_img = "src\\assets\\site-images\\image_placeholder.png";
   }
 
@@ -113,6 +115,12 @@ export class GardenService {
   changeColor() {
     var color = (<HTMLInputElement>document.getElementById("colorPicker")).value;
     //console.log(color);
+  toggleCurvedLine() {
+    this.curvedLineOn = !this.curvedLineOn;
+  }
+
+  isCurvedLine() {
+    return this.curvedLineOn;
   }
 
   isTopDownPerspective() {
