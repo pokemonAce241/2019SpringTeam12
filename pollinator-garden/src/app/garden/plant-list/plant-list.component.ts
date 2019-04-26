@@ -143,7 +143,6 @@ export class PlantListComponent implements OnInit {
         this.imgDims[i].x = this.imgDims[i].xRel * canvas.width;
         this.imgDims[i].y = this.imgDims[i].yRel * canvas.height;
         this.context.drawImage(this.imgDims[i].img, this.imgDims[i].x, this.imgDims[i].y, this.imgDims[i].width, this.imgDims[i].height);
-        //console.log("oxRel " + this.imgDims[i].oxRel);
         this.context.fillText(this.imgDims[i].name, canvas.width * this.imgDims[i].oxRel, this.imgDims[i].oy + this.imgDims[i].height + 10);
         this.imgDims[i].oxRel = (canvas.width * this.imgDims[i].oxRel) / canvas.width;
       }
@@ -202,7 +201,6 @@ export class PlantListComponent implements OnInit {
           }
           this.canvasService.setImg(this.imgDims[this.index].img.src);
           this.imgDims[this.index].img.src = this.plants[this.imgDims[this.index].id - 1].side_image_path;
-          console.log("Image Set");
           // Stores the id of the image
           this.canvasService.setId(this.imgDims[this.index].id);
 
@@ -385,7 +383,6 @@ export class PlantListComponent implements OnInit {
     this.plantService.getPlants()
       .subscribe(res => {
         this.plants = res;
-        console.log(this.plants);
       });
     return this.plants;
   }
@@ -584,7 +581,6 @@ export class PlantListComponent implements OnInit {
             this.soilActive = false;
             return true;
       }
-      //console.log(this.soilStatus);
       this.soilActive = true;
       return match;
     });
