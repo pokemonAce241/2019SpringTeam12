@@ -112,7 +112,7 @@ export class GardenService {
 
   changeColor() {
     var color = (<HTMLInputElement>document.getElementById("colorPicker")).value;
-    console.log(color);
+    //console.log(color);
   }
 
   isTopDownPerspective() {

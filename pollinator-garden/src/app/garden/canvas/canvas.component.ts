@@ -204,7 +204,7 @@ export class CanvasComponent implements OnInit {
             this.canvasService.toggleDragged();
           }
         }
-        // If not already selected plants then check if you clicked on an an unselected plant
+        // If not already selected plants then check if you clicked on an unselected plant
         for (var i = this.size-1; i >=0; i--) {
           if ((x > this.imgDims[i].x && x < this.imgDims[i].x + this.imgDims[i].width) &&
             (y > this.imgDims[i].y && y < this.imgDims[i].y + this.imgDims[i].height) &&
@@ -227,7 +227,6 @@ export class CanvasComponent implements OnInit {
       this.oldMouseLoc.x = x;
       this.oldMouseLoc.y = y;
       if (!this.canvasService.isPlantCanvas() && !this.canvasService.isDragged()) {
-        console.log("Yoink: " + !this.gardenService.isSquareGarden())
         if (!this.gardenService.isSquareGarden() && !this.gardenService.isCircleGarden()) {
           this.multiSelect = true;
         } else if ( this.gardenService.isSquareGarden() ) {
@@ -283,6 +282,7 @@ export class CanvasComponent implements OnInit {
         this.newDragX = x;
         this.newDragY = y;
         
+        // Updates selected plants position
         if (this.canvasService.isDragged() && x > 1) {
           for ( var i = 0; i < this.imgDims.length; i++ ){
             if ( this.imgDims[i].selected ) {
@@ -305,7 +305,7 @@ export class CanvasComponent implements OnInit {
         // do not change x < -50 (anomaly)
         // checks to see if the image crosses over the canvas boundary (From garden canvas --> plant list canvas)
         if (this.imgDims[this.index] !== undefined && x < -50 && !this.canvasService.isPlantCanvas()) {
-          console.log("Mouse is over plant list");
+          console.log("Mouse is over plant list???"+this.canvasService.isPlantCanvas());
           // Plant image should not be able to be dragged from garden canvas to plant list canvas
           this.canvasService.setDraggedToFalse();
           this.canvasService.setImg('');     //reset image
