@@ -30,11 +30,11 @@ const MOCK_GARDENS = [
 ]
 
 getAllGardensQuery = `SELECT garden.id, garden.name, garden.user_id, user.email as user_email, garden.date_created, garden.date_modified
-FROM GARDEN
+FROM garden
 INNER JOIN user ON garden.user_id = user.id`;
 
 getSingleGardenQuery = `SELECT garden.id, garden.name, garden.user_id, user.email as user_email, garden.date_created, garden.date_modified
-FROM GARDEN
+FROM garden
 INNER JOIN user ON garden.user_id = user.id
 WHERE garden.id = ?`;
 

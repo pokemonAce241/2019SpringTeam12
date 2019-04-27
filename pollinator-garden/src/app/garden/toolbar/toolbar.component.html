@@ -2,8 +2,12 @@
 <div class="mr-5" style="display: inline;">
   <button type="button" class="btn mdi mdi-circle-outline filterButton"></button>
   <button type="button" class="btn mdi mdi-square-outline filterButton"></button>
+  <button type="button" class="btn mdi mdi-vector-radius filterButton" (click)="toggleCurvedLine()"></button>
   <button type="button" class="btn mdi mdi-brush filterButton"></button>
-  <button type="button" class="btn mdi mdi-palette filterButton mr-5" style="color: brown;"></button>
+  <button type="button" class="btn mdi mdi-palette filterButton" style="color: brown;"></button>
+  <button type="button" class="btn mdi mdi-eraser filterButton mr-5" style="color: pink"></button>
+  <!-- <button type="button" class="btn mdi mdi-border-none-variant filterButton mr-5"></button>
+  <button type="button" class="btn mdi mdi-cursor-default-outline filterButton mr-5"></button> -->
 </div>
 
 <label class="ml-5 mr-1"> Season </label>
@@ -16,7 +20,7 @@
 
 <div class="" style="display: inline; float: right; height: 100%;">
   <button type="button" class="btn mdi mdi-content-save-outline filterButton" style="color: lightblue;"></button>
-  <button type="button" class="btn mdi mdi-cube-outline filterButton"></button>
+  <button title="Change Perspective" type="button" class="btn mdi mdi-cube-outline filterButton" (click)="perspectiveChange()"></button>
   <button type="button" class="btn mdi mdi-check-outline filterButton" style="color: greenyellow;"></button>
   <button type="button" class="btn mdi mdi-format-list-bulleted filterButton" (click)="goToShoppingList()"></button>
 </div>

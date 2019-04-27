@@ -99,6 +99,7 @@ CREATE TABLE `plant` (
   `native` tinyint(4) NOT NULL,
   `min_hardiness` int(11) NOT NULL,
   `max_hardiness` int(11) NOT NULL,
+  `color_id` int(11) NOT NULL,
   `front_image_path` varchar(255) DEFAULT NULL,
   `side_image_path` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -110,7 +111,7 @@ CREATE TABLE `plant` (
 --
 LOCK TABLES `plant` WRITE;
 /*!40000 ALTER TABLE `plant` DISABLE KEYS */;
-INSERT INTO `plant` VALUES (1,'Golden Alexander','Zizia','aurea',2,3,1,3,'perennial',1,3,8,'assets/images/zizia-aurea.png','assets/images/zizia-aurea.png'),(2,'Carolina jessamine','Gelsemium','sempervirens',12,20,3,6,'vine',1,7,10,'assets/images/gelsemium-sempervirens.png','assets/images/gelsemium-sempervirens.png'),(3,'Rabbiteye blueberry','Vaccinium','ashei',3,12,4,5,'shrub',1,6,9,'assets/images/vaccinium-ashei-spring.png','assets/images/vaccinium-ashei-spring.png'),(4,'Cosmos','Cosmos','bipinnatus',1,4,2,3,'annual',0,2,11,'assets/images/cosmos-bipinnatus.png','assets/images/cosmos-bipinnatus.png'),(5,'Rattlesnake master','Eryngium','yuccifolium',4,5,2,3,'perennial',1,3,8,'assets/images/eryngium-yuccifolium.png','assets/images/eryngium-yuccifolium.png'),(6,'Butterfly weed','Asclepias','tuberosa',1,3,1,2,'perennial',1,3,9,'assets/images/asclepias-tuberosa.png','assets/images/asclepias-tuberosa.png'),(7,'Rough goldenrod','Solidago','rugosa \'fireworks\'',3,4,3,4,'perennial',1,4,8,'assets/images/solidago-rugosa.png','assets/images/solidago-rugosa.png'),(8,'Aromatic aster','Symphiotrichum','oblongifolium',1,3,1,3,'perennial',1,3,8,'assets/images/symphiotrichum-oblongifolium.png','assets/images/symphiotrichum-oblongifolium.png'),(9,'Joe-pye weed','Eutrochium','dubium',3,4,1,3,'perennial',1,3,9,'assets/images/eutrochium-dubium.png','assets/images/eutrochium-dubium.png');
+INSERT INTO `plant` VALUES (1,'Golden Alexander','Zizia','aurea',2,3,1,3,1,1,3,8,5,'assets/images/Yellow_Flower_Top.png','assets/images/zizia-aurea.png'),(2,'Carolina jessamine','Gelsemium','sempervirens',12,20,3,6,3,1,7,10,5,'assets/images/Yellow_Flower_Top.png','assets/images/gelsemium-sempervirens.png'),(3,'Rabbiteye blueberry','Vaccinium','ashei',3,12,4,5,4,1,6,9,6,'assets/images/Blue_Flower_Top.png','assets/images/vaccinium-ashei-spring.png'),(4,'Cosmos','Cosmos','bipinnatus',1,4,2,3,2,0,2,11,4,'assets/images/Pink_Flower_Top.png','assets/images/cosmos-bipinnatus.png'),(5,'Rattlesnake master','Eryngium','yuccifolium',4,5,2,3,1,1,3,8,6,'assets/images/White_Flower_Top.png','assets/images/eryngium-yuccifolium.png'),(6,'Butterfly weed','Asclepias','tuberosa',1,3,1,2,1,1,3,9,7,'assets/images/Orange_Flower_Top.png','assets/images/asclepias-tuberosa.png'),(7,'Rough goldenrod','Solidago','rugosa \'fireworks\'',3,4,3,4,1,1,4,8,5,'assets/images/Yellow_Flower_Top.png','assets/images/solidago-rugosa.png'),(8,'Aromatic aster','Symphiotrichum','oblongifolium',1,3,1,3,1,1,3,8,3,'assets/images/Purple_Flower_Top.png','assets/images/symphiotrichum-oblongifolium.png'),(9,'Joe-pye weed','Eutrochium','dubium',3,4,1,3,1,1,3,9,4,'assets/images/Pink_Flower_Top.png','assets/images/eutrochium-dubium.png');
 /*!40000 ALTER TABLE `plant` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -127,6 +128,7 @@ CREATE TABLE `plant_instance` (
   `plant_id` int(11) NOT NULL,
   `x` int(11) NOT NULL,
   `y` int(11) NOT NULL,
+  'collision' BOOLEAN NOT NULL,
   PRIMARY KEY (`id`),
   KEY `garden_fk_idx` (`garden_id`),
   KEY `instance_plant_fk_idx` (`plant_id`),
@@ -141,7 +143,7 @@ CREATE TABLE `plant_instance` (
 
 LOCK TABLES `plant_instance` WRITE;
 /*!40000 ALTER TABLE `plant_instance` DISABLE KEYS */;
-INSERT INTO `plant_instance` VALUES (1,1,1,200,200),(20,1,4,347,338),(21,1,4,485,320),(22,1,8,101,329),(28,1,6,176,243),(32,2,6,323,255),(34,2,5,697,426),(35,2,5,727,385),(36,2,8,462,223),(37,2,2,436,191),(39,2,4,399,313),(40,2,3,432,425),(42,2,3,511,401),(44,1,3,696,396),(47,2,2,515,198),(48,7,6,220,194),(49,2,4,327,267),(53,6,1,282,299),(54,6,2,125,389),(55,7,1,361,178),(56,7,4,215,338),(58,8,3,418,236),(59,8,1,308,90),(60,8,4,306,233),(61,8,5,439,96),(62,7,8,273,98),(63,7,2,474,306),(64,7,8,295,255),(65,7,6,400,98),(66,7,4,150,159),(67,7,9,113,273),(69,2,6,246,193),(70,2,4,210,315),(71,9,8,348,231),(73,9,7,294,223),(74,9,9,298,10),(75,9,9,484,20),(76,6,4,295,267),(77,6,2,41,387),(78,9,3,599,227),(79,6,6,51,450),(80,7,9,693,263),(81,6,2,198,384),(82,6,2,-37,336),(83,6,8,285,432),(84,6,8,194,431),(85,10,2,179,103),(86,10,2,254,105),(87,10,3,32,364),(88,10,6,9,427),(89,10,6,88,406),(90,10,6,135,350),(91,10,3,90,273),(92,10,6,185,273),(93,10,8,318,403),(94,10,9,379,350),(95,10,4,371,417),(96,10,1,22,291),(97,10,4,323,456),(98,10,9,259,457),(99,10,5,94,315),(101,11,3,523,178),(103,2,4,55,279),(104,2,9,114,443),(105,2,6,566,49),(106,2,5,632,309),(109,2,2,170,110),(110,2,4,801,102),(111,12,8,90,179),(112,12,2,317,188),(113,2,1,60,93),(114,2,6,841,243),(115,2,6,988,244),(116,2,6,750,336),(117,2,6,806,383),(118,2,6,890,407),(119,2,6,979,391),(120,2,6,1067,355),(121,2,8,906,308),(122,2,6,425,17),(123,2,9,674,151),(124,2,5,320,87),(128,13,4,122,263),(129,13,9,56,411),(130,13,6,605,291),(132,13,1,481,244),(133,13,3,297,327),(134,13,1,151,90),(136,14,6,218,285),(137,15,1,241,228),(138,15,4,386,147),(139,14,6,105,287),(140,14,4,180,112);
+INSERT INTO `plant_instance` VALUES (1,1,1,200,200, false),(20,1,4,347,338,false),(21,1,4,485,320,false),(22,1,8,101,329,false),(28,1,6,176,243,false),(32,2,6,323,255,false),(34,2,5,697,426,false),(35,2,5,727,385,false),(36,2,8,462,223,false),(37,2,2,436,191,false),(39,2,4,399,313,false),(40,2,3,432,425,false),(42,2,3,511,401,false),(44,1,3,696,396,false),(47,2,2,515,198,false),(48,7,6,220,194,false),(49,2,4,327,267,false),(53,6,1,282,299,false),(54,6,2,125,389,false),(55,7,1,361,178,false),(56,7,4,215,338,false),(58,8,3,418,236,false),(59,8,1,308,90,false),(60,8,4,306,233,false),(61,8,5,439,96,false),(62,7,8,273,98,false),(63,7,2,474,306,false),(64,7,8,295,255,false),(65,7,6,400,98,false),(66,7,4,150,159,false),(67,7,9,113,273,false),(69,2,6,246,193,false),(70,2,4,210,315,false),(71,9,8,348,231,false),(73,9,7,294,223,false),(74,9,9,298,10,false),(75,9,9,484,20,false),(76,6,4,295,267,false),(77,6,2,41,387,false),(78,9,3,599,227,false),(79,6,6,51,450,false),(80,7,9,693,263,false),(81,6,2,198,384,false),(82,6,2,-37,336,false),(83,6,8,285,432,false),(84,6,8,194,431,false),(85,10,2,179,103,false),(86,10,2,254,105,false),(87,10,3,32,364,false),(88,10,6,9,427,false),(89,10,6,88,406,false),(90,10,6,135,350,false),(91,10,3,90,273,false),(92,10,6,185,273,false),(93,10,8,318,403,false),(94,10,9,379,350,false),(95,10,4,371,417,false),(96,10,1,22,291,false),(97,10,4,323,456,false),(98,10,9,259,457,false),(99,10,5,94,315,false),(101,11,3,523,178,false),(103,2,4,55,279,false),(104,2,9,114,443,false),(105,2,6,566,49,false),(106,2,5,632,309,false),(109,2,2,170,110,false),(110,2,4,801,102,false),(111,12,8,90,179,false),(112,12,2,317,188,false),(113,2,1,60,93,false),(114,2,6,841,243,false),(115,2,6,988,244,false),(116,2,6,750,336,false),(117,2,6,806,383,false),(118,2,6,890,407,false),(119,2,6,979,391,false),(120,2,6,1067,355,false),(121,2,8,906,308,false),(122,2,6,425,17,false),(123,2,9,674,151,false),(124,2,5,320,87,false),(128,13,4,122,263,false),(129,13,9,56,411,false),(130,13,6,605,291,false),(132,13,1,481,244,false),(133,13,3,297,327,false),(134,13,1,151,90,false),(136,14,6,218,285,false),(137,15,1,241,228,false),(138,15,4,386,147,false),(139,14,6,105,287,false),(140,14,4,180,112,false);
 /*!40000 ALTER TABLE `plant_instance` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -229,7 +231,7 @@ UNLOCK TABLES;
 --
 -- Table structure for table `plant_type`
 --
--- 
+--
 -- DROP TABLE IF EXISTS `plant_type`;
 -- /*!40101 SET @saved_cs_client     = @@character_set_client */;
 --  SET character_set_client = utf8mb4 ;
