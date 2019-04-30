@@ -31,7 +31,7 @@ This repository contains the following:
 5) Verify Angular CLI is installed
     - Angular CLI (at least version 6.2.2)
       - Check version by running `ng -v` in terminal
-    - To install for the first time, open terminal and run "npm install -g @angular/cli"
+    - To install for the first time, open terminal and run `npm install -g @angular/cli`
       - Verify install with `ng -v`
 
 6) Verify MySQL is installed
@@ -71,7 +71,7 @@ This repository contains the following:
     });
     ```
     
-12) Make sure you are in the api directory in terminal and then run "node app.js" to start the database
+12) Make sure you are in the api directory in terminal and then run `node app.js` to start the database
     - You should get a Connection Successful message in the terminal
       - If you go to http://localhost:3000/ it should say "Hello World!"
       - If you go to http://localhost:3000/plants it should show a json representation of the plants in the database
@@ -103,7 +103,7 @@ This repository contains the following:
 5) Verify Angular CLI is installed
     - Angular CLI (at least version 6.2.2)
       - Check version by running `ng -v` in terminal
-    - To install for the first time, open terminal and run "npm install -g @angular/cli"
+    - To install for the first time, open terminal and run `npm install -g @angular/cli`
       - Verify install with `ng -v`
     - If after installing, your mac does not recognize the `ng` command, it is possible that the install was successful but that your computer doesn't know where to find ng when it is called. To solve this complete the following steps:
       - First local where Angular was installed on your machine. This should have happened in a hidden folder off of the root directory. Check that the "ng" folder exists in this location. For my machine the path I had to take was `~/.npm-global/bin`, this location should contain the "ng folder that was just installed
@@ -146,7 +146,7 @@ This repository contains the following:
     });
     ```
     
-12) Make sure you are in the api directory in terminal and then run "node app.js" to start the database
+12) Make sure you are in the api directory in terminal and then run `node app.js` to start the database
     - You should get a Connection Successful message in the terminal
       - If you go to http://localhost:3000/ it should say "Hello World!"
       - If you go to http://localhost:3000/plants it should show a json representation of the plants in the database
