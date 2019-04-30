@@ -155,7 +155,7 @@ This repository contains the following:
 
 14) Run the application using `ng serve` in the terminal
     - When you get the Compiled Successfully message, head to http://localhost:4200/ to start using the application
-    - If the `ng` command is not recorgnized by the terminal in visual studio code, either follow the steps 5a-5c again in this visual studio code terminal, or run the `ng serve` command from the pollinator-garden directory in the regular terminal
+    - If the `ng` command is not recognized by the terminal in visual studio code, either follow the steps 5a-5c again in this visual studio code terminal, or run the `ng serve` command from the pollinator-garden directory in the regular terminal
 
 
 
