@@ -108,7 +108,7 @@ This repository contains the following:
     - If after installing, your mac does not recognize the `ng` command, it is possible that the install was successful but that your computer doesn't know where to find ng when it is called. To solve this complete the following steps:
       - First local where Angular was installed on your machine. This should have happened in a hidden folder off of the root directory. Check that the "ng" folder exists in this location. For my machine the path I had to take was `~/.npm-global/bin`, this location should contain the "ng folder that was just installed
       - Once the path to the "ng" folder is found, run the command `alias ng="~/.npm-global/bin/ng"` in terminal with your path to the "ng" folder. This tells your computer where to find the commands when you use the keyphrase `ng` in the terminal
-      - Verify that the path the install was succesfully made by running `ng -v` in terminal. This command should bring up a screen that shows the current versions of all the components of Angular
+      - Verify that the path the install was successfully made by running `ng -v` in terminal. This command should bring up a screen that shows the current versions of all the components of Angular
 
 6) Verify MySQL is installed
     - MySQL (either >= v5.7.22 or some version of 8.0)
