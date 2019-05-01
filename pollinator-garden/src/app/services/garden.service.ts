@@ -23,6 +23,8 @@ export class GardenService {
 
   private isTopDown: boolean;
   private canvas_img : any;
+  private isCreateSquareGarden: boolean;
+  private isCreateCircleGarden: boolean;
   // Observable for changing perspectives
   private viewChangeCallSource = new Subject<any>();
   viewChangeCalled$ = this.viewChangeCallSource.asObservable();
@@ -33,6 +35,8 @@ export class GardenService {
     private http: HttpClient
   ) {
     this.isTopDown = true;
+    this.isCreateSquareGarden = false;
+    this.isCreateCircleGarden = false;
     this.curvedLineOn = false;
     this.canvas_img = "src\\assets\\site-images\\image_placeholder.png";
   }
@@ -61,6 +65,54 @@ export class GardenService {
     this.isTopDown = !this.isTopDown;
     this.viewChangeCallSource.next();
   }
+
+  addSquareGarden() {
+    this.isCreateSquareGarden = !this.isCreateSquareGarden;
+    var element = document.getElementById("squareButton");
+    if (this.isCreateSquareGarden) {
+      element.style.background = "lightgray"
+    } else {
+      element.style.background = "transparent"
+    }
+
+    // Turn off any other buttons
+    if (this.isCreateCircleGarden) {
+      var element = document.getElementById("circleButton");
+      element.style.background = "transparent"
+      this.isCreateCircleGarden = false;
+    }
+  }
+
+  isSquareGarden() {
+    return this.isCreateSquareGarden;
+  }
+
+  addCircleGarden() {
+    this.isCreateCircleGarden = !this.isCreateCircleGarden;
+    var element = document.getElementById("circleButton");
+    if (this.isCreateCircleGarden) {
+      element.style.background = "lightgray"
+    } else {
+      element.style.background = "transparent"
+    }
+
+    // Turn off any other buttons
+    if (this.isCreateSquareGarden) {
+      var element = document.getElementById("squareButton");
+      element.style.background = "transparent"
+      this.isCreateSquareGarden = false;
+    }
+  }
+
+  isCircleGarden() {
+    return this.isCreateCircleGarden;
+  }
+
+  changeColorButton() {
+
+  }
+
+
 
   toggleCurvedLine() {
     this.curvedLineOn = !this.curvedLineOn;
