@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { MainGardenComponent } from './main-garden.component';
 
@@ -20,7 +21,8 @@ describe('MainGardenComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MainGardenComponent, SearchComponentStub, PlantListComponentStub, ToolbarComponentStub, CanvasComponentStub ]
+      declarations: [ MainGardenComponent, SearchComponentStub, PlantListComponentStub, ToolbarComponentStub, CanvasComponentStub ],
+      imports: [HttpClientTestingModule],
     })
     .compileComponents();
   }));
