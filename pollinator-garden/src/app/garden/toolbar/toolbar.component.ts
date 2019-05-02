@@ -19,6 +19,19 @@ export class ToolbarComponent implements OnInit {
     this.gardenService.viewChange();
   }
 
+  
+  public toggleSquareGarden() {
+    this.gardenService.addSquareGarden();
+  }
+
+  public toggleCircleGarden() {
+    this.gardenService.addCircleGarden();
+  }
+
+  public togglePaletteButton() {
+    this.gardenService.changeColorButton();
+  }
+
   public toggleCurvedLine() {
     this.gardenService.toggleCurvedLine();
   }

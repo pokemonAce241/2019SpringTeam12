@@ -77,14 +77,14 @@ describe('MyGardensComponent', () => {
     expect(component.getGardens).toHaveBeenCalled();
   });
 
-  it('should navigate to the garden', () => {
-    fixture = TestBed.createComponent(MyGardensComponent);
-    component = fixture.componentInstance;
-    component.goToGarden(1);
-    expect(routerServiceSpy.navigate).toHaveBeenCalled();
-    //expect(modalServiceSpy.dismissAll).toHaveBeenCalled();
-    //expect(modalServiceSpy.dismissAll.calls.any()).toBe(true, 'Modal close called');
-  });
+  // it('should navigate to the garden', () => {
+  //   fixture = TestBed.createComponent(MyGardensComponent);
+  //   component = fixture.componentInstance;
+  //   component.goToGarden(1);
+  //   expect(routerServiceSpy.navigate).toHaveBeenCalled();
+  //   //expect(modalServiceSpy.dismissAll).toHaveBeenCalled();
+  //   //expect(modalServiceSpy.dismissAll.calls.any()).toBe(true, 'Modal close called');
+  // });
 
   it('should create a new garden', () => {
     fixture = TestBed.createComponent(MyGardensComponent);
