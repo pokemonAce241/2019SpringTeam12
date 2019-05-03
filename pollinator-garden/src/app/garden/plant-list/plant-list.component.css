@@ -22,8 +22,20 @@ input[type=search]::-webkit-search-cancel-button {
     -webkit-appearance: searchfield-cancel-button;
 }
 
-#canvasContainer {
+/* #canvasContainer {
     height: 100%;
+} */
+
+.canvas-area {
+  width: 90%;
+  height: 100%;
+  display: inline-block;
+  overflow: auto;
+  canvas {
+    display: inline-block;
+    background-color: #fff;
+    max-width: 100%   !important;
+  }
 }
 
 .noselect {

@@ -1,10 +1,16 @@
-<div class="container">
+<div class="container noselect">
   <div class="plantlist">
     <app-plant-list></app-plant-list>
   </div>
   <div class="toolbar noselect">
     <app-toolbar></app-toolbar>
   </div>
+  <!-- <div class="canvas" id="canvasContainer" *ngIf="gardenService.getPerspective()">
+    <app-canvas ></app-canvas>
+  </div>
+  <div class="canvas" id="canvasContainer" *ngIf="!gardenService.getPerspective()">
+    <app-top-down></app-top-down>
+  </div> -->
   <div class="canvas" id="canvasContainer">
     <app-canvas></app-canvas>
   </div>
