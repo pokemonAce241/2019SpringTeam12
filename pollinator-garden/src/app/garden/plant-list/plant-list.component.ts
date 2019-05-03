@@ -113,6 +113,8 @@ export class PlantListComponent implements OnInit {
     private gardenService: GardenService,
   ) {
     this.imgDims = [];
+    this.filteredPlants = [];
+    this.plants = [];
     this.img = new Image();
     this.size = 0;
   }
@@ -670,7 +672,7 @@ export class PlantListComponent implements OnInit {
     this.filterPlants();
   }
 
-  clearNativeFilter() {
+clearNativeFilter() {
     for (var property in this.nativeFilters) {
       this.plantNativeness = "";
     }

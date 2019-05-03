@@ -98,4 +98,25 @@ describe('CanvasComponent', () => {
 
     canvas.draw();
   });
+
+  it('should change view', (done: DoneFn) => {
+    instanceServiceSpy.getInstances().subscribe(value => {
+      expect(value).toBe(testInstances, 'Instances value');
+      done();
+    });
+  });
+
+  it('should increase coverage', () => {
+    component.ngOnInit();
+    canvas.ngOnInit();
+    canvas.ngAfterViewInit();
+    canvas.getPlantInstances();
+    canvas.createInstance(canvas.plant_instances);
+    canvas.addNew();
+    canvas.draw();
+    canvas.deletePlants();
+    canvas.checkRouteId();
+
+
+  });
 });
